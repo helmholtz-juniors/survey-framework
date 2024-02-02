@@ -7,3 +7,9 @@ We use [pre-commit](https://pre-commit.com/#intro) to ensure quality of code. Th
 ```
 pip install -r requirements.txt
 ```
+
+# DocStrings
+Style: Google
+https://google.github.io/styleguide/pyguide.html#Comments
+
+
