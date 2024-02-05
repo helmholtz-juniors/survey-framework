@@ -1,3 +1,4 @@
+from typing import Union
 import warnings
 import re
 import pandas as pd
@@ -17,9 +18,9 @@ class LimeSurveyData:
     sections: pd.DataFrame
 
     def __init__(
-            self,
-            structure_file: Path,
-            responses_file: Path,
+        self,
+        structure_file: Path,
+        responses_file: Path,
     ) -> None:
         """
         Initialize an instance of the Survey
@@ -34,10 +35,7 @@ class LimeSurveyData:
         self.read_responses(responses_file)
 
     # partially copied from N2Framework
-    def read_structure(
-            self,
-            structure_file: Path
-    ) -> None:
+    def read_structure(self, structure_file: Path) -> None:
         """
         Read structure XML file
 
@@ -66,15 +64,15 @@ class LimeSurveyData:
 
     # copied from N2Framework
     def read_responses(
-            self,
-            responses_file: Path,
-            transformation_questions: dict = {},
+        self,
+        responses_file: Path,
+        transformation_questions: dict[str, str] = {},
     ) -> None:
         """Read responses CSV file
 
         Args:
             responses_file (str): Path to the responses CSV file
-            transformation_questions (dict, optional): Dict of questions
+            transformation_questions (dict, optional): dict of questions
                 requiring transformation of raw data, e.g. {'depression': 'D3'}
                 or {'supervision': ['E7a', 'E7b']}
         """
@@ -97,7 +95,7 @@ class LimeSurveyData:
             index_col=0,
             dtype=dtype_dict,
             parse_dates=datetime_columns,
-            #infer_datetime_format=True,
+            # infer_datetime_format=True,
         )
         responses = responses.rename(columns=dict(zip(columns, renamed_columns)))
 
@@ -108,7 +106,7 @@ class LimeSurveyData:
             # Identify columns for survey questions
             first_question = columns.get_loc("datestamp") + 1
             last_question = columns.get_loc("interviewtime") - 1
-            question_columns = renamed_columns[first_question: last_question + 1]
+            question_columns = renamed_columns[first_question : last_question + 1]
 
             # Split df into question responses and timing info
             question_responses = responses.loc[:, question_columns]
@@ -147,7 +145,7 @@ class LimeSurveyData:
             multiple_choice_questions = self.questions.index[
                 (self.questions["type"] == "multiple-choice")
                 & self.questions["contingent_of_name"].notnull()
-                ]
+            ]
             for question in multiple_choice_questions:
                 question_responses.insert(
                     question_responses.columns.get_loc(question),
@@ -181,21 +179,21 @@ class LimeSurveyData:
         self.lime_system_info = system_info
 
         for transform, questions in transformation_questions.items():
-            if not isinstance(questions, list):
-                questions = [questions]
             for question in questions:
                 self.add_responses(self.transform_question(question, transform))
 
-    def _get_dtype_info(self, columns, renamed_columns):
+    def _get_dtype_info(
+        self, columns: list[str], renamed_columns: list[str]
+    ) -> tuple[dict[str, str], list[str]]:
         """Get dtypes for columns in data csv
 
         Args:
-            columns (list): List of column names from data csv
-            renamed_columns (list): List of column names modified to match self.questions entries
+            columns (list): list of column names from data csv
+            renamed_columns (list): list of column names modified to match self.questions entries
 
         Returns:
-            dict: Dictionary of column names and dtypes
-            list: List of datetime columns
+            dict: dictionary of column names and dtypes
+            list: list of datetime columns
         """
 
         # Compile dict with dtype for each column
@@ -247,6 +245,18 @@ class LimeSurveyData:
                     pass
 
         return dtype_dict, datetime_columns
+
+    def add_responses(
+        self, name: str, responses: Union[pd.Series, pd.DataFrame] = None
+    ) -> None:
+        raise NotImplementedError
+
+    def transform_question(
+        self,
+        question: Union[str, tuple[tuple[str, str], tuple[str, str]]],
+        transform: str,
+    ) -> pd.DataFrame:
+        raise NotImplementedError
 
 
 def main() -> None:

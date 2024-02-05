@@ -25,15 +25,18 @@ from data_import.data_import import LimeSurveyData
 from pathlib import Path
 
 
-def main():
+def main() -> None:
     # important files and paths
     INPUT_PATH = ""
     XML_FILE_NAME = "data/survey_structure_2021_v2.xml"
-    CSV_FILE_NAME = "data/dummy_data_2021_codeonly_v2_v1.csv"
+    CSV_FILE_NAME = "data/dummy_data_2021_codeonly_v2.csv"
 
-    survey = LimeSurveyData(Path(INPUT_PATH + XML_FILE_NAME), Path(INPUT_PATH + CSV_FILE_NAME))
+    _ = LimeSurveyData(
+        Path(INPUT_PATH + XML_FILE_NAME), Path(INPUT_PATH + CSV_FILE_NAME)
+    )
 
     print("HelloWorld")
+
 
 if __name__ == "__main__":
     main()
