@@ -134,7 +134,7 @@ def _parse_question_sub_questions(question: Tag) -> list[tuple[str, str]]:
         question (Tag): bs4 tag of <question> element
 
     Returns:
-        list[tuple[str, str]]: list of pairs (<subsection varName>,
+        list[tuple[str, str]]: List of pairs (<subsection varName>,
           <subsection cleaned label>)
     """
     # TODO: Add validation that varName is provided
@@ -266,7 +266,7 @@ def _get_question_group_name(responses: list[ResponseType]) -> str:
     looking for a longest common prefix.
 
     Args:
-        responses (list[dict, Optional[dict]]): list of parsed responses
+        responses (list[dict, Optional[dict]]): List of parsed responses
 
     Raises:
         ValueError: At least one response with a (var)name is required
@@ -328,7 +328,7 @@ def _parse_question(
         question: bs4 tag of <question> element
 
     Returns:
-        list[dict]: list of parsed response columns. The list consists of
+        list[dict]: List of parsed response columns. The list consists of
         of dictionaries. Each dictionary corresponds to only one data column
         in responses CSV. I.e. single question with contingent will return
         list of two dictionaries.

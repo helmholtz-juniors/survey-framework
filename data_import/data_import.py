@@ -72,7 +72,7 @@ class LimeSurveyData:
 
         Args:
             responses_file (str): Path to the responses CSV file
-            transformation_questions (dict, optional): dict of questions
+            transformation_questions (dict, optional): Dict of questions
                 requiring transformation of raw data, e.g. {'depression': 'D3'}
                 or {'supervision': ['E7a', 'E7b']}
         """
@@ -190,12 +190,12 @@ class LimeSurveyData:
         """Get dtypes for columns in data csv
 
         Args:
-            columns (list): list of column names from data csv
-            renamed_columns (list): list of column names modified to match self.questions entries
+            columns (list): List of column names from data csv
+            renamed_columns (list): List of column names modified to match self.questions entries
 
         Returns:
-            dict: dictionary of column names and dtypes
-            list: list of datetime columns
+            dict: Dictionary of column names and dtypes
+            list: List of datetime columns
         """
 
         # Compile dict with dtype for each column
