@@ -17,4 +17,4 @@ repos:
   rev: 'v1.8.0'  # Use the sha / tag you want to point at
   hooks:
     - id: mypy
-      args: [--strict]
+      args: [--strict, --install-types, --non-interactive]

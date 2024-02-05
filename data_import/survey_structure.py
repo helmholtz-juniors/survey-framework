@@ -168,7 +168,7 @@ def _parse_single_question_response(
     """
     # Common response structure
     parsed_response: ResponseData = {
-        "name": response["varName"],
+        "name": cast(str, response["varName"]),
         "format": None,
         "length": None,
         "label": None,
@@ -177,15 +177,15 @@ def _parse_single_question_response(
     contingent_response = None
 
     # Get first child node of <response> section
-    response_data = response.findChild()
+    response_data = cast(Tag, response.findChild())
 
     # Parse non-fixed question
     if response_data.name == "free":
         parsed_response.update(
             {
-                "format": _get_clean_string(response_data.find("format")),
-                "length": _get_clean_string(response_data.find("length")),
-                "label": _get_clean_string(response_data.find("label")),
+                "format": _get_clean_string(cast(Tag, response_data.find("format"))),
+                "length": _get_clean_string(cast(Tag, response_data.find("length"))),
+                "label": _get_clean_string(cast(Tag, response_data.find("label"))),
             }
         )
     # Parse fixed question (i.e. with choises)
@@ -205,13 +205,17 @@ def _parse_single_question_response(
             ), f"Too many 'contingentQuestion's for response {response}"
 
             contingent_response = {
-                "name": contingent_question["varName"],
-                "text": _get_clean_string(contingent_question.find("text")),
-                "length": _get_clean_string(contingent_question.find("length")),
-                "format": _get_clean_string(contingent_question.find("format")),
+                "name": cast(str, cast(Tag, contingent_question)["varName"]),
+                "text": _get_clean_string(cast(Tag, contingent_question.find("text"))),
+                "length": _get_clean_string(
+                    cast(Tag, contingent_question.find("length"))
+                ),
+                "format": _get_clean_string(
+                    cast(Tag, contingent_question.find("format"))
+                ),
                 "contingent_of_name": parsed_response["name"],
                 "contingent_of_choice": _get_clean_string(
-                    contingent_question.parent.value
+                    cast(Tag, cast(Tag, contingent_question.parent).value)
                 ),
             }
     else:
@@ -468,14 +472,14 @@ def _parse_section(section: Tag) -> SectionInfo:
     """
 
     # Get section ID
-    section_id = section.attrs.get("id", None)
-    if section_id is None:
+    section_id_str = section.attrs.get("id", None)
+    if section_id_str is None:
         raise AssertionError(
             "Unexpected section structure."
             f" No id attribute found for section {section}"
         )
     else:
-        section_id = int(section_id)
+        section_id = int(section_id_str)
 
     # Parse <sectionInfo> tags
     section_info = ""
@@ -483,7 +487,9 @@ def _parse_section(section: Tag) -> SectionInfo:
     for info in section.find_all("sectionInfo"):
         position = _get_clean_string(info.position)
         if position == "title":
-            section_title = _get_clean_string(section.sectionInfo.find("text"))
+            section_title = _get_clean_string(
+                cast(Tag, cast(Tag, section.sectionInfo).find("text"))
+            )
         elif position in ("before", "after"):
             current_text = " ".join(
                 [

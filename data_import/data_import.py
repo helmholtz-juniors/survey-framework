@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Iterable, Optional, Union
 import warnings
 import re
 import pandas as pd
@@ -109,7 +109,7 @@ class LimeSurveyData:
             question_columns = renamed_columns[first_question : last_question + 1]
 
             # Split df into question responses and timing info
-            question_responses = responses.loc[:, question_columns]
+            question_responses = responses.loc[question_columns]
             system_info = responses.iloc[:, ~renamed_columns.isin(question_columns)]
 
         else:
@@ -151,7 +151,7 @@ class LimeSurveyData:
                     question_responses.columns.get_loc(question),
                     self.questions.loc[question, "contingent_of_name"],
                     # Fill in new column based on "{question_id}other" column data
-                    pd.Categorical(
+                    pd.Series(
                         question_responses[question].where(
                             question_responses[question].isnull(), "Y"
                         )
@@ -183,8 +183,10 @@ class LimeSurveyData:
                 self.add_responses(self.transform_question(question, transform))
 
     def _get_dtype_info(
-        self, columns: list[str], renamed_columns: list[str]
-    ) -> tuple[dict[str, str], list[str]]:
+        self, columns: Iterable[str], renamed_columns: Iterable[str]
+    ) -> tuple[
+        dict[str, Union[str, pd.Int32Dtype, pd.UInt32Dtype, pd.Int16Dtype]], list[str]
+    ]:
         """Get dtypes for columns in data csv
 
         Args:
@@ -197,7 +199,9 @@ class LimeSurveyData:
         """
 
         # Compile dict with dtype for each column
-        dtype_dict = {}
+        dtype_dict: dict[
+            str, Union[str, pd.Int32Dtype, pd.UInt32Dtype, pd.Int16Dtype]
+        ] = {}
         # Compile list of datetime columns (because pd.read_csv takes this as separate arg)
         datetime_columns = []
 
@@ -247,8 +251,19 @@ class LimeSurveyData:
         return dtype_dict, datetime_columns
 
     def add_responses(
-        self, name: str, responses: Union[pd.Series, pd.DataFrame] = None
+        self,
+        responses: pd.DataFrame,
+        question: Optional[Union[str, tuple[tuple[str, str], tuple[str, str]]]] = None,
     ) -> None:
+        """Add responses to specified question to self.responses DataFrame
+
+        Args:
+            responses (pd.Series or pd.DataFrame): responses to be added
+                to self.responses
+            question (list or str, optional): Name (id) of question to which
+                the responses correspond. If not given, the column/Series name
+                is taken as the name
+        """
         raise NotImplementedError
 
     def transform_question(
@@ -256,6 +271,15 @@ class LimeSurveyData:
         question: Union[str, tuple[tuple[str, str], tuple[str, str]]],
         transform: str,
     ) -> pd.DataFrame:
+        """Perform transformation on responses to given question
+
+        Args:
+            question (str or tuple of str): Question(s) to transform
+            transform (str): Type of transform to perform
+
+        Returns:
+            pd.DataFrame: Transformed DataFrame to be concatenated to self.responses
+        """
         raise NotImplementedError
 
 
