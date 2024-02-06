@@ -25,6 +25,7 @@ class ResponseData(TypedDict):
 
 
 ResponseType: TypeAlias = "tuple[ResponseData, Optional[dict[str, str]]]"
+QuestionType: TypeAlias = "dict[str, Union[str, dict[str, str], None]]"
 
 
 class SectionInfo(TypedDict):
@@ -33,9 +34,8 @@ class SectionInfo(TypedDict):
     info: str
 
 
-# TODO: Question TypedDict?
 class SurveyStructure(TypedDict):
-    questions: list[dict[str, Union[str, dict[str, str]]]]
+    questions: list[QuestionType]
     sections: list[SectionInfo]
 
 
@@ -320,7 +320,7 @@ def _get_question_type(
 
 def _parse_question(
     question: Tag,
-) -> list[dict[str, Union[str, dict[str, str]]]]:
+) -> list[QuestionType]:
     """
     Parse single <question> section
 
@@ -365,7 +365,7 @@ def _parse_question(
     )
 
     # Combine responses and subquestions
-    columns_list: list[dict[str, Union[str, dict[str, str]]]] = []
+    columns_list: list[QuestionType] = []
     if subquestions_count:
         response, contingent = responses[0]
         assert contingent is None, (
@@ -374,18 +374,13 @@ def _parse_question(
         )
 
         for name, label in subquestions:
-            _format = response["format"]
-            choices = response["choices"]
-            assert _format is not None
-            assert choices is not None
-
             # Add the column
             columns_list.append(
                 {
                     "name": name,
                     "label": label,
-                    "format": _format,
-                    "choices": choices,
+                    "format": response["format"],
+                    "choices": response["choices"],
                 }
             )
 
@@ -397,18 +392,13 @@ def _parse_question(
             else:
                 label = question_label
 
-            _format = response["format"]
-            choices = response["choices"]
-            assert _format is not None
-            assert choices is not None
-
             # Add the column
             columns_list.append(
                 {
                     "name": response["name"],
                     "label": label,
-                    "format": _format,
-                    "choices": choices,
+                    "format": response["format"],
+                    "choices": response["choices"],
                 }
             )
             if contingent is not None:

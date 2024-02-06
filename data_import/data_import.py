@@ -109,7 +109,7 @@ class LimeSurveyData:
             question_columns = renamed_columns[first_question : last_question + 1]
 
             # Split df into question responses and timing info
-            question_responses = responses.loc[question_columns]
+            question_responses = responses.loc[:, question_columns]  # type: ignore  # the indexing works perfectly with the given slice, I think mypy got confused here?
             system_info = responses.iloc[:, ~renamed_columns.isin(question_columns)]
 
         else:
