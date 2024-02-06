@@ -8,21 +8,43 @@ lime survey data such as *.xml structure files
 
 import os
 import re
-from typing import Dict, List, Optional, Tuple
+from typing import TypeAlias, TypedDict, cast, Union, Optional
 from pathlib import Path
 from warnings import warn
 
 from bs4 import BeautifulSoup
 from bs4.element import Tag
 
+
+class ResponseData(TypedDict):
+    name: str
+    format: Optional[str]
+    length: Optional[str]
+    label: Optional[str]
+    choices: Optional[dict[str, str]]
+
+
+ResponseType: TypeAlias = "tuple[ResponseData, Optional[dict[str, str]]]"
+QuestionType: TypeAlias = "dict[str, Union[str, dict[str, str], None]]"
+
+
+class SectionInfo(TypedDict):
+    id: int
+    title: str
+    info: str
+
+
+class SurveyStructure(TypedDict):
+    questions: list[QuestionType]
+    sections: list[SectionInfo]
+
+
 __all__ = [
     "read_lime_questionnaire_structure",
 ]
 
 
-def _get_clean_string(
-        tag: Tag
-) -> str:
+def _get_clean_string(tag: Tag) -> str:
     """
     Clear a text in XML from HTML tags and line breaks
 
@@ -48,17 +70,15 @@ def _get_clean_string(
     return clean_string
 
 
-def _parse_question_title(
-        question: Tag
-) -> str:
+def _parse_question_title(question: Tag) -> str:
     """
     Get a question title from <question> element
 
     Args:
-        question (Tag): 
+        question (Tag):
 
     Raises:
-        AssertionError: 
+        AssertionError:
 
     Returns:
         str: Parsed question title cleaned from HTML tags and extra spaces
@@ -77,9 +97,7 @@ def _parse_question_title(
     return question_label
 
 
-def _parse_question_description(
-        question: Tag
-) -> str:
+def _parse_question_description(question: Tag) -> str:
     """Get a question description from <question> element
 
     Args:
@@ -107,9 +125,7 @@ def _parse_question_description(
     return description
 
 
-def _parse_question_sub_questions(
-        question: Tag
-) -> List[Tuple[str, str]]:
+def _parse_question_sub_questions(question: Tag) -> list[tuple[str, str]]:
     """Collect subquestions data
 
     Collects names and labels of each <subQuestion> sections
@@ -130,8 +146,8 @@ def _parse_question_sub_questions(
 
 
 def _parse_single_question_response(
-        response: Tag
-) -> Tuple[Dict, Optional[Dict]]:
+    response: Tag,
+) -> ResponseType:
     """
     Parse single <response> element of a question
 
@@ -151,8 +167,8 @@ def _parse_single_question_response(
             * contingent_of_choice - <value> of the parent <choice> element
     """
     # Common response structure
-    parsed_response = {
-        "name": response["varName"],
+    parsed_response: ResponseData = {
+        "name": cast(str, response["varName"]),
         "format": None,
         "length": None,
         "label": None,
@@ -161,14 +177,16 @@ def _parse_single_question_response(
     contingent_response = None
 
     # Get first child node of <response> section
-    response_data = response.findChild()
+    response_data = cast(Tag, response.findChild())
 
     # Parse non-fixed question
     if response_data.name == "free":
         parsed_response.update(
-            format=_get_clean_string(response_data.find("format")),
-            length=_get_clean_string(response_data.find("length")),
-            label=_get_clean_string(response_data.find("label")),
+            {
+                "format": _get_clean_string(cast(Tag, response_data.find("format"))),
+                "length": _get_clean_string(cast(Tag, response_data.find("length"))),
+                "label": _get_clean_string(cast(Tag, response_data.find("label"))),
+            }
         )
     # Parse fixed question (i.e. with choises)
     elif response_data.name == "fixed":
@@ -177,7 +195,7 @@ def _parse_single_question_response(
             _get_clean_string(category.value): _get_clean_string(category.label)
             for category in response_data.find_all("category", recursive=False)
         }
-        parsed_response.update(choices=choices)
+        parsed_response.update({"choices": choices})
 
         # Parse contingent question
         contingent_question = response_data.find("contingentQuestion")
@@ -187,13 +205,17 @@ def _parse_single_question_response(
             ), f"Too many 'contingentQuestion's for response {response}"
 
             contingent_response = {
-                "name": contingent_question["varName"],
-                "text": _get_clean_string(contingent_question.find("text")),
-                "length": _get_clean_string(contingent_question.find("length")),
-                "format": _get_clean_string(contingent_question.find("format")),
+                "name": cast(str, cast(Tag, contingent_question)["varName"]),
+                "text": _get_clean_string(cast(Tag, contingent_question.find("text"))),
+                "length": _get_clean_string(
+                    cast(Tag, contingent_question.find("length"))
+                ),
+                "format": _get_clean_string(
+                    cast(Tag, contingent_question.find("format"))
+                ),
                 "contingent_of_name": parsed_response["name"],
                 "contingent_of_choice": _get_clean_string(
-                    contingent_question.parent.value
+                    cast(Tag, cast(Tag, contingent_question.parent).value)
                 ),
             }
     else:
@@ -205,8 +227,8 @@ def _parse_single_question_response(
 
 
 def _parse_question_responses(
-        question: Tag
-) -> List[Tuple[Dict, Optional[Dict]]]:
+    question: Tag,
+) -> list[ResponseType]:
     """
     Parse all question responses
 
@@ -234,7 +256,7 @@ def _parse_question_responses(
     return parsed_responses
 
 
-def _get_question_group_name(responses: List[Tuple[Dict, Optional[Dict]]]) -> str:
+def _get_question_group_name(responses: list[ResponseType]) -> str:
     """
     Get a question group name
 
@@ -252,7 +274,7 @@ def _get_question_group_name(responses: List[Tuple[Dict, Optional[Dict]]]) -> st
     Returns:
         str: the question group name
     """
-    names = [response["name"] for response, _ in responses]
+    names = cast(list[str], [response["name"] for response, _ in responses])
     if len(names) == 1:
         question_group_name = names[0]
     elif len(names) > 1:
@@ -265,8 +287,8 @@ def _get_question_group_name(responses: List[Tuple[Dict, Optional[Dict]]]) -> st
 
 
 def _get_question_type(
-        subquestions: List[Tuple],
-        responses: List[Tuple[Dict, Optional[Dict]]],
+    subquestions: list[tuple[str, str]],
+    responses: list[ResponseType],
 ) -> str:
     """Infer question type
 
@@ -297,8 +319,8 @@ def _get_question_type(
 
 
 def _parse_question(
-        question: Tag,
-) -> List[Dict]:
+    question: Tag,
+) -> list[QuestionType]:
     """
     Parse single <question> section
 
@@ -343,7 +365,7 @@ def _parse_question(
     )
 
     # Combine responses and subquestions
-    columns_list = []
+    columns_list: list[QuestionType] = []
     if subquestions_count:
         response, contingent = responses[0]
         assert contingent is None, (
@@ -384,15 +406,17 @@ def _parse_question(
                 if contingent["text"]:
                     # If text was provided for the contingent question
                     # then use it combinded with the question label
-                    label = " / ".join([columns_list[-1]["label"], contingent["text"]])
+                    label = " / ".join(
+                        [cast(str, columns_list[-1]["label"]), contingent["text"]]
+                    )
                 else:
                     # If text was not provided for the contingent question
                     # then use contingent choice label combinded with the
                     # question label
                     label = " / ".join(
                         [
-                            columns_list[-1]["label"],
-                            columns_list[-1]["choices"][
+                            cast(str, columns_list[-1]["label"]),
+                            cast(dict[str, str], columns_list[-1]["choices"])[
                                 contingent["contingent_of_choice"]
                             ],
                         ]
@@ -425,9 +449,7 @@ def _parse_question(
     return columns_list
 
 
-def _parse_section(
-        section: Tag
-) -> Dict:
+def _parse_section(section: Tag) -> SectionInfo:
     """
     Parse questionnaire section
 
@@ -440,14 +462,14 @@ def _parse_section(
     """
 
     # Get section ID
-    section_id = section.attrs.get("id", None)
-    if section_id is None:
+    section_id_str = section.attrs.get("id", None)
+    if section_id_str is None:
         raise AssertionError(
             "Unexpected section structure."
             f" No id attribute found for section {section}"
         )
     else:
-        section_id = int(section_id)
+        section_id = int(section_id_str)
 
     # Parse <sectionInfo> tags
     section_info = ""
@@ -455,7 +477,9 @@ def _parse_section(
     for info in section.find_all("sectionInfo"):
         position = _get_clean_string(info.position)
         if position == "title":
-            section_title = _get_clean_string(section.sectionInfo.find("text"))
+            section_title = _get_clean_string(
+                cast(Tag, cast(Tag, section.sectionInfo).find("text"))
+            )
         elif position in ("before", "after"):
             current_text = " ".join(
                 [
@@ -482,7 +506,7 @@ def _parse_section(
     }
 
 
-def read_lime_questionnaire_structure(filepath: Path) -> dict[str, list[dict]]:
+def read_lime_questionnaire_structure(filepath: Path) -> SurveyStructure:
     """
     Read LimeSurvey XML structure file
 
@@ -514,7 +538,7 @@ def read_lime_questionnaire_structure(filepath: Path) -> dict[str, list[dict]]:
             question_columns_list = _parse_question(question)
             # Add section_id to the columns descriptions
             question_columns_list = [
-                {**column, "section_id": section_dict["id"]}
+                {**column, "section_id": str(section_dict["id"])}
                 for column in question_columns_list
             ]
             # Append to the resulting list of columns

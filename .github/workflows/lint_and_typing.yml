@@ -11,4 +11,4 @@ jobs:
     - run: pip install --upgrade pip
     - run: pip install ruff mypy 
     - run: ruff check .
-    - run: mypy --strict .
+    - run: mypy --strict --install-types --non-interactive .
