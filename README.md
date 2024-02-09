@@ -9,6 +9,7 @@ DO NOT ADD LIMESURVEY FILES FROM THE N2SURVEY TO THIS REPOSITORY!!
      1. Sign NDA
      2. Get access to the data
      3. Unzip file and put folder somewhere.
+     4. You will for example need the following files: `Survey2021_structure.xml` and `Survey2021_Qcode_Acode.csv`
 2. Go to the terminal on your computer. 
 3. Clone project to your computer. 
 ```
