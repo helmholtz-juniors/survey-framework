@@ -1,10 +1,18 @@
-from typing import Iterable, Optional, Union
+from enum import StrEnum, auto
+from typing import Iterable, Optional, Union, cast
 import warnings
 import re
 import pandas as pd
 from pathlib import Path
 
 from .survey_structure import read_lime_questionnaire_structure
+
+
+class QuestionType(StrEnum):
+    FREE = auto()
+    ARRAY = auto()
+    SINGLE_CHOICE = "single-choice"
+    MULTIPLE_CHOICE = "multiple-choice"
 
 
 class LimeSurveyData:
@@ -33,6 +41,12 @@ class LimeSurveyData:
         # Store path to structure file
         self.read_structure(structure_file)
         self.read_responses(responses_file)
+
+    def __str__(self) -> str:
+        string = f"QUESTIONS\n{self.questions}\n"
+        string += f"RESPONSES\n{self.responses}\n"
+        string += f"SECTIONS\n{self.sections}\n"
+        return string
 
     # partially copied from N2Framework
     def read_structure(self, structure_file: Path) -> None:
@@ -75,6 +89,9 @@ class LimeSurveyData:
             transformation_questions (dict, optional): Dict of questions
                 requiring transformation of raw data, e.g. {'depression': 'D3'}
                 or {'supervision': ['E7a', 'E7b']}
+        TODO: we do not currently support the transformation dict.
+              - if unnecessary, remove
+              - if not, move to data_analysis
         """
 
         # Read 1st line of the csv file
@@ -170,7 +187,7 @@ class LimeSurveyData:
             question_responses = question_responses.drop(not_in_structure, axis=1)
         # Ceheck for questions not listed in data csv
         not_in_data = list(set(self.questions.index) - set(question_responses.columns))
-        if not_in_structure:
+        if not_in_data:
             warnings.warn(
                 f"The following questions in the survey structure are not found in the data csv file:\n{not_in_data}"
             )
@@ -249,6 +266,141 @@ class LimeSurveyData:
                     pass
 
         return dtype_dict, datetime_columns
+
+    def get_question(self, question: str, drop_other: bool = False) -> pd.DataFrame:
+        """Get question structure (i.e. subset from self.questions)
+
+        Args:
+            question (str): Name of question or subquestion
+            drop_other (bool, optional): Whether to exclude contingent question (i.e. "other")
+        Raises:
+            ValueError: There is no such question or subquestion
+
+        Returns:
+            pd.DataFrame: Subset from `self.questions` with corresponding rows
+        """
+
+        questions_subdf = self.questions[
+            (self.questions["question_group"] == question)
+            | (self.questions.index == question)
+        ]
+
+        if questions_subdf.empty:
+            raise ValueError(f"Unexpected question code '{question}'")
+
+        if drop_other:
+            questions_subdf = questions_subdf[~questions_subdf.is_contingent]
+
+        return questions_subdf
+
+    def get_choices(self, question: str) -> dict[str, str]:
+        """Get choices of a question
+
+        * For multiple-choice group, format is `<subquestion code: subquestion title>`,
+        for example, {"C3_SQ001": "I do not like scientific work.", "C3_SQ002": ...}
+        * For all other fixed questions (i.e. array, single choice, subquestion), returns
+          choices of that question or column
+        * For free and contingent, returns None
+
+        Args:
+            question (str): Name of question or subquestion to retrieve
+
+        Returns:
+            dict: dict of choices mappings
+        """
+
+        question_info = self.get_question(question)
+        question_info = question_info[~question_info.is_contingent]
+        question_type = self.get_question_type(question)
+
+        # If set of multiple-choice questions
+        if (question_info.shape[0] > 1) and (
+            question_type == QuestionType.MULTIPLE_CHOICE
+        ):
+            # Flatten nested dict and get choice text directly for multiple-choice
+            choices_dict = {
+                cast(str, index): row.choices["Y"]
+                for index, row in question_info.iterrows()
+            }
+        # If single-choice, free, individual subquestion, or array
+        else:
+            choices_dict = question_info.choices[0]
+
+        return choices_dict
+
+    def get_responses(
+        self,
+        question: str,
+        drop_other: bool = False,
+    ) -> pd.DataFrame:
+        """Get responses for a given question with or without labels
+        (and with or without contingent questions).
+
+        Args:
+            question (str): Question to get the responses for.
+            drop_other (bool, optional): Whether to exclude contingent question (i.e. "other")
+
+        Raises:
+            ValueError: Inconsistent question types within question groups.
+            ValueError: Unknown question types.
+
+        Returns:
+            [pd.DataFrame]: The response for the selected question.
+        """
+        question_group = self.get_question(question, drop_other=drop_other)
+        question_type = self.get_question_type(question)
+
+        responses = self.responses.loc[:, question_group.index]  # type:ignore  # see similar issue in read_responses; unclear if mypy is wrong or we actually misuse pandas here
+
+        # convert multiple-choice responses
+        if question_type == QuestionType.MULTIPLE_CHOICE:
+            # ASSUME: question response consists of multiple columns with
+            #         'Y' or NaN as entries.
+            # Masked with boolean values the responses with nan only for the columns where is_contingent is True.
+            responses[
+                question_group.index[~question_group.is_contingent]
+            ] = responses.loc[:, ~question_group.is_contingent].notnull()
+
+        return responses
+
+    def get_question_type(self, question: str) -> QuestionType:
+        """Get question type and validate it
+
+        Args:
+            question (str): question or column code
+
+        Raises:
+            AssertionError: Unconsistent question types within question
+            ValueError: Unexpected question type
+
+        Returns:
+            QuestionType: Question type like "single-choice", "array", etc.
+        """
+
+        question_group = self.get_question(question)
+        question_types = question_group.type.unique()
+
+        if len(question_types) > 1:
+            raise AssertionError(
+                f"Question {question} has multiple types {list(question_types)}."
+            )
+
+        question_type = QuestionType(question_types[0])
+
+        return question_type
+
+    def query(self, expr: str) -> pd.DataFrame:
+        """Filter responses DataFrame with a boolean expression
+
+        Args:
+            expr (str): Condition str for pd.DataFrame.query().
+                E.g. "A6 == 'A3' & "B2 == 'A5'"
+
+        Returns:
+            pd.DataFrame: Filtered responses
+        """
+
+        return self.responses.query(expr)
 
     def add_responses(
         self,

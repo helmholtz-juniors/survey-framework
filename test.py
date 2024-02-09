@@ -27,15 +27,25 @@ from pathlib import Path
 
 def main() -> None:
     # important files and paths
-    INPUT_PATH = ""
-    XML_FILE_NAME = "data/survey_structure_2021_v2.xml"
-    CSV_FILE_NAME = "data/dummy_data_2021_codeonly_v2.csv"
+    INPUT_PATH = "../hejus/Survey2021_Package_protected"
+    # XML_FILE_NAME = "data/survey_structure_2021_v2.xml"
+    # CSV_FILE_NAME = "data/dummy_data_2021_codeonly_v2.csv"
+    XML_FILE_NAME = "Survey2021_structure.xml"
+    CSV_FILE_NAME = "Survey2021_Qcode_Acode.csv"
 
-    _ = LimeSurveyData(
-        Path(INPUT_PATH + XML_FILE_NAME), Path(INPUT_PATH + CSV_FILE_NAME)
+    survey = LimeSurveyData(
+        Path(INPUT_PATH) / XML_FILE_NAME, Path(INPUT_PATH) / CSV_FILE_NAME
     )
 
-    print("HelloWorld")
+    # print(survey)
+
+    print(survey.get_choices("B8"))
+    print(survey.get_responses("B8"))
+
+    # get all multiple choice questions
+    # for q, _ in survey.questions.iterrows():
+    #     if survey.get_question_type(q) == "multiple-choice":
+    #         print(q)
 
 
 if __name__ == "__main__":
