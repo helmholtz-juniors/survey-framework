@@ -28,4 +28,7 @@ pip install -r requirements.txt
 Style: Google
 https://google.github.io/styleguide/pyguide.html#Comments
 
+# Nice to Know
+- contingent questions are the longtext open ended questions added to other questions, e.g. `A2` and `A2other`
+
 
