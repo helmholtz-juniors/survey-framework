@@ -1,6 +1,7 @@
 import pandas as pd
 from data_import.data_import import LimeSurveyData
 
+
 def get_data_for_q(
     survey: LimeSurveyData,
     question_number: str,
@@ -14,12 +15,12 @@ def get_data_for_q(
 
     Returns:
         pd.DataFrame: _description_
-    """    
+    """
     responses = survey.get_responses(question_number, drop_other=True)
     # change types of all columns to object
     responses = responses.astype("object")
     # make id column by resetting the index
     responses = responses.reset_index()
     # change id column to type string
-    responses = responses.astype({'id': "string"})
+    responses = responses.astype({"id": "string"})
     return responses

@@ -1,16 +1,7 @@
-from enum import Enum, StrEnum
-from pathlib import Path
-import seaborn as sns
 import matplotlib.pyplot as plt
-from textwrap import wrap
-import numpy as np
-import matplotlib.ticker as mtick
-from textwrap import wrap
 import pandas as pd
 
-import plotting.helmholtzcolors as hc
 from data_import.data_import import LimeSurveyData
-from data_analysis.analysis import get_data_for_q
 from plotting.plotenums import PercentCount, ShowAxesLabel
 from plotting.plots import add_axes_labels, add_tick_labels, plot_barplot
 

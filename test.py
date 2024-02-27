@@ -31,16 +31,16 @@ from data_analysis.analysis import get_data_for_q
 import matplotlib.pyplot as plt
 
 
-def test_plots_A(survey: LimeSurveyData, output_path: Path) -> None:
-    section = "A"
-    a6 = "A6"  # gender representation
-    a7 = "A7"  # sexual orientation
-    a11 = "A11"  # citizenship
-    a10 = "A10"  # ethnicity
-    a4 = "A4"  # type of work
-    a3 = "A3"  # field of work (subject)
+# def test_plots_A(survey: LimeSurveyData, output_path: Path) -> None:
+# section = "A"
+# a6 = "A6"  # gender representation
+# a7 = "A7"  # sexual orientation
+# a11 = "A11"  # citizenship
+# a10 = "A10"  # ethnicity
+# a4 = "A4"  # type of work
+# a3 = "A3"  # field of work (subject)
 
-    output_a6 = output_path / Path(section) / Path(a6 + "png")
+# output_a6 = output_path / Path(section) / Path(a6 + "png")
 
 
 def test_plots_A2(survey: LimeSurveyData, output_path: Path) -> None:
@@ -61,7 +61,9 @@ def test_plots_A2(survey: LimeSurveyData, output_path: Path) -> None:
     N_question = survey.responses[question].count()
     data_q_all = get_data_for_q(survey, question)
     data_q_all_dropna = data_q_all.dropna()
-    data_q_counts = data_q_all.groupby(["A2"]).count().rename(columns={"id": "count"})
+    data_q_counts = (
+        data_q_all_dropna.groupby(["A2"]).count().rename(columns={"id": "count"})
+    )
 
     order_A2 = [
         "A1",
