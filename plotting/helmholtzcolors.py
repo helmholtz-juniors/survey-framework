@@ -5,6 +5,7 @@ Created on Sun Sep  4 11:50:52 2022
 
 @author: jenpopp
 """
+from typing import cast
 import seaborn as sns
 
 # helmholtzcolors.py
@@ -34,11 +35,13 @@ green80 = "#aecd5e"
 
 
 def get_blues(n: int) -> list[tuple[float, float, float]]:
-    return sns.blend_palette([darkblue, helmholtzblue, blue60, blue40], n)
+    blues = sns.blend_palette([darkblue, helmholtzblue, blue60, blue40], n)
+    return cast(list[tuple[float, float, float]], blues)
 
 
 def get_greens(n: int) -> list[tuple[float, float, float]]:
-    return sns.blend_palette([darkgreen, helmholtzgreen, green60, "#dbeeaa"], n)
+    greens = sns.blend_palette([darkgreen, helmholtzgreen, green60, "#dbeeaa"], n)
+    return cast(list[tuple[float, float, float]], greens)
 
 
 arraycolors131 = [helmholtzblue, grey40, grey60, grey80, helmholtzgreen]

@@ -24,11 +24,14 @@ WARNING: For this to work H1a_SQ008 has to be adapted in the XML file from ` to 
 import pandas as pd
 from data_import.data_import import LimeSurveyData
 from plotting.barplots import plot_bar
-from plotting.barplots_sidebyside import plot_bar_side_by_side
+
+# from plotting.barplots_sidebyside import plot_bar_side_by_side
 from pathlib import Path
 from data_analysis.analysis import get_data_for_q
 
 import matplotlib.pyplot as plt
+
+from plotting.plotenums import ShowAxesLabel
 
 
 # def test_plots_A(survey: LimeSurveyData, output_path: Path) -> None:
@@ -105,7 +108,7 @@ def test_plots_A2(survey: LimeSurveyData, output_path: Path) -> None:
         N_question,
         label_q_data="Centers",
         orientation="v",
-        show_axes_labels="c",
+        show_axes_labels=ShowAxesLabel.COUNT,
     )
 
     # use bbox_inches="tight" to get rid of borders, however then fontsize in tex will change
@@ -125,13 +128,13 @@ def test_plots_E(survey: LimeSurveyData, output_path: Path) -> None:
     data_e5_all = data_e5_all.dropna()
     data_e6_all = data_e6_all.dropna()
 
-    figure, axis = plot_bar_side_by_side(
-        survey=survey,
-        data_left=data_e5_all,
-        data_right=data_e6_all,
-        y_left=e5a,
-        y_right=e6a,
-    )
+    # figure, axis = plot_bar_side_by_side(
+    #     survey=survey,
+    #     data_left=data_e5_all,
+    #     data_right=data_e6_all,
+    #     y_left=e5a,
+    #     y_right=e6a,
+    # )
 
     plt.savefig(output)
 
@@ -152,7 +155,7 @@ def main() -> None:
     # survey.export_Qs_to_CSV(Path(OUTPUT_PATH))
 
     # test_plots_E(survey, OUTPUT_PATH)
-    test_plots_A2(survey, output_path=OUTPUT_PATH)
+    test_plots_A2(survey, output_path=Path(OUTPUT_PATH))
 
     # print(survey.get_choices("B8"))
     # print(survey.get_responses("B8"))
