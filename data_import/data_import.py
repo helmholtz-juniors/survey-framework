@@ -121,8 +121,8 @@ class LimeSurveyData:
             raw_data = True
 
             # Identify columns for survey questions
-            first_question = columns.get_loc("datestamp") + 1
-            last_question = columns.get_loc("interviewtime") - 1
+            first_question = cast(int, columns.get_loc("datestamp")) + 1
+            last_question = cast(int, columns.get_loc("interviewtime")) - 1
             question_columns = renamed_columns[first_question : last_question + 1]
 
             # Split df into question responses and timing info
@@ -165,7 +165,7 @@ class LimeSurveyData:
             ]
             for question in multiple_choice_questions:
                 question_responses.insert(
-                    question_responses.columns.get_loc(question),
+                    cast(int, question_responses.columns.get_loc(question)),
                     self.questions.loc[question, "contingent_of_name"],
                     # Fill in new column based on "{question_id}other" column data
                     pd.Series(
