@@ -17,5 +17,9 @@ repos:
     rev: "v1.8.0" # Use the sha / tag you want to point at
     hooks:
       - id: mypy
-        additional_dependencies: [types-seaborn==0.13.2.20240205]
+        additional_dependencies:
+          [
+            types-beautifulsoup4==4.12.0.20240106,
+            types-seaborn==0.13.2.20240205,
+          ]
         args: [--strict]
