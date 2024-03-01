@@ -139,7 +139,7 @@ def plot_barplot(
                         y=list(data_df[question]),
                         hue=hue_input,
                         palette=colors,
-                        orient=orientation,
+                        orient="h",
                     )
                 case Orientation.VERTICAL:
                     # counts + vertical
@@ -148,7 +148,7 @@ def plot_barplot(
                         x=list(data_df[question]),
                         hue=hue_input,
                         palette=colors,
-                        orient=orientation,
+                        orient="v",
                     )
         case PercentCount.PERCENT:
             match orientation:
@@ -159,7 +159,7 @@ def plot_barplot(
                         y=list(data_df[question]),
                         hue=hue_input,
                         palette=colors,
-                        orient=orientation,
+                        orient="h",
                     )
                 case Orientation.VERTICAL:
                     # percentages + vertical
@@ -168,7 +168,7 @@ def plot_barplot(
                         x=list(data_df[question]),
                         hue=hue_input,
                         palette=colors,
-                        orient=orientation,
+                        orient="v",
                     )
 
     return fig, ax
