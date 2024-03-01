@@ -1,8 +1,10 @@
-from enum import UNIQUE, Enum, StrEnum, verify
-from typing import assert_never
+from enum import Enum, StrEnum
+
+
 class Orientation(StrEnum):
     VERTICAL = "v"
     HORIZONTAL = "h"
+
 
 class PercentCount(StrEnum):
     PERCENT = "Percentage"
@@ -15,12 +17,17 @@ class ShowAxesLabel(Enum):
     PERCENT = 3
 
 
-def validateOrientation(orientation: Orientation) -> None: 
+def validateOrientation(orientation: Orientation) -> None:
     if orientation == Orientation.VERTICAL or orientation == Orientation.HORIZONTAL:
-        return 
-    raise ValueError(f'Invalid value for Orientation: {orientation}. Expected \'Orientation.VERTICAL = "v"\' or \'Orientation.HORIZONTAL = "h"\'')
+        return
+    raise ValueError(
+        f"Invalid value for Orientation: {orientation}. Expected 'Orientation.VERTICAL = \"v\"' or 'Orientation.HORIZONTAL = \"h\"'"
+    )
 
-def validatePercentCount(percentcount: PercentCount) -> None: 
+
+def validatePercentCount(percentcount: PercentCount) -> None:
     if percentcount == PercentCount.PERCENT or percentcount == PercentCount.COUNT:
-        return 
-    raise ValueError(f'Invalid value for PercentCount: {percentcount}. Expected \'PercentCount.PERCENT = "Percentages"\' or \'PercentCount.COUNT = "Count"\'')
+        return
+    raise ValueError(
+        f"Invalid value for PercentCount: {percentcount}. Expected 'PercentCount.PERCENT = \"Percentages\"' or 'PercentCount.COUNT = \"Count\"'"
+    )

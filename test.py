@@ -21,18 +21,16 @@ K - Covid-19
 WARNING: For this to work H1a_SQ008 has to be adapted in the XML file from ` to ' in the "don't" (otherwise H1a_SQ008 and H1b_SQ008 will not map to each other)
 """
 
-import pandas as pd
+# import pandas as pd
 from data_import.data_import import LimeSurveyData
-from plotting.barplots import plot_bar
+# from plotting.barplots import plot_bar
 
 # from plotting.barplots_sidebyside import plot_bar_side_by_side
 from pathlib import Path
 from data_analysis.analysis import get_data_for_q
-from order.order2021 import *
+# from order.order2021 import *
 
 import matplotlib.pyplot as plt
-
-from plotting.plotenums import ShowAxesLabel
 
 
 def test_plots_E(survey: LimeSurveyData, output_path: Path) -> None:
@@ -74,7 +72,7 @@ def main() -> None:
 
     # survey.export_Qs_to_CSV(Path(OUTPUT_PATH))
 
-    test_plots_E(survey, OUTPUT_PATH)
+    test_plots_E(survey, Path(OUTPUT_PATH))
 
     # print(survey.get_choices("B8"))
     # print(survey.get_responses("B8"))

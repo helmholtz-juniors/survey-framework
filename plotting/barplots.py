@@ -7,7 +7,6 @@ from plotting.plots import adapt_legend, add_axes_labels, add_tick_labels, plot_
 
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure
-from typing import Literal
 
 
 def plot_bar(
@@ -23,7 +22,7 @@ def plot_bar(
     fontsize: int = 10,
     show_axes_labels: ShowAxesLabel = ShowAxesLabel.NONE,
     text_wrap: int = 25,
-) -> tuple[Figure, Axes, Axes]:
+) -> tuple[Figure, Axes]:
     """
     plot bar plots (single and multiple)
 
@@ -78,7 +77,7 @@ def plot_bar(
     # add tick labels (the ones below or next to the bars outside of the plot)
     ax = add_tick_labels(
         survey=survey,
-        plot=ax,
+        ax=ax,
         data_df=data_df,
         question=question,
         orientation=orientation,
@@ -113,7 +112,7 @@ def plot_bar_comparison(
     fontsize: int = 10,
     show_axes_labels: ShowAxesLabel = ShowAxesLabel.NONE,
     text_wrap: int = 25,
-) -> tuple[Figure, Axes, Axes]:
+) -> tuple[Figure, Axes]:
     """
     plot comparison bar plots (single and multiple)
 
@@ -159,21 +158,20 @@ def plot_bar_comparison(
         fontsize=fontsize,
     )
 
-
     # add tick labels (the ones below or next to the bars outside of the plot)
     ax = add_tick_labels(
         survey=survey,
-        plot=ax,
-        data_df=data_df[question].value_counts(),
+        ax=ax,
+        data_df=pd.DataFrame(data_df[question].value_counts()),
         question=question,
         orientation=orientation,
         fontsize=fontsize,
         text_wrap=text_wrap,
     )
 
-    # adapt legend 
+    # adapt legend
     ax = adapt_legend(
-        survey=survey, plot=ax, question=question_comparison, text_wrap=text_wrap
+        survey=survey, ax=ax, question=question_comparison, text_wrap=text_wrap
     )
 
     # add general labels to axes

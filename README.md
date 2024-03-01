@@ -40,7 +40,7 @@ https://google.github.io/styleguide/pyguide.html#Comments
      3. pop the stash to resolve merge conflicts with git `git stash pop`
           1. remember that there can be more than one stash, if you don't want to pop the last one check `git stash list` and then use `git stash apply` or `git stash apply stash@{2}` or whichever one you want to apply
           2. `git stash pop` will also remove the last added stash from the stash list
-2. use `pre-commit --all-files` to check whether `ruff` and `mypy` are happy 
+2. use `pre-commit` to check whether `ruff` and `mypy` are happy 
      1. do this within the `(.venv)` environment to make sure your version complys with the requirements in `requirements.txt`
 3. add files to be comitted 
 4. commit everything to a (new) branch

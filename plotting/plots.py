@@ -1,16 +1,21 @@
-from enum import verify
 from textwrap import wrap
 from matplotlib import pyplot as plt
 import pandas as pd
 from data_import.data_import import LimeSurveyData, QuestionType
-from plotting.plotenums import Orientation, PercentCount, ShowAxesLabel, validateOrientation, validatePercentCount
+from plotting.plotenums import (
+    Orientation,
+    PercentCount,
+    ShowAxesLabel,
+    validateOrientation,
+    validatePercentCount,
+)
 import seaborn as sns
 import plotting.helmholtzcolors as hc
 
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 from matplotlib.patches import Rectangle
-from typing import Literal, cast, Iterable
+from typing import cast, Iterable
 
 
 def add_axes_labels(
@@ -171,7 +176,7 @@ def plot_barplot(
 
 def add_tick_labels(
     survey: LimeSurveyData,
-    plot: Axes,
+    ax: Axes,
     data_df: pd.DataFrame,
     question: str,
     orientation: Orientation,
@@ -201,7 +206,7 @@ def add_tick_labels(
     match orientation:
         case Orientation.HORIZONTAL:
             # get all current y-ticklabels
-            y_ticklabels = [item.get_text() for item in plot.get_yticklabels()]
+            y_ticklabels = [item.get_text() for item in ax.get_yticklabels()]
             # change text of all ticklabels
             for i in range(0, len(y_ticklabels)):
                 # figure out if question type is SINGLE or MULTIPLE_CHOICE
@@ -214,11 +219,11 @@ def add_tick_labels(
                 # wrap labels
                 y_ticklabels[i] = "\n".join(wrap(label, text_wrap))
             # update labels
-            plot.set_yticks(range(len(data_df)))
-            plot.set_yticklabels(y_ticklabels, fontsize=fontsize)
+            ax.set_yticks(range(len(data_df)))
+            ax.set_yticklabels(y_ticklabels, fontsize=fontsize)
         case Orientation.VERTICAL:
             # get all current x-ticklabels
-            x_ticklabels = [item.get_text() for item in plot.get_xticklabels()]
+            x_ticklabels = [item.get_text() for item in ax.get_xticklabels()]
             # change text of all ticklabels
             for i in range(0, len(x_ticklabels)):
                 # figure out if question type is SINGLE or MULTIPLE_CHOICE
@@ -231,8 +236,8 @@ def add_tick_labels(
                 # wrap labels
                 x_ticklabels[i] = "\n".join(wrap(label, text_wrap))
             # update labels
-            plot.set_xticks(range(len(data_df)))
-            plot.set_xticklabels(
+            ax.set_xticks(range(len(data_df)))
+            ax.set_xticklabels(
                 x_ticklabels,
                 fontsize=fontsize,
                 rotation=45,
@@ -240,7 +245,7 @@ def add_tick_labels(
                 rotation_mode="anchor",
             )
 
-    return plot
+    return ax
 
 
 def adapt_legend(
@@ -254,4 +259,3 @@ def adapt_legend(
     ax.legend(handles=handles, labels=labels, bbox_to_anchor=(1, 0.97))
 
     return ax
-

@@ -25,20 +25,13 @@ import pandas as pd
 from data_import.data_import import LimeSurveyData
 from helper import directories
 from plotting.barplots import plot_bar, plot_bar_comparison
-# from plotting.barplots_sidebyside import plot_bar_side_by_side
 from pathlib import Path
 from data_analysis.analysis import get_data_for_q
-from order.order2021 import *
-
-# import matplotlib
-# print("--------------------------\n")
-# print(matplotlib.get_backend())
-# print("--------------------------\n")
-
+from order.order2021 import order_A2, order_A6
 
 import matplotlib.pyplot as plt
 
-from plotting.plotenums import Orientation, PercentCount
+from plotting.plotenums import Orientation, PercentCount, ShowAxesLabel
 
 
 sectionA = "A"
@@ -90,8 +83,8 @@ def test_plots_A2_single(survey: LimeSurveyData, output_path: Path) -> None:
         question=a2,
         n_question=N_question,
         label_q_data="Centers",
-        orientation="v",
-        show_axes_labels="c",
+        orientation=Orientation.VERTICAL,
+        show_axes_labels=ShowAxesLabel.NONE,
     )
 
     # use bbox_inches="tight" to get rid of borders, however then fontsize in tex will change
@@ -155,9 +148,10 @@ def main() -> None:
         Path(INPUT_PATH) / XML_FILE_NAME, Path(INPUT_PATH) / CSV_FILE_NAME
     )
 
-    # test_plots_A2_single(survey, output_path=OUTPUT_PATH)
+    # test_plots_A2_single(survey, output_path=Path(OUTPUT_PATH))
 
-    test_plots_A2_comparison_A6(survey, output_path=OUTPUT_PATH)
+    test_plots_A2_comparison_A6(survey, output_path=Path(OUTPUT_PATH))
+
 
 if __name__ == "__main__":
     main()
