@@ -1,26 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-@author: cguthoff
-
-Created Jan 2023
-
-A - General
-B - Working Conditions
-C - Satisfaction
-D - Mental Health
-E - Supervision
-F - Power Abuse
-H - Integration
-	H1a support received
-	H1b support needed
-I - Career Development
-J - Family
-K - Covid-19
-
-WARNING: For this to work H1a_SQ008 has to be adapted in the XML file from ` to ' in the "don't" (otherwise H1a_SQ008 and H1b_SQ008 will not map to each other)
-"""
-
 import pandas as pd
 from data_import.data_import import LimeSurveyData
 from helper import directories
@@ -87,7 +64,6 @@ def test_plots_A2_single(survey: LimeSurveyData, output_path: Path) -> None:
         show_axes_labels=ShowAxesLabel.NONE,
     )
 
-    # use bbox_inches="tight" to get rid of borders, however then fontsize in tex will change
     plt.savefig(output)
 
 

@@ -30,8 +30,7 @@ Style: Google
 https://google.github.io/styleguide/pyguide.html#Comments
 
 # Nice to Know
-- contingent questions are the longtext open ended questions added to other questions, e.g. `A2` and `A2other`
-
+- contingent questions are the longtext open ended questions added to other questions, e.g. `A2` and `A2other` 
 
 # How to Commit
 1. pull the current project status `git pull`
