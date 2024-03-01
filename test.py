@@ -28,91 +28,11 @@ from plotting.barplots import plot_bar
 # from plotting.barplots_sidebyside import plot_bar_side_by_side
 from pathlib import Path
 from data_analysis.analysis import get_data_for_q
+from order.order2021 import *
 
 import matplotlib.pyplot as plt
 
 from plotting.plotenums import ShowAxesLabel
-
-
-# def test_plots_A(survey: LimeSurveyData, output_path: Path) -> None:
-# section = "A"
-# a6 = "A6"  # gender representation
-# a7 = "A7"  # sexual orientation
-# a11 = "A11"  # citizenship
-# a10 = "A10"  # ethnicity
-# a4 = "A4"  # type of work
-# a3 = "A3"  # field of work (subject)
-
-# output_a6 = output_path / Path(section) / Path(a6 + "png")
-
-
-def test_plots_A2(survey: LimeSurveyData, output_path: Path) -> None:
-    section = "A"
-    question = "A2"
-
-    def directories(path: Path) -> None:
-        if path.is_dir():
-            return
-        else:
-            path.mkdir()
-            return
-
-    output = output_path / Path(section)
-    directories(output)
-    output = output / Path(question + ".pdf")
-
-    N_question = survey.responses[question].count()
-    data_q_all = get_data_for_q(survey, question)
-    data_q_all_dropna = data_q_all.dropna()
-    data_q_counts = (
-        data_q_all_dropna.groupby(["A2"]).count().rename(columns={"id": "count"})
-    )
-
-    order_A2 = [
-        "A1",
-        "A2",
-        "A3",
-        "A4",
-        "A5",
-        "A6",
-        "A7",
-        "A8",
-        "A9",
-        "A10",
-        "A11",
-        "A12",
-        "A13",
-        "A14",
-        "A15",
-        "A16",
-        "A17",
-        "A18",
-        "-oth-",
-    ]
-
-    data_q_counts_sorted = data_q_counts.reset_index()
-    data_q_counts_sorted["A2"] = pd.Categorical(
-        data_q_counts_sorted["A2"], categories=order_A2, ordered=True
-    )
-    data_q_counts_sorted = data_q_counts_sorted.sort_values(by="A2")
-
-    data_q_counts_sorted_percentages = data_q_counts_sorted
-    data_q_counts_sorted_percentages["percentages"] = (
-        data_q_counts_sorted_percentages["count"] / N_question * 100
-    )
-
-    plot, fig, ax = plot_bar(
-        survey,
-        data_q_counts_sorted_percentages,
-        "A2",
-        N_question,
-        label_q_data="Centers",
-        orientation="v",
-        show_axes_labels=ShowAxesLabel.COUNT,
-    )
-
-    # use bbox_inches="tight" to get rid of borders, however then fontsize in tex will change
-    plt.savefig(output)
 
 
 def test_plots_E(survey: LimeSurveyData, output_path: Path) -> None:
@@ -154,8 +74,7 @@ def main() -> None:
 
     # survey.export_Qs_to_CSV(Path(OUTPUT_PATH))
 
-    # test_plots_E(survey, OUTPUT_PATH)
-    test_plots_A2(survey, output_path=Path(OUTPUT_PATH))
+    test_plots_E(survey, OUTPUT_PATH)
 
     # print(survey.get_choices("B8"))
     # print(survey.get_responses("B8"))

@@ -1,8 +1,9 @@
+from enum import verify
 from textwrap import wrap
 from matplotlib import pyplot as plt
 import pandas as pd
 from data_import.data_import import LimeSurveyData, QuestionType
-from plotting.plotenums import PercentCount, ShowAxesLabel
+from plotting.plotenums import Orientation, PercentCount, ShowAxesLabel, validateOrientation, validatePercentCount
 import seaborn as sns
 import plotting.helmholtzcolors as hc
 
@@ -16,7 +17,7 @@ def add_axes_labels(
     fig: Figure,
     ax: Axes,
     data_df: pd.DataFrame,
-    orientation: Literal["h", "v"],
+    orientation: Orientation,
     show_axes_labels: ShowAxesLabel,
 ) -> tuple[Figure, Axes]:
     """
@@ -33,6 +34,7 @@ def add_axes_labels(
     Returns:
         tuple[Figure, Axes]: modified figure and axes
     """
+    validateOrientation(orientation)
 
     labels = []
 
@@ -52,7 +54,7 @@ def add_axes_labels(
     rects = cast(Iterable[Rectangle], ax.patches)
     # match over orientation
     match orientation:
-        case "h":
+        case Orientation.HORIZONTAL:
             for rect, label in zip(rects, labels):
                 # calculate y_value
                 y_value = rect.get_y() + rect.get_height() / 2
@@ -60,7 +62,7 @@ def add_axes_labels(
                 x_value = rect.get_width()
                 # add text to bar
                 ax.text(x_value, y_value, label, ha="left", va="center")
-        case "v":
+        case Orientation.VERTICAL:
             for rect, label in zip(rects, labels):
                 # calculate x_value
                 x_value = rect.get_x() + rect.get_width() / 2
@@ -75,11 +77,13 @@ def add_axes_labels(
 def plot_barplot(
     data_df: pd.DataFrame,
     question: str,
-    orientation: Literal["h", "v"],
+    orientation: Orientation,
     percentcount: PercentCount,
     fig_size_x: int,
     fig_size_y: int,
-) -> tuple[Figure, Axes, Axes]:
+    comparison: bool = False,
+    hue: str = "",
+) -> tuple[Figure, Axes]:
     """
     plot bar plot with processed data
 
@@ -90,10 +94,26 @@ def plot_barplot(
         percentcount (PercentCount): whether plot shows counts or percent
         fig_size_x (int): x-axis size of figure
         fig_size_y (int): y-axis size of figure
+        hue (str): hue for plot. Defaults to "".
 
     Returns:
-        tuple[Figure, Axes, Axes]: modified figure, axes and plot
+        tuple[Figure, Axes]: modified figure and axes
     """
+    # validate that input for orientation and percentcount is correct
+    validateOrientation(orientation)
+    validatePercentCount(percentcount)
+
+    # built input for hue and colors for plotting
+    hue_input = list()
+    colors = list()
+    if comparison:
+        # if it's a comparison bar plot, hue needs to be filled with a list of comparison data
+        hue_input = list(data_df[hue])
+        colors = hc.get_blues(len(data_df[hue].value_counts()))
+    else:
+        # otherwise, hue needs to be equal to the question data
+        hue_input = list(data_df[question])
+        colors = hc.get_blues(len(data_df))
 
     # set seaborn style
     sns.set_style("darkgrid", {"axes.facecolor": "#f2f0f0"})
@@ -102,52 +122,51 @@ def plot_barplot(
     fig, ax = plt.subplots(
         dpi=300, figsize=(fig_size_x, fig_size_y), layout="constrained"
     )
-    colors = hc.get_blues(len(data_df))
 
     # plot graphs
     match percentcount:
         case PercentCount.COUNT:
             match orientation:
-                case "h":
+                case Orientation.HORIZONTAL:
                     # counts + horizontal
-                    plot = sns.barplot(
+                    ax = sns.barplot(
                         x=data_df["count"],
                         y=list(data_df[question]),
-                        hue=list(data_df[question]),
+                        hue=hue_input,
                         palette=colors,
                         orient=orientation,
                     )
-                case "v":
+                case Orientation.VERTICAL:
                     # counts + vertical
-                    plot = sns.barplot(
+                    ax = sns.barplot(
                         y=data_df["count"],
                         x=list(data_df[question]),
-                        hue=list(data_df[question]),
+                        hue=hue_input,
                         palette=colors,
                         orient=orientation,
                     )
         case PercentCount.PERCENT:
             match orientation:
-                case "h":
+                case Orientation.HORIZONTAL:
                     # percentages + horizontal
-                    plot = sns.barplot(
+                    ax = sns.barplot(
                         x=data_df["percentages"],
                         y=list(data_df[question]),
-                        hue=list(data_df[question]),
+                        hue=hue_input,
                         palette=colors,
                         orient=orientation,
                     )
-                case "v":
+                case Orientation.VERTICAL:
                     # percentages + vertical
-                    plot = sns.barplot(
+                    ax = sns.barplot(
                         y=data_df["percentages"],
                         x=list(data_df[question]),
-                        hue=list(data_df[question]),
+                        hue=hue_input,
                         palette=colors,
                         orient=orientation,
                     )
 
-    return fig, ax, plot
+    return fig, ax
 
 
 def add_tick_labels(
@@ -155,7 +174,7 @@ def add_tick_labels(
     plot: Axes,
     data_df: pd.DataFrame,
     question: str,
-    orientation: Literal["h", "v"],
+    orientation: Orientation,
     fontsize: int,
     text_wrap: int,
 ) -> Axes:
@@ -176,10 +195,11 @@ def add_tick_labels(
     Returns:
         Axes: _description_
     """
+    validateOrientation(orientation)
 
     # match on orientation of plot
     match orientation:
-        case "h":
+        case Orientation.HORIZONTAL:
             # get all current y-ticklabels
             y_ticklabels = [item.get_text() for item in plot.get_yticklabels()]
             # change text of all ticklabels
@@ -196,7 +216,7 @@ def add_tick_labels(
             # update labels
             plot.set_yticks(range(len(data_df)))
             plot.set_yticklabels(y_ticklabels, fontsize=fontsize)
-        case "v":
+        case Orientation.VERTICAL:
             # get all current x-ticklabels
             x_ticklabels = [item.get_text() for item in plot.get_xticklabels()]
             # change text of all ticklabels
@@ -221,3 +241,17 @@ def add_tick_labels(
             )
 
     return plot
+
+
+def adapt_legend(
+    survey: LimeSurveyData, ax: Axes, question: str, text_wrap: int
+) -> Axes:
+    # rename legend and move below N
+    handles, labels = ax.get_legend_handles_labels()
+    for i in range(0, len(labels)):
+        label = survey.questions.choices[question][labels[i]]
+        labels[i] = "\n".join(wrap(label, 30))
+    ax.legend(handles=handles, labels=labels, bbox_to_anchor=(1, 0.97))
+
+    return ax
+

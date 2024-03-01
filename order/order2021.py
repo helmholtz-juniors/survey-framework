@@ -43,6 +43,7 @@ order_A3 = [
     "-oth-",
 ]
 order_A4 = ["A1", "A2", "A3", "A4", "A5", "A6", "A7", "-oth-"]
+order_A6 = ["A1", "A3", "A4", "A5", "A2", "-oth-"]
 order_A10 = [
     "A10_SQ001",
     "A10_SQ002",
