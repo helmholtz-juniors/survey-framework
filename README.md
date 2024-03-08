@@ -25,12 +25,8 @@ We use [pre-commit](https://pre-commit.com/#intro) to ensure quality of code. Th
 pip install -r requirements.txt
 ```
 
-# DocStrings
-Style: Google
-https://google.github.io/styleguide/pyguide.html#Comments
-
-# Nice to Know
-- contingent questions are the longtext open ended questions added to other questions, e.g. `A2` and `A2other` 
+# Reviewing
+Please only send requests for reviews to two people of the following set: Florian Handtke, Keno Hassler or Carolyn Guthoff. 
 
 # How to Commit
 DO NOT COMMIT TO THE MAIN BRANCH!!!
@@ -58,6 +54,13 @@ DO NOT COMMIT TO THE MAIN BRANCH!!!
 - use `ruff format` to format files, e.g. `ruff format test.py` to format `test.py` or `ruff format` to format everything
 - use `mypy --strict [folder]` for typing errors, also makes sense for debugging
 - use `ruff check --fix` for python linter that warns for imports you didn't use or things you did wrong
+
+# DocStrings
+Style: Google
+https://google.github.io/styleguide/pyguide.html#Comments
+
+# Nice to Know
+- contingent questions are the longtext open ended questions added to other questions, e.g. `A2` and `A2other` 
 
 
 
