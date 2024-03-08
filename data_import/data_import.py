@@ -121,8 +121,8 @@ class LimeSurveyData:
             raw_data = True
 
             # Identify columns for survey questions
-            first_question = columns.get_loc("datestamp") + 1
-            last_question = columns.get_loc("interviewtime") - 1
+            first_question = cast(int, columns.get_loc("datestamp")) + 1
+            last_question = cast(int, columns.get_loc("interviewtime")) - 1
             question_columns = renamed_columns[first_question : last_question + 1]
 
             # Split df into question responses and timing info
@@ -165,7 +165,7 @@ class LimeSurveyData:
             ]
             for question in multiple_choice_questions:
                 question_responses.insert(
-                    question_responses.columns.get_loc(question),
+                    cast(int, question_responses.columns.get_loc(question)),
                     self.questions.loc[question, "contingent_of_name"],
                     # Fill in new column based on "{question_id}other" column data
                     pd.Series(
@@ -185,7 +185,7 @@ class LimeSurveyData:
                 f"The following columns in the data csv file are not found in the survey structure and are dropped:\n{not_in_structure}"
             )
             question_responses = question_responses.drop(not_in_structure, axis=1)
-        # Ceheck for questions not listed in data csv
+        # Check for questions not listed in data csv
         not_in_data = list(set(self.questions.index) - set(question_responses.columns))
         if not_in_data:
             warnings.warn(
@@ -266,6 +266,20 @@ class LimeSurveyData:
                     pass
 
         return dtype_dict, datetime_columns
+
+    def export_Qs_to_CSV(self, output_path: Path) -> None:
+        """
+        export the question sheet from the survey to CSV
+
+        Args:
+            output_path (Path): output path to where CSV is saved
+        """
+        try:
+            output_path.mkdir(parents=True, exist_ok=False)
+        except FileExistsError:
+            print("Folder is already there")
+        output = Path(output_path / "Q.csv")
+        self.questions.to_csv(output)
 
     def get_question(self, question: str, drop_other: bool = False) -> pd.DataFrame:
         """Get question structure (i.e. subset from self.questions)

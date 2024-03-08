@@ -24,8 +24,8 @@ class ResponseData(TypedDict):
     choices: Optional[dict[str, str]]
 
 
-ResponseType: TypeAlias = "tuple[ResponseData, Optional[dict[str, str]]]"
-QuestionType: TypeAlias = "dict[str, Union[str, dict[str, str], None]]"
+ResponseTypeAlias: TypeAlias = "tuple[ResponseData, Optional[dict[str, str]]]"
+QuestionTypeAlias: TypeAlias = "dict[str, Union[str, dict[str, str], None]]"
 
 
 class SectionInfo(TypedDict):
@@ -35,7 +35,7 @@ class SectionInfo(TypedDict):
 
 
 class SurveyStructure(TypedDict):
-    questions: list[QuestionType]
+    questions: list[QuestionTypeAlias]
     sections: list[SectionInfo]
 
 
@@ -147,7 +147,7 @@ def _parse_question_sub_questions(question: Tag) -> list[tuple[str, str]]:
 
 def _parse_single_question_response(
     response: Tag,
-) -> ResponseType:
+) -> ResponseTypeAlias:
     """
     Parse single <response> element of a question
 
@@ -228,7 +228,7 @@ def _parse_single_question_response(
 
 def _parse_question_responses(
     question: Tag,
-) -> list[ResponseType]:
+) -> list[ResponseTypeAlias]:
     """
     Parse all question responses
 
@@ -256,7 +256,7 @@ def _parse_question_responses(
     return parsed_responses
 
 
-def _get_question_group_name(responses: list[ResponseType]) -> str:
+def _get_question_group_name(responses: list[ResponseTypeAlias]) -> str:
     """
     Get a question group name
 
@@ -288,7 +288,7 @@ def _get_question_group_name(responses: list[ResponseType]) -> str:
 
 def _get_question_type(
     subquestions: list[tuple[str, str]],
-    responses: list[ResponseType],
+    responses: list[ResponseTypeAlias],
 ) -> str:
     """Infer question type
 
@@ -320,7 +320,7 @@ def _get_question_type(
 
 def _parse_question(
     question: Tag,
-) -> list[QuestionType]:
+) -> list[QuestionTypeAlias]:
     """
     Parse single <question> section
 
@@ -365,7 +365,7 @@ def _parse_question(
     )
 
     # Combine responses and subquestions
-    columns_list: list[QuestionType] = []
+    columns_list: list[QuestionTypeAlias] = []
     if subquestions_count:
         response, contingent = responses[0]
         assert contingent is None, (
