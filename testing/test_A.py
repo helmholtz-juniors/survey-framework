@@ -1,6 +1,5 @@
 import pandas as pd
 from data_import.data_import import LimeSurveyData
-from helper import directories
 from plotting.barplots import plot_bar, plot_bar_comparison
 from pathlib import Path
 from data_analysis.analysis import get_data_for_q
@@ -33,7 +32,7 @@ a14 = "A14"  # longtext feedback to section
 
 def test_plots_A2_single(survey: LimeSurveyData, output_path: Path) -> None:
     output = output_path / Path(sectionA)
-    directories(output)
+    output.mkdir(exist_ok=True)
     output = output / Path(a2 + ".pdf")
 
     N_question = survey.responses[a2].count()
@@ -69,7 +68,7 @@ def test_plots_A2_single(survey: LimeSurveyData, output_path: Path) -> None:
 
 def test_plots_A10_multiple(survey: LimeSurveyData, output_path: Path) -> None:
     output = output_path / Path(sectionA)
-    directories(output)
+    output.mkdir(exist_ok=True)
     output = output / Path(a10 + ".pdf")
 
     data_q_all = get_data_for_q(survey, a10)
@@ -111,7 +110,7 @@ def test_plots_A10_multiple(survey: LimeSurveyData, output_path: Path) -> None:
 
 def test_plots_A2_comparison_A6(survey: LimeSurveyData, output_path: Path) -> None:
     output = output_path / Path(sectionA)
-    directories(output)
+    output.mkdir(exist_ok=True)
     output = output / Path(a2 + "_" + a6 + ".pdf")
 
     responses_df_all = survey.get_responses(a2, drop_other=True)

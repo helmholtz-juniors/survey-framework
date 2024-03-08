@@ -8,7 +8,7 @@ from testing.test_A import test_A
 def main() -> None:
     # important files and paths
     # INPUT_PATH should be an absolute path to the survey
-    INPUT_PATH = ""
+    INPUT_PATH = "/Users/carolynguthoff/Documents/05_HelmholtzJuniors/Survey2021/data/Survey2021_Package_protected/"
     # file name of survey structure, has ending '.xml'
     XML_FILE_NAME = "Survey2021_structure.xml"
     # file name of survey, has ending '.csv'
