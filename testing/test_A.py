@@ -77,7 +77,7 @@ def test_plots_A10_multiple(survey: LimeSurveyData, output_path: Path) -> None:
 
     responses_df_all = survey.get_responses(a10, drop_other=True)
     responses_df_melted = pd.melt(responses_df_all)
-    responses_df_melted_cleaned = responses_df_melted[responses_df_melted.value == True]
+    responses_df_melted_cleaned = responses_df_melted[responses_df_melted.value]
     responses_df_melted_cleaned_counts = (
         responses_df_melted_cleaned.groupby("name")
         .count()
