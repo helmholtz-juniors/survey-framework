@@ -155,21 +155,9 @@ def test_plots_A2_comparison_A6(survey: LimeSurveyData, output_path: Path) -> No
     plt.savefig(output)
 
 
-def test_A() -> None:
-    # important files and paths
-    INPUT_PATH = "/Users/carolynguthoff/Documents/05_HelmholtzJuniors/Survey2021/data/Survey2021_Package_protected/"
-    # XML_FILE_NAME = "data/survey_structure_2021_v2.xml"
-    # CSV_FILE_NAME = "data/dummy_data_2021_codeonly_v2.csv"
-    XML_FILE_NAME = "Survey2021_structure.xml"
-    CSV_FILE_NAME = "Survey2021_Qcode_Acode.csv"
-    OUTPUT_PATH = "output/"
+def test_A(survey: LimeSurveyData, output_path: Path) -> None:
+    # test_plots_A2_single(survey, output_path)
 
-    survey = LimeSurveyData(
-        Path(INPUT_PATH) / XML_FILE_NAME, Path(INPUT_PATH) / CSV_FILE_NAME
-    )
+    test_plots_A10_multiple(survey, output_path)
 
-    # test_plots_A2_single(survey, output_path=Path(OUTPUT_PATH))
-
-    test_plots_A10_multiple(survey, output_path=Path(OUTPUT_PATH))
-
-    # test_plots_A2_comparison_A6(survey, output_path=Path(OUTPUT_PATH))
+    # test_plots_A2_comparison_A6(survey, output_path)
