@@ -2,7 +2,8 @@ from pathlib import Path
 
 from data_import.data_import import LimeSurveyData
 
-def main() -> None:
+
+def export() -> None:
     # important files and paths
     INPUT_PATH = "/Users/carolynguthoff/Documents/05_HelmholtzJuniors/Survey2021/data/Survey2021_Package_protected/"
 
@@ -15,6 +16,3 @@ def main() -> None:
     )
 
     survey.export_Qs_to_CSV(Path(OUTPUT_PATH))
-
-if __name__ == "__main__":
-    main()

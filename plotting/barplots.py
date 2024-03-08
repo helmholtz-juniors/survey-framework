@@ -2,8 +2,13 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 from data_import.data_import import LimeSurveyData
-from plotting.plotenums import Orientation, PercentCount, ShowAxesLabel
-from plotting.plots import adapt_legend, add_axes_labels, add_tick_labels, plot_barplot
+from plotting.helper_plotenums import Orientation, PercentCount, ShowAxesLabel
+from plotting.helper_plots import (
+    adapt_legend,
+    add_axes_labels,
+    add_tick_labels,
+    plot_barplot,
+)
 
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure
@@ -21,6 +26,7 @@ def plot_bar(
     fig_size_y: int = 10,
     fontsize: int = 10,
     show_axes_labels: ShowAxesLabel = ShowAxesLabel.NONE,
+    fontsize_axes_labels: int = 10,
     text_wrap: int = 25,
 ) -> tuple[Figure, Axes]:
     """
@@ -72,6 +78,7 @@ def plot_bar(
         data_df=data_df,
         orientation=orientation,
         show_axes_labels=show_axes_labels,
+        fontsize=fontsize_axes_labels,
     )
 
     # add tick labels (the ones below or next to the bars outside of the plot)
@@ -111,6 +118,7 @@ def plot_bar_comparison(
     fig_size_y: int = 10,
     fontsize: int = 10,
     show_axes_labels: ShowAxesLabel = ShowAxesLabel.NONE,
+    fontsize_axes_labels: int = 10,
     text_wrap: int = 25,
 ) -> tuple[Figure, Axes]:
     """
@@ -156,6 +164,16 @@ def plot_bar_comparison(
         va="top",
         transform=ax.transAxes,
         fontsize=fontsize,
+    )
+
+    # add bar labels (the ones on top or next to bars within the plot)
+    fig, ax = add_axes_labels(
+        fig=fig,
+        ax=ax,
+        data_df=data_df,
+        orientation=orientation,
+        show_axes_labels=show_axes_labels,
+        fontsize=fontsize_axes_labels,
     )
 
     # add tick labels (the ones below or next to the bars outside of the plot)

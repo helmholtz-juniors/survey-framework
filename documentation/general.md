@@ -1,8 +1,9 @@
 # Where to start
 
-## Export a CSV file
+## Exporting a CSV file
 
-1. go to `testing/export.py`
-2. adapt all necessary parameters like `INPUT_PATH` 
-3. run `testing/export.py`
-4. the `.csv` file will be saved to `output/` if you didn't change the output path in step 2
+* go to `testing/export.py`
+* adapt all necessary parameters like `INPUT_PATH` 
+* go to `main.py` and make sure `main()` calls `export()`
+* run `main.py`
+* the `.csv` file will be saved to `output/` if you didn't change the output path in step 2

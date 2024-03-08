@@ -169,3 +169,6 @@ cython_debug/
 
 # any created output
 output
+
+# Mac files
+.DS_Store

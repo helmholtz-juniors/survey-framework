@@ -34,7 +34,7 @@ def test_plots_E(survey: LimeSurveyData, output_path: Path) -> None:
     plt.savefig(output)
 
 
-def main() -> None:
+def test_E() -> None:
     # important files and paths
     INPUT_PATH = "/Users/carolynguthoff/Documents/05_HelmholtzJuniors/Survey2021/data/Survey2021_Package_protected/"
     # XML_FILE_NAME = "data/survey_structure_2021_v2.xml"
@@ -47,18 +47,9 @@ def main() -> None:
         Path(INPUT_PATH) / XML_FILE_NAME, Path(INPUT_PATH) / CSV_FILE_NAME
     )
 
-    # survey.export_Qs_to_CSV(Path(OUTPUT_PATH))
-
     test_plots_E(survey, Path(OUTPUT_PATH))
-
-    # print(survey.get_choices("B8"))
-    # print(survey.get_responses("B8"))
 
     # get all multiple choice questions
     # for q, _ in survey.questions.iterrows():
     #     if survey.get_question_type(q) == "multiple-choice":
     #         print(q)
-
-
-if __name__ == "__main__":
-    main()

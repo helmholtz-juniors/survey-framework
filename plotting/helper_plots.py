@@ -2,7 +2,7 @@ from textwrap import wrap
 from matplotlib import pyplot as plt
 import pandas as pd
 from data_import.data_import import LimeSurveyData, QuestionType
-from plotting.plotenums import (
+from plotting.helper_plotenums import (
     Orientation,
     PercentCount,
     ShowAxesLabel,
@@ -24,6 +24,7 @@ def add_axes_labels(
     data_df: pd.DataFrame,
     orientation: Orientation,
     show_axes_labels: ShowAxesLabel,
+    fontsize: int,
 ) -> tuple[Figure, Axes]:
     """
     add axes labels to bars
@@ -66,7 +67,9 @@ def add_axes_labels(
                 # calculate x_value
                 x_value = rect.get_width()
                 # add text to bar
-                ax.text(x_value, y_value, label, ha="left", va="center")
+                ax.text(
+                    x_value, y_value, label, ha="left", va="center", fontsize=fontsize
+                )
         case Orientation.VERTICAL:
             for rect, label in zip(rects, labels):
                 # calculate x_value
@@ -74,7 +77,9 @@ def add_axes_labels(
                 # calculate y_value
                 y_value = rect.get_height()
                 # add text to bar
-                ax.text(x_value, y_value, label, ha="center", va="bottom")
+                ax.text(
+                    x_value, y_value, label, ha="center", va="bottom", fontsize=fontsize
+                )
 
     return fig, ax
 

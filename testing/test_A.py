@@ -4,11 +4,11 @@ from helper import directories
 from plotting.barplots import plot_bar, plot_bar_comparison
 from pathlib import Path
 from data_analysis.analysis import get_data_for_q
-from order.order2021 import order_A2, order_A6
+from order.order2021 import order_A2, order_A6, order_A10
 
 import matplotlib.pyplot as plt
 
-from plotting.plotenums import Orientation, PercentCount, ShowAxesLabel
+from plotting.helper_plotenums import Orientation, PercentCount, ShowAxesLabel
 
 
 sectionA = "A"
@@ -67,6 +67,48 @@ def test_plots_A2_single(survey: LimeSurveyData, output_path: Path) -> None:
     plt.savefig(output)
 
 
+def test_plots_A10_multiple(survey: LimeSurveyData, output_path: Path) -> None:
+    output = output_path / Path(sectionA)
+    directories(output)
+    output = output / Path(a10 + ".pdf")
+
+    data_q_all = get_data_for_q(survey, a10)
+    N_question = len(data_q_all.index)
+
+    responses_df_all = survey.get_responses(a10, drop_other=True)
+    responses_df_melted = pd.melt(responses_df_all)
+    responses_df_melted_cleaned = responses_df_melted[responses_df_melted.value == True]
+    responses_df_melted_cleaned_counts = (
+        responses_df_melted_cleaned.groupby("name")
+        .count()
+        .rename(columns={"id": "count"})
+    )
+    responses_df_counts_sorted = responses_df_melted_cleaned_counts.reset_index()
+    responses_df_counts_sorted["name"] = pd.Categorical(
+        responses_df_counts_sorted["name"], categories=order_A10, ordered=True
+    )
+    responses_df_counts_sorted = responses_df_counts_sorted.sort_values(
+        by="name"
+    ).rename(columns={"value": "count", "name": a10})
+    responses_df_counts_sorted_percentages = responses_df_counts_sorted
+    responses_df_counts_sorted_percentages["percentages"] = (
+        responses_df_counts_sorted_percentages["count"] / N_question * 100
+    )
+
+    fig, ax = plot_bar(
+        survey=survey,
+        data_df=responses_df_counts_sorted_percentages,
+        question=a10,
+        n_question=N_question,
+        label_q_data="Ethnicity",
+        percentcount=PercentCount.COUNT,
+        orientation=Orientation.VERTICAL,
+        show_axes_labels=ShowAxesLabel.PERCENT,
+    )
+
+    plt.savefig(output)
+
+
 def test_plots_A2_comparison_A6(survey: LimeSurveyData, output_path: Path) -> None:
     output = output_path / Path(sectionA)
     directories(output)
@@ -106,12 +148,14 @@ def test_plots_A2_comparison_A6(survey: LimeSurveyData, output_path: Path) -> No
         label_q_data="Centers",
         orientation=Orientation.HORIZONTAL,
         percentcount=PercentCount.COUNT,
+        show_axes_labels=ShowAxesLabel.COUNT,
+        fontsize_axes_labels=5,
     )
 
     plt.savefig(output)
 
 
-def main() -> None:
+def test_A() -> None:
     # important files and paths
     INPUT_PATH = "/Users/carolynguthoff/Documents/05_HelmholtzJuniors/Survey2021/data/Survey2021_Package_protected/"
     # XML_FILE_NAME = "data/survey_structure_2021_v2.xml"
@@ -126,8 +170,6 @@ def main() -> None:
 
     # test_plots_A2_single(survey, output_path=Path(OUTPUT_PATH))
 
-    test_plots_A2_comparison_A6(survey, output_path=Path(OUTPUT_PATH))
+    test_plots_A10_multiple(survey, output_path=Path(OUTPUT_PATH))
 
-
-if __name__ == "__main__":
-    main()
+    # test_plots_A2_comparison_A6(survey, output_path=Path(OUTPUT_PATH))
