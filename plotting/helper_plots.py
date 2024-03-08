@@ -6,8 +6,6 @@ from plotting.helper_plotenums import (
     Orientation,
     PercentCount,
     ShowAxesLabel,
-    validateOrientation,
-    validatePercentCount,
 )
 import seaborn as sns
 import plotting.helmholtzcolors as hc
@@ -40,7 +38,6 @@ def add_axes_labels(
     Returns:
         tuple[Figure, Axes]: modified figure and axes
     """
-    validateOrientation(orientation)
 
     labels = []
 
@@ -109,9 +106,6 @@ def plot_barplot(
     Returns:
         tuple[Figure, Axes]: modified figure and axes
     """
-    # validate that input for orientation and percentcount is correct
-    validateOrientation(orientation)
-    validatePercentCount(percentcount)
 
     # built input for hue and colors for plotting
     hue_input = list()
@@ -205,7 +199,6 @@ def add_tick_labels(
     Returns:
         Axes: _description_
     """
-    validateOrientation(orientation)
 
     # match on orientation of plot
     match orientation:

@@ -56,7 +56,7 @@ DO NOT COMMIT TO THE MAIN BRANCH!!!
 ## Helpful commands to locally apply
 - use `pre-commit` in the Terminal to check for errors
 - use `ruff format` to format files, e.g. `ruff format test.py` to format `test.py` or `ruff format` to format everything
-- use `mypy --strict [folder]` for typing mistakes
+- use `mypy --strict [folder]` for typing errors, also makes sense for debugging
 - use `ruff check --fix` for python linter that warns for imports you didn't use or things you did wrong
 
 
