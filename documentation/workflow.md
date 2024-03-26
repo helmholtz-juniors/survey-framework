@@ -2,6 +2,9 @@
 
 This document describes the current workflow for working in the helmholtz-juniors organization on github. 
 
+# Plots
+Overview of plots: https://notes.desy.de/s/X42lW1ct-
+
 # Tasks
 - all currently available tasks can be found in the Project ['Survey'](https://github.com/orgs/helmholtz-juniors/projects/3)
 - go to this project and pick a task from the 'Ready' column
