@@ -26,7 +26,7 @@ pip install -r requirements.txt
 ```
 
 # Reviewing
-Please only send requests for reviews to two people of the following set: Florian Handtke, Keno Hassler or Carolyn Guthoff. 
+Please only send requests for reviews to two people of the following set: Florian Hantke, Keno Hassler or Carolyn Guthoff. 
 
 # How to Commit
 DO NOT COMMIT TO THE MAIN BRANCH!!!
