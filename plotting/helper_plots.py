@@ -13,7 +13,7 @@ import plotting.helmholtzcolors as hc
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 from matplotlib.patches import Rectangle
-from typing import cast, Iterable
+from typing import Sequence, cast, Iterable
 
 
 def add_axes_labels(
@@ -108,8 +108,8 @@ def plot_barplot(
     """
 
     # built input for hue and colors for plotting
-    hue_input = list()
-    colors = list()
+    hue_input = []
+    colors: Sequence[tuple[float, float, float]] = []
     if comparison:
         # if it's a comparison bar plot, hue needs to be filled with a list of comparison data
         hue_input = list(data_df[hue])

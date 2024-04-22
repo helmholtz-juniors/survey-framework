@@ -35,7 +35,6 @@ def test_plots_E(survey: LimeSurveyData, output_path: Path) -> None:
 
 
 def test_E(survey: LimeSurveyData, output_path: Path) -> None:
-
     test_plots_E(survey, output_path)
 
     # get all multiple choice questions
