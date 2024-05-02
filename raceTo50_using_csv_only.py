@@ -91,8 +91,14 @@ for i, CSV_FILE_NAME in enumerate(sorted_survey_files):
         df_centers[f"counts_week{i+1}"] / df_centers["N_drs"] * 100
     )
 
+# put zeros instead of NaN so that sorting works properly
+df_centers = df_centers.fillna(0)
+
 # Sort the DataFrame in descending order by 'Center_short', so that it appears alphabetically
-df_centers_sorted = df_centers.sort_values(by="Center_short", ascending=False)
+# df_centers_sorted = df_centers.sort_values(by="Center_short", ascending=False)
+df_centers_sorted = df_centers.sort_values(
+    by=f"percentages_week{len(sorted_survey_files)}"
+)
 
 # use the Center_short column as index
 df_centers_sorted.set_index("Center_short", inplace=True)
@@ -114,7 +120,6 @@ for j in range(1, len(df_centers_sorted[percentage_columns].columns)):
 # Get the colors for the bar plot
 # The survey is running for 6 weeks
 blues = get_blues(N_weeks)[0 : len(sorted_survey_files)]
-print(blues)
 
 # plot the bars
 bars = df_diff.plot.barh(stacked=True, zorder=3, legend=False, color=blues, ax=ax)  # type: ignore[call-overload]
@@ -135,13 +140,15 @@ for index, row in df_centers_sorted.iterrows():
 
 # Apply the new labels
 ax.set_yticklabels(new_labels)
-print(ax.get_yticklabels())
 
 # and now some shenanigans with the KIT label
 # Get the y-tick labels, again
 tick_labels = ax.get_yticklabels()
 # Check if there are any tick labels to modify
-specific_label = tick_labels[2]  # Adjust the index as needed for a different label
+kit_index = df_centers_sorted.index.tolist().index("KIT")
+specific_label = tick_labels[
+    kit_index
+]  # Adjust the index as needed for a different label
 specific_label.set_color("lightgray")  # Change color
 
 # set the axis labels (or remove them)
