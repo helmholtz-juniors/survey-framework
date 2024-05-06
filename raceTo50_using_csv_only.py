@@ -134,6 +134,8 @@ for index, row in df_centers_sorted.iterrows():
     if index != "KIT":
         column_str = f"percentages_week{i+1}"
         new_labels.append(f"{index} | {row[column_str]:4.1f} %")
+        # column_str = f"counts_week{i+1}"
+        # new_labels.append(f"{index} | {row[column_str]:3.0f}")
     else:
         new_labels.append("KIT")
 
@@ -217,3 +219,4 @@ plt.legend(handles=patches, loc="lower right")
 # plt.plot(max_value, crown_y,'o',marker=crown_marker,markersize=20,zorder=4,color=helmholtzgreen)
 
 plt.savefig(OUTPUT_PATH / f"RaceTo50_{formatted_date}.png")
+# plt.savefig(OUTPUT_PATH / f"RaceTo50_{formatted_date}_absolute.png")
