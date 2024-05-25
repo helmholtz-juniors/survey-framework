@@ -8,24 +8,15 @@ lime survey data such as *.xml structure files
 
 import os
 import re
-from typing import TypeAlias, TypedDict, cast, Union, Optional
 from pathlib import Path
+from typing import TypedDict, cast
 from warnings import warn
 
 from bs4 import BeautifulSoup
 from bs4.element import Tag
 
-
-class ResponseData(TypedDict):
-    name: str
-    format: Optional[str]
-    length: Optional[str]
-    label: Optional[str]
-    choices: Optional[dict[str, str]]
-
-
-ResponseTypeAlias: TypeAlias = "tuple[ResponseData, Optional[dict[str, str]]]"
-QuestionTypeAlias: TypeAlias = "dict[str, Union[str, dict[str, str], None]]"
+from .fixup_2024 import count_responses, name_response, rename_question
+from .types import QuestionTypeAlias, ResponseData, ResponseTypeAlias
 
 
 class SectionInfo(TypedDict):
@@ -88,7 +79,7 @@ def _parse_question_title(question: Tag) -> str:
         question_label = _get_clean_string(text_sections[0])
         if len(text_sections) > 1:
             warn(
-                f"More than one 'text' section provided for question {question}."
+                f"More than one 'text' tag found for question '{question_label}'."
                 " Only the first one was used."
             )
     else:
@@ -168,7 +159,8 @@ def _parse_single_question_response(
     """
     # Common response structure
     parsed_response: ResponseData = {
-        "name": cast(str, response["varName"]),
+        # fixup empty response tag in 2024 survey
+        "name": name_response(response),
         "format": None,
         "length": None,
         "label": None,
@@ -300,7 +292,8 @@ def _get_question_type(
         str: Inferred question type
     """
     subquestion_count = len(subquestions)
-    response_count = len(responses)
+    # fixup broken question type in 2024 survey
+    response_count = count_responses(responses)
 
     if subquestion_count:
         question_type = "array"
@@ -446,7 +439,8 @@ def _parse_question(
         for column in columns_list
     ]
 
-    return columns_list
+    # fixup broken question in 2024 survey
+    return rename_question(columns_list)
 
 
 def _parse_section(section: Tag) -> SectionInfo:
