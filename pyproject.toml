@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "survey_framework"
+version = "0.0.1"
+authors = [{ name = "Helmholtz Juniors", email = "hejus@example.com" }]
+description = "Framework code to analyze and visualize LimeSurvey data."
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+dependencies = ["seaborn", "matplotlib", "beautifulsoup4"]
+
+[project.optional-dependencies]
+build = ["pre-commit", "ruff", "mypy", "types-beautifulsoup4", "pandas-stubs"]
