@@ -72,12 +72,11 @@ def plot_bar(
     )
 
     # add bar labels (the ones on top or next to bars within the plot)
-    fig, ax = add_axes_labels(
-        fig=fig,
+    ax = add_axes_labels(
         ax=ax,
-        data_df=data_df,
-        orientation=orientation,
         show_axes_labels=show_axes_labels,
+        percentcount=percentcount,
+        n_question=n_question,
         fontsize=fontsize_axes_labels,
     )
 
@@ -167,12 +166,11 @@ def plot_bar_comparison(
     )
 
     # add bar labels (the ones on top or next to bars within the plot)
-    fig, ax = add_axes_labels(
-        fig=fig,
+    ax = add_axes_labels(
         ax=ax,
-        data_df=data_df,
-        orientation=orientation,
         show_axes_labels=show_axes_labels,
+        percentcount=percentcount,
+        n_question=n_question,
         fontsize=fontsize_axes_labels,
     )
 

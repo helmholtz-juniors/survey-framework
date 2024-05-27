@@ -3,7 +3,7 @@ from data_import.data_import import LimeSurveyData
 from plotting.barplots import plot_bar, plot_bar_comparison
 from pathlib import Path
 from data_analysis.analysis import get_data_for_q
-from order.order2021 import order_A2, order_A6, order_A10
+from order.order2021 import order_A6
 
 import matplotlib.pyplot as plt
 
@@ -37,16 +37,14 @@ def test_plots_A2_single(survey: LimeSurveyData, output_path: Path) -> None:
 
     N_question = survey.responses[a2].count()
     data_q_all = get_data_for_q(survey, a2)
-    data_q_all_dropna = data_q_all.dropna()
-    data_q_counts = (
-        data_q_all_dropna.groupby([a2]).count().rename(columns={"id": "count"})
-    )
+    # data_q_all_dropna = data_q_all.dropna()
+    data_q_counts = data_q_all.groupby([a2]).count().rename(columns={"id": "count"})
 
     data_q_counts_sorted = data_q_counts.reset_index()
-    data_q_counts_sorted[a2] = pd.Categorical(
-        data_q_counts_sorted[a2], categories=order_A2, ordered=True
-    )
-    data_q_counts_sorted = data_q_counts_sorted.sort_values(by=a2)
+    # data_q_counts_sorted[a2] = pd.Categorical(
+    #     data_q_counts_sorted[a2], categories=order_A2, ordered=True
+    # )
+    # data_q_counts_sorted = data_q_counts_sorted.sort_values(by=a2)
 
     data_q_counts_sorted_percentages = data_q_counts_sorted
     data_q_counts_sorted_percentages["percentages"] = (
@@ -77,17 +75,15 @@ def test_plots_A10_multiple(survey: LimeSurveyData, output_path: Path) -> None:
     responses_df_all = survey.get_responses(a10, drop_other=True)
     responses_df_melted = pd.melt(responses_df_all)
     responses_df_melted_cleaned = responses_df_melted[responses_df_melted.value]
-    responses_df_melted_cleaned_counts = (
-        responses_df_melted_cleaned.groupby("name")
-        .count()
-        .rename(columns={"id": "count"})
-    )
+    responses_df_melted_cleaned_counts = responses_df_melted_cleaned.groupby(
+        "name"
+    ).count()
     responses_df_counts_sorted = responses_df_melted_cleaned_counts.reset_index()
-    responses_df_counts_sorted["name"] = pd.Categorical(
-        responses_df_counts_sorted["name"], categories=order_A10, ordered=True
-    )
+    # responses_df_counts_sorted["name"] = pd.Categorical(
+    #     responses_df_counts_sorted["name"], categories=order_A10, ordered=True
+    # )
     responses_df_counts_sorted = responses_df_counts_sorted.sort_values(
-        by="name"
+        by="value", ascending=False
     ).rename(columns={"value": "count", "name": a10})
     responses_df_counts_sorted_percentages = responses_df_counts_sorted
     responses_df_counts_sorted_percentages["percentages"] = (
@@ -125,9 +121,9 @@ def test_plots_A2_comparison_A6(survey: LimeSurveyData, output_path: Path) -> No
         responses_df_all_concat[[a2, a6]].value_counts().reset_index(name="count")
     )
 
-    responses_df_counts[a2] = pd.Categorical(
-        responses_df_counts[a2], categories=order_A2, ordered=True
-    )
+    # responses_df_counts[a2] = pd.Categorical(
+    #     responses_df_counts[a2], categories=order_A2, ordered=True
+    # )
     responses_df_counts[a6] = pd.Categorical(
         responses_df_counts[a6], categories=order_A6, ordered=True
     )
@@ -155,8 +151,8 @@ def test_plots_A2_comparison_A6(survey: LimeSurveyData, output_path: Path) -> No
 
 
 def test_A(survey: LimeSurveyData, output_path: Path) -> None:
-    # test_plots_A2_single(survey, output_path)
+    test_plots_A2_single(survey, output_path)
 
     test_plots_A10_multiple(survey, output_path)
 
-    # test_plots_A2_comparison_A6(survey, output_path)
+    test_plots_A2_comparison_A6(survey, output_path)
