@@ -2,7 +2,7 @@
 from pathlib import Path
 from data_import.data_import import LimeSurveyData
 from testing.test_A import test_A
-# from testing.test_E import test_E
+from testing.test_E import test_E
 
 
 def main() -> None:
@@ -20,7 +20,7 @@ def main() -> None:
     )
 
     test_A(survey, Path(OUTPUT_PATH))
-    # test_E(survey, Path(OUTPUT_PATH))
+    test_E(survey, Path(OUTPUT_PATH))
     # export(survey, Path(OUTPUT_PATH))
 
 

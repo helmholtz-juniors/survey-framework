@@ -17,18 +17,16 @@ from typing import cast, Iterable
 
 
 def add_axes_labels(
-    fig: Figure,
     ax: Axes,
     show_axes_labels: ShowAxesLabel,
     percentcount: PercentCount,
     n_question: int,
     fontsize: int,
-) -> tuple[Figure, Axes]:
+) -> Axes:
     """
     add labels to each bar in a bar plot
 
     Args:
-        fig (Figure): matplotlib.figure
         ax (Axes): matplotlib.axes
         show_axes_labels (ShowAxesLabel): whether axes labels should be shown
         percentcount (PercentCount): whether the data plotted is absolute or relative
@@ -36,7 +34,7 @@ def add_axes_labels(
         fontsize (int): font size for the bar labels
 
     Returns:
-        tuple[Figure, Axes]: modified figure and axes
+        Axes: modified axes
     """
 
     # Define a label formatter.
@@ -63,7 +61,7 @@ def add_axes_labels(
     for bc in cast(Iterable[BarContainer], ax.containers):
         ax.bar_label(bc, padding=1, fontsize=fontsize, fmt=fmt)
 
-    return fig, ax
+    return ax
 
 
 def plot_barplot(
@@ -147,7 +145,7 @@ def add_tick_labels(
 ) -> Axes:
     """
     add axis labels for question
-    horizontl --> add labels to y-axis
+    horizontal --> add labels to y-axis
     vertical --> add labels to x-axis
 
     Args:
