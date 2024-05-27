@@ -49,7 +49,7 @@ def plot_bar_side_by_side(
     # TODO: check if this signature is flexible enough. What about percentCount, fontsize, etc?
 
     # set seaborn theme
-    sns.set_theme()
+    hc.set_plotstyle()
 
     # define figure and axis
     # nrows, ncols = number of rows, columns of the subplot grid

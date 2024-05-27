@@ -1,19 +1,20 @@
 from textwrap import wrap
-from matplotlib import pyplot as plt
+from typing import Iterable, cast
+
 import pandas as pd
+import seaborn as sns
+from matplotlib import pyplot as plt
+from matplotlib.axes import Axes
+from matplotlib.container import BarContainer
+from matplotlib.figure import Figure
+
+import plotting.helmholtzcolors as hc
 from data_import.data_import import LimeSurveyData, QuestionType
 from plotting.helper_plotenums import (
     Orientation,
     PercentCount,
     ShowAxesLabel,
 )
-import seaborn as sns
-import plotting.helmholtzcolors as hc
-
-from matplotlib.axes import Axes
-from matplotlib.figure import Figure
-from matplotlib.container import BarContainer
-from typing import cast, Iterable
 
 
 def add_axes_labels(
@@ -103,7 +104,7 @@ def plot_barplot(
         colors = hc.get_blues(len(data_df))
 
     # set seaborn style
-    sns.set_style("darkgrid", {"axes.facecolor": "#f2f0f0"})
+    hc.set_plotstyle()
 
     # initialize plot and set colors
     fig, ax = plt.subplots(

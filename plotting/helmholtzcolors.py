@@ -34,6 +34,10 @@ green60 = "#c4da8b"
 green80 = "#aecd5e"
 
 
+def set_plotstyle() -> None:
+    sns.set_style("darkgrid", {"axes.facecolor": "#f2f0f0"})
+
+
 def get_blues(n: int) -> list[tuple[float, float, float]]:
     blues = sns.blend_palette([darkblue, helmholtzblue, blue60, blue40], n)
     return cast(list[tuple[float, float, float]], blues)
