@@ -7,8 +7,8 @@ class Orientation(StrEnum):
 
 
 class PercentCount(StrEnum):
-    PERCENT = "Percentage"
-    COUNT = "Counts"
+    PERCENT = "percentages"
+    COUNT = "count"
 
 
 class ShowAxesLabel(Enum):

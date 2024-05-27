@@ -25,15 +25,15 @@ def add_axes_labels(
     fontsize: int,
 ) -> tuple[Figure, Axes]:
     """
-    add axes labels to bars
-    for second part see: https://stackoverflow.com/questions/28931224/how-to-add-value-labels-on-a-bar-chart
+    add labels to each bar in a bar plot
 
     Args:
         fig (Figure): matplotlib.figure
         ax (Axes): matplotlib.axes
-        data_df (pd.DataFrame): dataframe with processed data
-        orientation (Orientation): orientation of plot
         show_axes_labels (ShowAxesLabel): whether axes labels should be shown
+        percentcount (PercentCount): whether the data plotted is absolute or relative
+        n_question (int): the total number of answers, needed for percent calculation
+        fontsize (int): font size for the bar labels
 
     Returns:
         tuple[Figure, Axes]: modified figure and axes
@@ -113,47 +113,25 @@ def plot_barplot(
     )
 
     # plot graphs
-    match percentcount:
-        case PercentCount.COUNT:
-            match orientation:
-                case Orientation.HORIZONTAL:
-                    # counts + horizontal
-                    ax = sns.barplot(
-                        x=data_df["count"],
-                        y=list(data_df[question]),
-                        hue=hue_input,
-                        palette=colors,
-                        orient="h",
-                    )
-                case Orientation.VERTICAL:
-                    # counts + vertical
-                    ax = sns.barplot(
-                        y=data_df["count"],
-                        x=list(data_df[question]),
-                        hue=hue_input,
-                        palette=colors,
-                        orient="v",
-                    )
-        case PercentCount.PERCENT:
-            match orientation:
-                case Orientation.HORIZONTAL:
-                    # percentages + horizontal
-                    ax = sns.barplot(
-                        x=data_df["percentages"],
-                        y=list(data_df[question]),
-                        hue=hue_input,
-                        palette=colors,
-                        orient="h",
-                    )
-                case Orientation.VERTICAL:
-                    # percentages + vertical
-                    ax = sns.barplot(
-                        y=data_df["percentages"],
-                        x=list(data_df[question]),
-                        hue=hue_input,
-                        palette=colors,
-                        orient="v",
-                    )
+    match orientation:
+        case Orientation.HORIZONTAL:
+            # x = data, y = labels
+            ax = sns.barplot(
+                x=data_df[percentcount.value],
+                y=list(data_df[question]),
+                hue=hue_input,
+                palette=colors,
+                orient="h",
+            )
+        case Orientation.VERTICAL:
+            # x = labels, y = data
+            ax = sns.barplot(
+                y=data_df[percentcount.value],
+                x=list(data_df[question]),
+                hue=hue_input,
+                palette=colors,
+                orient="v",
+            )
 
     return fig, ax
 
@@ -185,39 +163,32 @@ def add_tick_labels(
         Axes: _description_
     """
 
+    # function to rename a single label using the survey data
+    def renamed(label: str) -> str:
+        match survey.get_question_type(question=question):
+            case QuestionType.SINGLE_CHOICE:
+                new_label = survey.questions.choices[question][label]
+            case QuestionType.MULTIPLE_CHOICE:
+                new_label = survey.questions.choices[label]["Y"]
+            case other:
+                raise NotImplementedError(f"Labels for {other} not implemented.")
+        # wrap labels
+        return "\n".join(wrap(new_label, text_wrap))
+
     # match on orientation of plot
     match orientation:
         case Orientation.HORIZONTAL:
             # get all current y-ticklabels
-            y_ticklabels = [item.get_text() for item in ax.get_yticklabels()]
-            # change text of all ticklabels
-            for i in range(0, len(y_ticklabels)):
-                # figure out if question type is SINGLE or MULTIPLE_CHOICE
-                question_type = survey.get_question_type(question=question)
-                label = ""
-                if question_type == QuestionType.SINGLE_CHOICE:
-                    label = survey.questions.choices[question][y_ticklabels[i]]
-                elif question_type == QuestionType.MULTIPLE_CHOICE:
-                    label = survey.questions.choices[y_ticklabels[i]]["Y"]
-                # wrap labels
-                y_ticklabels[i] = "\n".join(wrap(label, text_wrap))
+            y_ticklabels = [renamed(item.get_text()) for item in ax.get_yticklabels()]
+
             # update labels
             ax.set_yticks(range(len(data_df)))
             ax.set_yticklabels(y_ticklabels, fontsize=fontsize)
+
         case Orientation.VERTICAL:
             # get all current x-ticklabels
-            x_ticklabels = [item.get_text() for item in ax.get_xticklabels()]
-            # change text of all ticklabels
-            for i in range(0, len(x_ticklabels)):
-                # figure out if question type is SINGLE or MULTIPLE_CHOICE
-                question_type = survey.get_question_type(question=question)
-                label = ""
-                if question_type == QuestionType.SINGLE_CHOICE:
-                    label = survey.questions.choices[question][x_ticklabels[i]]
-                elif question_type == QuestionType.MULTIPLE_CHOICE:
-                    label = survey.questions.choices[x_ticklabels[i]]["Y"]
-                # wrap labels
-                x_ticklabels[i] = "\n".join(wrap(label, text_wrap))
+            x_ticklabels = [renamed(item.get_text()) for item in ax.get_xticklabels()]
+
             # update labels
             ax.set_xticks(range(len(data_df)))
             ax.set_xticklabels(
@@ -234,11 +205,23 @@ def add_tick_labels(
 def adapt_legend(
     survey: LimeSurveyData, ax: Axes, question: str, text_wrap: int
 ) -> Axes:
-    # rename legend and move below N
+    """
+    rename legend and move below N
+
+    Args:
+        survey (LimeSurveyData): survey data
+        ax (Axes): plot
+        question (str): str of question
+        text_wrap (int): after how many letters text should be wrapped
+
+    Returns:
+        Axes: _description_
+    """
+
     handles, labels = ax.get_legend_handles_labels()
     for i in range(0, len(labels)):
         label = survey.questions.choices[question][labels[i]]
-        labels[i] = "\n".join(wrap(label, 30))
+        labels[i] = "\n".join(wrap(label, text_wrap))
     ax.legend(handles=handles, labels=labels, bbox_to_anchor=(1, 0.97))
 
     return ax
