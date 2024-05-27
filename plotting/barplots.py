@@ -75,9 +75,9 @@ def plot_bar(
     fig, ax = add_axes_labels(
         fig=fig,
         ax=ax,
-        data_df=data_df,
-        orientation=orientation,
         show_axes_labels=show_axes_labels,
+        percentcount=percentcount,
+        n_question=n_question,
         fontsize=fontsize_axes_labels,
     )
 
@@ -170,9 +170,9 @@ def plot_bar_comparison(
     fig, ax = add_axes_labels(
         fig=fig,
         ax=ax,
-        data_df=data_df,
-        orientation=orientation,
         show_axes_labels=show_axes_labels,
+        percentcount=percentcount,
+        n_question=n_question,
         fontsize=fontsize_axes_labels,
     )
 

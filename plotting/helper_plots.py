@@ -12,16 +12,16 @@ import plotting.helmholtzcolors as hc
 
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure
-from matplotlib.patches import Rectangle
+from matplotlib.container import BarContainer
 from typing import cast, Iterable
 
 
 def add_axes_labels(
     fig: Figure,
     ax: Axes,
-    data_df: pd.DataFrame,
-    orientation: Orientation,
     show_axes_labels: ShowAxesLabel,
+    percentcount: PercentCount,
+    n_question: int,
     fontsize: int,
 ) -> tuple[Figure, Axes]:
     """
@@ -39,44 +39,29 @@ def add_axes_labels(
         tuple[Figure, Axes]: modified figure and axes
     """
 
-    labels = []
-
-    # add bar labels
-    match show_axes_labels:
-        case ShowAxesLabel.COUNT:
-            # show counts
-            labels = [f"n={p}" for p in data_df["count"]]
-        case ShowAxesLabel.PERCENT:
-            # show percentages
-            labels = [f"{p:0.2f}%" for p in data_df["percentages"]]
-        case ShowAxesLabel.NONE:
-            # leave function
-            return fig, ax
-
-    # get the rectangles from the axes
-    rects = cast(Iterable[Rectangle], ax.patches)
-    # match over orientation
-    match orientation:
-        case Orientation.HORIZONTAL:
-            for rect, label in zip(rects, labels):
-                # calculate y_value
-                y_value = rect.get_y() + rect.get_height() / 2
-                # calculate x_value
-                x_value = rect.get_width()
-                # add text to bar
-                ax.text(
-                    x_value, y_value, label, ha="left", va="center", fontsize=fontsize
+    # Define a label formatter.
+    # This is straightforward if the plotted number is the one to be shown.
+    # If not, calculate the value to be displayed using N.
+    def fmt(n: float) -> str:
+        match show_axes_labels, percentcount:
+            case ShowAxesLabel.COUNT, PercentCount.COUNT:
+                return f"{n:g}"
+            case ShowAxesLabel.PERCENT, PercentCount.PERCENT:
+                return f"{n:0.2f}%"
+            case ShowAxesLabel.PERCENT, PercentCount.COUNT:
+                return f"{n * 100 / n_question:.2f}%"
+            case ShowAxesLabel.COUNT, PercentCount.PERCENT:
+                raise NotImplementedError(
+                    "Percentages on axis with absolute counts on bars is not implemented yet."
                 )
-        case Orientation.VERTICAL:
-            for rect, label in zip(rects, labels):
-                # calculate x_value
-                x_value = rect.get_x() + rect.get_width() / 2
-                # calculate y_value
-                y_value = rect.get_height()
-                # add text to bar
-                ax.text(
-                    x_value, y_value, label, ha="center", va="bottom", fontsize=fontsize
-                )
+            case ShowAxesLabel.NONE, _:
+                return ""
+        # match is exhaustive, but mypy doesn't get that
+        assert False, "unreachable"
+
+    # actually label the bars, using matplotlib sugar
+    for bc in cast(Iterable[BarContainer], ax.containers):
+        ax.bar_label(bc, padding=1, fontsize=fontsize, fmt=fmt)
 
     return fig, ax
 
