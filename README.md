@@ -34,25 +34,25 @@ NEVER COMMIT LIMESURVEY DATA TO THIS (OR ANY) REPOSITORY!
 
 ### Setting up the development environment
 
-0. Navigate to the n2_survey directory
-   ```sh
-   cd n2_survey
-   ```
-1. Clone this project to your computer
+1. Navigate to the n2_survey directory
+    ```sh
+    cd n2_survey
+    ```
+2. Clone this project to your computer
     ```sh
     git clone git@github.com:helmholtz-juniors/survey-framework.git survey_framework
     ```
-2. Create and activate a virtual environment
-   ```sh
-   python3 -m venv .venv
-   source .venv/bin/activate
-   ```
-   Run the last command whenever you come back to the project to re-activate the virtual environment.
-3. Install this package (in editable mode). This way, it can be used from other packages and still be modified.
-   ```sh
-   python3 -m pip install -e .[lint]
-   ```
-   (depending on your shell, you might need to escape the brackets like: `\[lint\]`)
+3. Create and activate a virtual environment
+    ```sh
+    python3 -m venv .venv
+    source .venv/bin/activate
+    ```
+    Run the last command whenever you come back to the project to re-activate the virtual environment.
+4. Install this package (in editable mode). This way, it can be used from other packages and still be modified.
+    ```sh
+    python3 -m pip install -e .[lint]
+    ```
+    (depending on your shell, you might need to escape the brackets like: `\[lint\]`)
 
 ### Preparing a commit
 Our CI pipeline automatically checks for code formatting and typing errors.
@@ -80,20 +80,20 @@ If you use a decent IDE (recommendations: VS Code or PyCharm), it will display d
 DON'T COMMIT TO MAIN! (We cannot enforce it right now, but please don't).
 
 1. pull the current project status `git pull`
-     1. if git tells you to clean up your repository first, stash your code with `git stash`
-     2. afterwards pull the current status with `git pull`
-     3. pop the stash to resolve merge conflicts with git `git stash pop`
-          1. remember that there can be more than one stash, if you don't want to pop the last one check `git stash list` and then use `git stash apply` or `git stash apply stash@{2}` or whichever one you want to apply
-          2. `git stash pop` will also remove the last added stash from the stash list
+    1. if git tells you to clean up your repository first, stash your code with `git stash`
+    2. afterwards pull the current status with `git pull`
+    3. pop the stash to resolve merge conflicts with git `git stash pop`
+        1. remember that there can be more than one stash, if you don't want to pop the last one check `git stash list` and then use `git stash apply` or `git stash apply stash@{2}` or whichever one you want to apply
+        2. `git stash pop` will also remove the last added stash from the stash list
 2. add files to be comitted 
 3. use `pre-commit` to check whether `ruff` and `mypy` are happy 
-     1. do this within the `(.venv)` environment to make sure your version complys with the requirements in `requirements.txt`
+    1. do this within the `(.venv)` environment to make sure your version complys with the requirements in `requirements.txt`
 4. commit everything to a (new) branch
 5. github checks with lint what mistakes are still in the code
 6. make ruff happy
 7. create a pull request on github
-     1. go to Pull requests in the top menu
-     2. click on `New pull request` in the top right
+    1. go to Pull requests in the top menu
+    2. click on `New pull request` in the top right
 8. request review in pull request 
 
 ### Helpful commands to locally apply
