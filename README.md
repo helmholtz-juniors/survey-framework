@@ -54,6 +54,14 @@ NEVER COMMIT LIMESURVEY DATA TO THIS (OR ANY) REPOSITORY!
     ```
     (depending on your shell, you might need to escape the brackets like: `\[lint\]`)
 
+### Kick the tires
+
+To check if everything works, run (inside the survey_framework directory):
+```sh
+python3 src/main.py
+```
+This should run the test cases and generate a few basic plots in the output subdirectory.
+
 ### Preparing a commit
 Our CI pipeline automatically checks for code formatting and typing errors.
 To do the same locally, use `ruff` for linting, `ruff format` for code formatting and `mypy --strict` for type checking.
