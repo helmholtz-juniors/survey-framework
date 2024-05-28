@@ -1,4 +1,4 @@
-from typing import TypedDict, Optional, TypeAlias, Union
+from typing import Optional, TypeAlias, TypedDict, Union
 
 
 class ResponseData(TypedDict):

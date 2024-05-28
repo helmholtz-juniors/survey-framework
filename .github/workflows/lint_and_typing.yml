@@ -10,5 +10,5 @@ jobs:
         python-version: "3.11"
     - run: pip install --upgrade pip
     - run: pip install .[lint]
-    - run: ruff check .
-    - run: mypy --strict .
+    - run: ruff check src
+    - run: mypy --strict src

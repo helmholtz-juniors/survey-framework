@@ -1,16 +1,16 @@
 from textwrap import wrap
-# from typing import cast
 
+# from typing import cast
 import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
+from data_import.data_import import LimeSurveyData
 from matplotlib.axes import Axes
 
 # from matplotlib.container import BarContainer
 from matplotlib.figure import Figure
 
 import plotting.helmholtzcolors as hc
-from data_import.data_import import LimeSurveyData
 from plotting.helper_plotenums import PercentCount, ShowAxesLabel
 from plotting.helper_plots import add_axes_labels
 
