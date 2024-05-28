@@ -1,14 +1,12 @@
-import pandas as pd
-from data_import.data_import import LimeSurveyData
-from plotting.barplots import plot_bar, plot_bar_comparison
 from pathlib import Path
-from data_analysis.analysis import get_data_for_q
-from order.order2021 import order_A6
 
 import matplotlib.pyplot as plt
-
+import pandas as pd
+from data_analysis.analysis import get_data_for_q
+from data_import.data_import import LimeSurveyData
+from order.order2021 import order_A6
+from plotting.barplots import plot_bar, plot_bar_comparison
 from plotting.helper_plotenums import Orientation, PercentCount, ShowAxesLabel
-
 
 sectionA = "A"
 a1 = "A1"  # participation in last N2 survey

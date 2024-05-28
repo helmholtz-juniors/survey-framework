@@ -1,13 +1,13 @@
 # import pandas as pd
-from data_import.data_import import LimeSurveyData
-# from plotting.barplots import plot_bar
-
-from plotting.barplots_sidebyside import plot_bar_side_by_side
 from pathlib import Path
-from data_analysis.analysis import get_data_for_q
-# from order.order2021 import *
 
+# from order.order2021 import *
 import matplotlib.pyplot as plt
+from data_analysis.analysis import get_data_for_q
+from data_import.data_import import LimeSurveyData
+
+# from plotting.barplots import plot_bar
+from plotting.barplots_sidebyside import plot_bar_side_by_side
 
 
 def test_plots_E(survey: LimeSurveyData, output_path: Path) -> None:

@@ -1,9 +1,10 @@
-from enum import StrEnum, auto
-from typing import Iterable, Optional, Union, cast
-import warnings
 import re
-import pandas as pd
+import warnings
+from enum import StrEnum, auto
 from pathlib import Path
+from typing import Iterable, Optional, Union, cast
+
+import pandas as pd
 
 from .survey_structure import read_lime_questionnaire_structure
 
@@ -80,7 +81,7 @@ class LimeSurveyData:
     def read_responses(
         self,
         responses_file: Path,
-        transformation_questions: dict[str, str] = {},
+        transformation_questions: Optional[dict[str, str]] = None,
     ) -> None:
         """Read responses CSV file
 
@@ -182,22 +183,25 @@ class LimeSurveyData:
         )
         if not_in_structure:
             warnings.warn(
-                f"The following columns in the data csv file are not found in the survey structure and are dropped:\n{not_in_structure}"
+                f"The following columns in the data csv file are not found in the survey structure and are dropped:\n{not_in_structure}",
+                stacklevel=1,
             )
             question_responses = question_responses.drop(not_in_structure, axis=1)
         # Check for questions not listed in data csv
         not_in_data = list(set(self.questions.index) - set(question_responses.columns))
         if not_in_data:
             warnings.warn(
-                f"The following questions in the survey structure are not found in the data csv file:\n{not_in_data}"
+                f"The following questions in the survey structure are not found in the data csv file:\n{not_in_data}",
+                stacklevel=1,
             )
 
         self.responses = question_responses
         self.lime_system_info = system_info
 
-        for transform, questions in transformation_questions.items():
-            for question in questions:
-                self.add_responses(self.transform_question(question, transform))
+        if transformation_questions:
+            for transform, questions in transformation_questions.items():
+                for question in questions:
+                    self.add_responses(self.transform_question(question, transform))
 
     def _get_dtype_info(
         self, columns: Iterable[str], renamed_columns: Iterable[str]
@@ -252,10 +256,7 @@ class LimeSurveyData:
                     dtype_dict[column] = "category"
                 elif column == "seed":
                     dtype_dict[column] = pd.UInt32Dtype()
-                elif column == "startdate":
-                    dtype_dict[column] = "str"
-                    datetime_columns.append(column)
-                elif column == "datestamp":
+                elif column == "startdate" or column == "datestamp":
                     dtype_dict[column] = "str"
                     datetime_columns.append(column)
                 # Float for all timing info
@@ -371,9 +372,9 @@ class LimeSurveyData:
             # ASSUME: question response consists of multiple columns with
             #         'Y' or NaN as entries.
             # Masked with boolean values the responses with nan only for the columns where is_contingent is True.
-            responses[
-                question_group.index[~question_group.is_contingent]
-            ] = responses.loc[:, ~question_group.is_contingent].notnull()
+            responses[question_group.index[~question_group.is_contingent]] = (
+                responses.loc[:, ~question_group.is_contingent].notnull()
+            )
 
         return responses
 

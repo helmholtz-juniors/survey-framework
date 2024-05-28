@@ -3,13 +3,13 @@ from typing import Iterable, cast
 
 import pandas as pd
 import seaborn as sns
+from data_import.data_import import LimeSurveyData, QuestionType
 from matplotlib import pyplot as plt
 from matplotlib.axes import Axes
 from matplotlib.container import BarContainer
 from matplotlib.figure import Figure
 
 import plotting.helmholtzcolors as hc
-from data_import.data_import import LimeSurveyData, QuestionType
 from plotting.helper_plotenums import (
     Orientation,
     PercentCount,
@@ -56,7 +56,7 @@ def add_axes_labels(
             case ShowAxesLabel.NONE, _:
                 return ""
         # match is exhaustive, but mypy doesn't get that
-        assert False, "unreachable"
+        raise AssertionError("unreachable")
 
     # actually label the bars, using matplotlib sugar
     for bc in cast(Iterable[BarContainer], ax.containers):

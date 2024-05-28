@@ -80,7 +80,8 @@ def _parse_question_title(question: Tag) -> str:
         if len(text_sections) > 1:
             warn(
                 f"More than one 'text' tag found for question '{question_label}'."
-                " Only the first one was used."
+                " Only the first one was used.",
+                stacklevel=1,
             )
     else:
         raise AssertionError(f"No question label for question {question}")
@@ -111,7 +112,8 @@ def _parse_question_description(question: Tag) -> str:
         if len(directive_sections) > 1:
             warn(
                 f"More than one 'directive' section provided for question {question}."
-                " Only the first one was used."
+                " Only the first one was used.",
+                stacklevel=1,
             )
     return description
 
@@ -380,10 +382,7 @@ def _parse_question(
     else:
         for response, contingent in responses:
             # Get a label
-            if response["label"]:
-                label = response["label"]
-            else:
-                label = question_label
+            label = response["label"] if response["label"] else question_label
 
             # Add the column
             columns_list.append(
@@ -516,7 +515,7 @@ def read_lime_questionnaire_structure(filepath: Path) -> SurveyStructure:
     """
 
     # Read the structure file
-    with open(filepath, "r", encoding="utf8") as fp:
+    with open(filepath, encoding="utf8") as fp:
         soup = BeautifulSoup(fp, "xml")
 
     # Parse sections and questions

@@ -1,7 +1,9 @@
 import matplotlib.pyplot as plt
 import pandas as pd
-
 from data_import.data_import import LimeSurveyData
+from matplotlib.axes import Axes
+from matplotlib.figure import Figure
+
 from plotting.helper_plotenums import Orientation, PercentCount, ShowAxesLabel
 from plotting.helper_plots import (
     adapt_legend,
@@ -9,9 +11,6 @@ from plotting.helper_plots import (
     add_tick_labels,
     plot_barplot,
 )
-
-from matplotlib.axes import Axes
-from matplotlib.figure import Figure
 
 
 def plot_bar(
