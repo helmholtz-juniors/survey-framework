@@ -12,7 +12,7 @@ from plotting.helper_barplots import (
     add_tick_labels,
     plot_barplot,
 )
-from plotting.helper_plotenums import Orientation, PercentCount, ShowAxesLabel
+from plotting.helper_plotenums import BarLabels, Orientation, PercentCount
 
 
 def plot_bar(
@@ -26,7 +26,7 @@ def plot_bar(
     fig_size_x: int = 16,
     fig_size_y: int = 10,
     fontsize: int = 10,
-    show_axes_labels: ShowAxesLabel = ShowAxesLabel.NONE,
+    show_axes_labels: BarLabels = BarLabels.NONE,
     fontsize_axes_labels: int = 10,
     text_wrap: int = 25,
 ) -> tuple[Figure, Axes]:
@@ -95,9 +95,9 @@ def plot_bar(
     # add general labels to axes
     match orientation:
         case Orientation.HORIZONTAL:
-            ax.set(xlabel=percentcount, ylabel=label_q_data)
+            ax.set(xlabel=percentcount.value.capitalize, ylabel=label_q_data)
         case Orientation.VERTICAL:
-            ax.set(xlabel=label_q_data, ylabel=percentcount)
+            ax.set(xlabel=label_q_data, ylabel=percentcount.value.capitalize)
 
     # set title
     ax.set_title(
@@ -132,7 +132,7 @@ def plot_bar_comparison(
     fig_size_x: int = 16,
     fig_size_y: int = 10,
     fontsize: int = 10,
-    show_axes_labels: ShowAxesLabel = ShowAxesLabel.NONE,
+    show_axes_labels: BarLabels = BarLabels.NONE,
     fontsize_axes_labels: int = 10,
     text_wrap: int = 25,
 ) -> tuple[Figure, Axes]:

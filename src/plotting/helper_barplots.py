@@ -11,15 +11,15 @@ from matplotlib.figure import Figure
 
 import plotting.helmholtzcolors as hc
 from plotting.helper_plotenums import (
+    BarLabels,
     Orientation,
     PercentCount,
-    ShowAxesLabel,
 )
 
 
 def add_axes_labels(
     ax: Axes,
-    show_axes_labels: ShowAxesLabel,
+    show_axes_labels: BarLabels,
     percentcount: PercentCount,
     n_question: int,
     fontsize: int,
@@ -43,17 +43,17 @@ def add_axes_labels(
     # If not, calculate the value to be displayed using N.
     def fmt(n: float) -> str:
         match show_axes_labels, percentcount:
-            case ShowAxesLabel.COUNT, PercentCount.COUNT:
+            case BarLabels.COUNT, PercentCount.COUNT:
                 return f"{n:g}"
-            case ShowAxesLabel.PERCENT, PercentCount.PERCENT:
+            case BarLabels.PERCENT, PercentCount.PERCENT:
                 return f"{n:0.2f}%"
-            case ShowAxesLabel.PERCENT, PercentCount.COUNT:
+            case BarLabels.PERCENT, PercentCount.COUNT:
                 return f"{n * 100 / n_question:.2f}%"
-            case ShowAxesLabel.COUNT, PercentCount.PERCENT:
+            case BarLabels.COUNT, PercentCount.PERCENT:
                 raise NotImplementedError(
                     "Percentages on axis with absolute counts on bars is not implemented yet."
                 )
-            case ShowAxesLabel.NONE, _:
+            case BarLabels.NONE, _:
                 return ""
         # match is exhaustive, but mypy doesn't get that
         raise AssertionError("unreachable")

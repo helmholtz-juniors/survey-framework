@@ -1,7 +1,9 @@
 from pathlib import Path
 
 from data_import.data_import import LimeSurveyData
+from testing.export import export
 from testing.test_A import test_A
+from testing.test_D import test_D
 from testing.test_E import test_E
 
 
@@ -21,7 +23,8 @@ def main() -> None:
 
     test_A(survey, Path(OUTPUT_PATH))
     test_E(survey, Path(OUTPUT_PATH))
-    # export(survey, Path(OUTPUT_PATH))
+    test_D(survey, Path(OUTPUT_PATH))
+    export(survey, Path(OUTPUT_PATH))
 
 
 if __name__ == "__main__":

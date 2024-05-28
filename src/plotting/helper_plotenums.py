@@ -11,7 +11,7 @@ class PercentCount(StrEnum):
     COUNT = "count"
 
 
-class ShowAxesLabel(Enum):
+class BarLabels(Enum):
     NONE = 1
     COUNT = 2
     PERCENT = 3

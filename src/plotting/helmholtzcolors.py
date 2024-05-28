@@ -34,6 +34,8 @@ helmholtzgreen = "#8CB423"
 green60 = "#c4da8b"
 green80 = "#aecd5e"
 
+transparent = "#ffffff00"
+
 
 def set_plotstyle() -> None:
     sns.set_style("darkgrid", {"axes.facecolor": "#f2f0f0"})
@@ -48,6 +50,16 @@ def get_greens(n: int) -> list[tuple[float, float, float]]:
     greens = sns.blend_palette([darkgreen, helmholtzgreen, green60, "#dbeeaa"], n)
     return cast(list[tuple[float, float, float]], greens)
 
+
+# color palette for Likert plots. Array index == number of answer options
+palette = [
+    [transparent],  # 0
+    [transparent, helmholtzblue],  # 1
+    [transparent, helmholtzblue, helmholtzgreen],  # 2
+    [transparent, helmholtzblue, grey60, helmholtzgreen],  # 3
+    [transparent, helmholtzblue, grey60, green60, helmholtzgreen],  # 4
+    [transparent, helmholtzblue, blue60, grey60, green60, helmholtzgreen],  # 5
+]
 
 arraycolors131 = [helmholtzblue, grey40, grey60, grey80, helmholtzgreen]
 arraycolors242 = [

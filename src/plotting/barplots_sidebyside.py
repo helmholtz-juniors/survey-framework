@@ -12,7 +12,7 @@ from matplotlib.figure import Figure
 
 import plotting.helmholtzcolors as hc
 from plotting.helper_barplots import add_axes_labels
-from plotting.helper_plotenums import PercentCount, ShowAxesLabel
+from plotting.helper_plotenums import BarLabels, PercentCount
 
 
 def plot_bar_side_by_side(
@@ -107,8 +107,8 @@ def plot_bar_side_by_side(
     # ]
     # plot_right.bar_label(bar_container, labels=bar_labels_right)
 
-    add_axes_labels(axis[0], ShowAxesLabel.PERCENT, PercentCount.COUNT, N_left, 11)
-    add_axes_labels(axis[1], ShowAxesLabel.PERCENT, PercentCount.COUNT, N_right, 11)
+    add_axes_labels(axis[0], BarLabels.PERCENT, PercentCount.COUNT, N_left, 11)
+    add_axes_labels(axis[1], BarLabels.PERCENT, PercentCount.COUNT, N_right, 11)
 
     # get titles
     if title_left == "":
