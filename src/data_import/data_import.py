@@ -372,9 +372,9 @@ class LimeSurveyData:
             # ASSUME: question response consists of multiple columns with
             #         'Y' or NaN as entries.
             # Masked with boolean values the responses with nan only for the columns where is_contingent is True.
-            responses[
-                question_group.index[~question_group.is_contingent]
-            ] = responses.loc[:, ~question_group.is_contingent].notnull()
+            responses[question_group.index[~question_group.is_contingent]] = (
+                responses.loc[:, ~question_group.is_contingent].notnull()
+            )
 
         return responses
 
