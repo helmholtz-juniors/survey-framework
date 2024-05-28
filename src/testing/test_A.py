@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from data_analysis.analysis import get_data_for_q
 from data_import.data_import import LimeSurveyData
-from order.order2021 import order_A6
+from order.order2024 import order_a2, order_a6
 from plotting.barplots import plot_bar, plot_bar_comparison
 from plotting.helper_plotenums import Orientation, PercentCount, ShowAxesLabel
 
@@ -38,11 +38,12 @@ def test_plots_A2_single(survey: LimeSurveyData, output_path: Path) -> None:
     # data_q_all_dropna = data_q_all.dropna()
     data_q_counts = data_q_all.groupby([a2]).count().rename(columns={"id": "count"})
 
+    # TODO: ordering helper
     data_q_counts_sorted = data_q_counts.reset_index()
-    # data_q_counts_sorted[a2] = pd.Categorical(
-    #     data_q_counts_sorted[a2], categories=order_A2, ordered=True
-    # )
-    # data_q_counts_sorted = data_q_counts_sorted.sort_values(by=a2)
+    data_q_counts_sorted[a2] = pd.Categorical(
+        data_q_counts_sorted[a2], categories=order_a2, ordered=True
+    )
+    data_q_counts_sorted = data_q_counts_sorted.sort_values(by=a2)
 
     data_q_counts_sorted_percentages = data_q_counts_sorted
     data_q_counts_sorted_percentages["percentages"] = (
@@ -78,7 +79,7 @@ def test_plots_A10_multiple(survey: LimeSurveyData, output_path: Path) -> None:
     ).count()
     responses_df_counts_sorted = responses_df_melted_cleaned_counts.reset_index()
     # responses_df_counts_sorted["name"] = pd.Categorical(
-    #     responses_df_counts_sorted["name"], categories=order_A10, ordered=True
+    #     responses_df_counts_sorted["name"], categories=order_a10, ordered=True
     # )
     responses_df_counts_sorted = responses_df_counts_sorted.sort_values(
         by="value", ascending=False
@@ -123,7 +124,7 @@ def test_plots_A2_comparison_A6(survey: LimeSurveyData, output_path: Path) -> No
     #     responses_df_counts[a2], categories=order_A2, ordered=True
     # )
     responses_df_counts[a6] = pd.Categorical(
-        responses_df_counts[a6], categories=order_A6, ordered=True
+        responses_df_counts[a6], categories=order_a6, ordered=True
     )
     responses_df_counts_sorted = responses_df_counts.sort_values(by=[a2, a6])
 
@@ -151,6 +152,6 @@ def test_plots_A2_comparison_A6(survey: LimeSurveyData, output_path: Path) -> No
 def test_A(survey: LimeSurveyData, output_path: Path) -> None:
     test_plots_A2_single(survey, output_path)
 
-    test_plots_A10_multiple(survey, output_path)
+    # test_plots_A10_multiple(survey, output_path)
 
-    test_plots_A2_comparison_A6(survey, output_path)
+    # test_plots_A2_comparison_A6(survey, output_path)

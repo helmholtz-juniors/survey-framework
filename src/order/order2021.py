@@ -1,8 +1,9 @@
 # question orders
 
-order_A1 = ["A1", "A2", "A3", "A4"]
-order_A2 = [
+order2021_A1 = ["A1", "A2", "A3", "A4"]
+order2021_A2 = [
     "A1",
+    "A18",
     "A2",
     "A3",
     "A4",
@@ -19,10 +20,9 @@ order_A2 = [
     "A15",
     "A16",
     "A17",
-    "A18",
     "-oth-",
 ]
-order_A3 = [
+order2021_A3 = [
     "A1",
     "A2",
     "A3",
@@ -42,9 +42,9 @@ order_A3 = [
     "A10",
     "-oth-",
 ]
-order_A4 = ["A1", "A2", "A3", "A4", "A5", "A6", "A7", "-oth-"]
-order_A6 = ["A1", "A3", "A4", "A5", "A2", "-oth-"]
-order_A10 = [
+order2021_A4 = ["A1", "A2", "A3", "A4", "A5", "A6", "A7", "-oth-"]
+order2021_A6 = ["A1", "A3", "A4", "A5", "A2", "-oth-"]
+order2021_A10 = [
     "A10_SQ001",
     "A10_SQ002",
     "A10_SQ003",
