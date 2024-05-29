@@ -3,14 +3,14 @@ from typing import Iterable, cast
 
 import pandas as pd
 import seaborn as sns
-from data_import.data_import import LimeSurveyData, QuestionType
 from matplotlib import pyplot as plt
 from matplotlib.axes import Axes
 from matplotlib.container import BarContainer
 from matplotlib.figure import Figure
 
-import plotting.helmholtzcolors as hc
-from plotting.helper_plotenums import (
+from ..data_import.data_import import LimeSurveyData, QuestionType
+from . import helmholtzcolors as hc
+from .helper_plotenums import (
     BarLabels,
     Orientation,
     PercentCount,

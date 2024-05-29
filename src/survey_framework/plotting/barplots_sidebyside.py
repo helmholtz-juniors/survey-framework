@@ -4,15 +4,15 @@ from textwrap import wrap
 import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
-from data_import.data_import import LimeSurveyData
-from matplotlib.axes import Axes
 
 # from matplotlib.container import BarContainer
+from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 
-import plotting.helmholtzcolors as hc
-from plotting.helper_barplots import add_axes_labels
-from plotting.helper_plotenums import BarLabels, PercentCount
+from ..data_import.data_import import LimeSurveyData
+from . import helmholtzcolors as hc
+from .helper_barplots import add_axes_labels
+from .helper_plotenums import BarLabels, PercentCount
 
 
 def plot_bar_side_by_side(

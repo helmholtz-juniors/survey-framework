@@ -1,11 +1,10 @@
 from pathlib import Path
 
 import matplotlib.pyplot as plt
-from data_analysis.analysis import get_data_for_q
-from data_import.data_import import LimeSurveyData
 
-# from plotting.helper_plotenums import BarLabels
-from plotting.likertplot import plot_likertplot
+from ..data_analysis.analysis import get_data_for_q
+from ..data_import.data_import import LimeSurveyData
+from ..plotting.likertplot import plot_likertplot
 
 
 def test_plots_D(survey: LimeSurveyData, output_path: Path) -> None:
@@ -16,8 +15,6 @@ def test_plots_D(survey: LimeSurveyData, output_path: Path) -> None:
     output.parent.mkdir(parents=True, exist_ok=True)
 
     data_d4_all = get_data_for_q(survey, d4)
-
-    print(data_d4_all)
     # every column in this DF should be a grouped bar in the Likert plot
 
     fig, ax = plot_likertplot(
@@ -25,7 +22,6 @@ def test_plots_D(survey: LimeSurveyData, output_path: Path) -> None:
         question=d4,
         data_df=data_d4_all,
         order=["A2", "A3", "A4"],
-        drop=["A5", "A6"],
     )
 
     plt.savefig(output)

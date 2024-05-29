@@ -1,5 +1,6 @@
 import pandas as pd
-from data_import.data_import import LimeSurveyData
+
+from ..data_import.data_import import LimeSurveyData
 
 
 def get_data_for_q(

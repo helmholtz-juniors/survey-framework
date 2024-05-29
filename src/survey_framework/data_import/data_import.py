@@ -184,7 +184,7 @@ class LimeSurveyData:
         if not_in_structure:
             warnings.warn(
                 f"The following columns in the data csv file are not found in the survey structure and are dropped:\n{not_in_structure}",
-                stacklevel=1,
+                stacklevel=2,
             )
             question_responses = question_responses.drop(not_in_structure, axis=1)
         # Check for questions not listed in data csv
@@ -192,7 +192,7 @@ class LimeSurveyData:
         if not_in_data:
             warnings.warn(
                 f"The following questions in the survey structure are not found in the data csv file:\n{not_in_data}",
-                stacklevel=1,
+                stacklevel=2,
             )
 
         self.responses = question_responses
@@ -275,10 +275,8 @@ class LimeSurveyData:
         Args:
             output_path (Path): output path to where CSV is saved
         """
-        try:
-            output_path.mkdir(parents=True, exist_ok=False)
-        except FileExistsError:
-            print("Folder is already there")
+        output_path.mkdir(parents=True, exist_ok=True)
+
         output = Path(output_path / "Q.csv")
         self.questions.to_csv(output)
 
@@ -339,7 +337,7 @@ class LimeSurveyData:
             }
         # If single-choice, free, individual subquestion, or array
         else:
-            choices_dict = question_info.choices[0]
+            choices_dict = question_info.choices.iloc[0]
 
         return choices_dict
 
@@ -403,6 +401,13 @@ class LimeSurveyData:
         question_type = QuestionType(question_types[0])
 
         return question_type
+
+    def get_questions_by_type(self, type: QuestionType) -> list[str]:
+        return list(
+            self.questions.loc[self.questions["type"] == type.value]["question_group"]
+            .unique()
+            .tolist()
+        )
 
     def query(self, expr: str) -> pd.DataFrame:
         """Filter responses DataFrame with a boolean expression

@@ -2,17 +2,17 @@ from textwrap import wrap
 
 import matplotlib.pyplot as plt
 import pandas as pd
-from data_import.data_import import LimeSurveyData
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 
-from plotting.helper_barplots import (
+from ..data_import.data_import import LimeSurveyData
+from ..plotting.helper_barplots import (
     adapt_legend,
     add_axes_labels,
     add_tick_labels,
     plot_barplot,
 )
-from plotting.helper_plotenums import BarLabels, Orientation, PercentCount
+from ..plotting.helper_plotenums import BarLabels, Orientation, PercentCount
 
 
 def plot_bar(

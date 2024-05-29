@@ -81,7 +81,7 @@ def _parse_question_title(question: Tag) -> str:
             warn(
                 f"More than one 'text' tag found for question '{question_label}'."
                 " Only the first one was used.",
-                stacklevel=1,
+                stacklevel=2,
             )
     else:
         raise AssertionError(f"No question label for question {question}")
@@ -113,7 +113,7 @@ def _parse_question_description(question: Tag) -> str:
             warn(
                 f"More than one 'directive' section provided for question {question}."
                 " Only the first one was used.",
-                stacklevel=1,
+                stacklevel=2,
             )
     return description
 

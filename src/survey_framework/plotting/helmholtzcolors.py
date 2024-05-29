@@ -59,6 +59,17 @@ palette = [
     [transparent, helmholtzblue, grey60, helmholtzgreen],  # 3
     [transparent, helmholtzblue, grey60, green60, helmholtzgreen],  # 4
     [transparent, helmholtzblue, blue60, grey60, green60, helmholtzgreen],  # 5
+    [transparent, helmholtzblue, blue60, grey60, grey40, green60, helmholtzgreen],  # 6
+    [
+        transparent,
+        helmholtzblue,
+        blue60,
+        grey60,
+        grey40,
+        green60,
+        green80,
+        helmholtzgreen,
+    ],  # 7
 ]
 
 arraycolors131 = [helmholtzblue, grey40, grey60, grey80, helmholtzgreen]
