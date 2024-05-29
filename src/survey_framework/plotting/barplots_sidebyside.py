@@ -46,7 +46,8 @@ def plot_bar_side_by_side(
     Returns:
         tuple[plt.figure, plt.axes]: New Figure and Axes
     """
-    # TODO: check if this signature is flexible enough. What about percentCount, fontsize, etc?
+    # TODO: check if this signature is flexible enough.
+    #       What about percentCount, fontsize, etc?
 
     # set seaborn theme
     hc.set_plotstyle()
@@ -134,7 +135,7 @@ def plot_bar_side_by_side(
     plot_right.set_yticklabels(y_ticklabels)
 
     # more space between both subfigures
-    # https: // www.geeksforgeeks.org / how - to - set - the - spacing - between - subplots - in -matplotlib - in -python /
+    # https://www.geeksforgeeks.org/how-to-set-the-spacing-between-subplots-in-matplotlib-in-python/
     figure.tight_layout(pad=0.5)
 
     plt.text(0, 0.99, f"N = {N_left}", ha="left", va="top", transform=axis[0].transAxes)

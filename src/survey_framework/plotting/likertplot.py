@@ -30,7 +30,7 @@ def plot_likertplot(
         data_df: dataframe containing answers to be plotted
         question: question code (e.g. 'D4')
         order: ordered list of answer options. **The rest will be dropped!**
-        bar_labels: which kind of labels bars should have. Defaults to BarLabels.PERCENT.
+        bar_labels: which kind of labels bars should have. Defaults to PERCENT.
         fig_size_x: width of the figure. Defaults to 16.
         fig_size_y: height of the figure. Defaults to 10.
         text_wrap: number of characters before a question label wraps. Defaults to 30.
@@ -71,7 +71,8 @@ def plot_likertplot(
         new_labels.append("\n".join(wrap(label, text_wrap)))
     ax.set_yticklabels(new_labels)
     # TODO: use plot_helpers instead?
-    # add_tick_labels(survey=survey, ax=ax, data_df=data_df, question=question, orientation=Orientation.HORIZONTAL, fontsize=10, text_wrap=30)
+    # add_tick_labels(survey=survey, ax=ax, data_df=data_df,
+    # question=question, orientation=Orientation.HORIZONTAL, fontsize=10, text_wrap=30)
 
     # set the legend labels
     choices = survey.questions.loc[survey.questions["question_group"] == question][

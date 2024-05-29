@@ -23,7 +23,7 @@ lint = ["ruff", "mypy", "types-beautifulsoup4", "pandas-stubs", "types-seaborn"]
 [tool.ruff.lint]
 select = [
     # pycodestyle
-    #"E",
+    "E",
     # Pyflakes
     "F",
     # pyupgrade

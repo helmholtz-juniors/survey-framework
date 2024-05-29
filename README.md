@@ -6,7 +6,7 @@ This repo should contain the code for data import, analysis and plotting.
 We suggest the following folder structure:
 ```tree
 n2_survey
-|-- survey_framework (this repository)
+|-- survey-framework (this repository)
 |   |-- data (dummy data)
 |   |-- documentation
 |   |-- src
@@ -41,7 +41,7 @@ NEVER COMMIT LIMESURVEY DATA TO THIS (OR ANY) REPOSITORY!
     ```
 2. Clone this project to your computer
     ```sh
-    git clone git@github.com:helmholtz-juniors/survey-framework.git survey_framework
+    git clone git@github.com:helmholtz-juniors/survey-framework.git
     ```
 3. Create and activate a virtual environment
     ```sh

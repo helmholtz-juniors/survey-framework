@@ -8,11 +8,12 @@ lime survey data such as *.xml structure files
 
 import os
 import re
+import warnings
 from pathlib import Path
 from typing import TypedDict, cast
 from warnings import warn
 
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, MarkupResemblesLocatorWarning
 from bs4.element import Tag
 
 from .fixup_2024 import count_responses, name_response, rename_question
@@ -47,13 +48,16 @@ def _get_clean_string(tag: Tag) -> str:
     """
 
     # Remove HTML tags and line breaks
-    clean_string = (
-        " ".join(BeautifulSoup(tag.text, "html.parser").stripped_strings)
-        .replace("\n", " ")
-        .replace("\t", " ")
-        .replace("\xa0", " ")
-        .strip()
-    )
+    # warnings are caused by "/" in strings, ignore them
+    with warnings.catch_warnings():
+        warnings.simplefilter(action="ignore", category=MarkupResemblesLocatorWarning)
+        clean_string = (
+            " ".join(BeautifulSoup(tag.text, "html.parser").stripped_strings)
+            .replace("\n", " ")
+            .replace("\t", " ")
+            .replace("\xa0", " ")
+            .strip()
+        )
 
     # Replace multiply repeated spaces by one
     clean_string = re.sub(" +", " ", clean_string)
@@ -76,13 +80,7 @@ def _parse_question_title(question: Tag) -> str:
     """
     text_sections = question.find_all("text", recursive=False)
     if len(text_sections) >= 1:
-        question_label = _get_clean_string(text_sections[0])
-        if len(text_sections) > 1:
-            warn(
-                f"More than one 'text' tag found for question '{question_label}'."
-                " Only the first one was used.",
-                stacklevel=2,
-            )
+        question_label = " ".join(map(_get_clean_string, text_sections)).strip()
     else:
         raise AssertionError(f"No question label for question {question}")
 
@@ -307,7 +305,8 @@ def _get_question_type(
         question_type = "free"
     else:
         raise AssertionError(
-            f"Unknown question type encountered when processing {responses[0][0]['name']}"
+            "Unknown question type encountered when processing "
+            f"{responses[0][0]['name']}"
         )
 
     return question_type

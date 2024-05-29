@@ -51,7 +51,7 @@ def add_axes_labels(
                 return f"{n * 100 / n_question:.2f}%"
             case BarLabels.COUNT, PercentCount.PERCENT:
                 raise NotImplementedError(
-                    "Percentages on axis with absolute counts on bars is not implemented yet."
+                    "Percentages on axis with absolute counts on bars not implemented."
                 )
             case BarLabels.NONE, _:
                 return ""
@@ -95,7 +95,8 @@ def plot_barplot(
     hue_input = list()
     colors = list()
     if comparison:
-        # if it's a comparison bar plot, hue needs to be filled with a list of comparison data
+        # if it's a comparison bar plot, hue needs to be filled
+        # with a list of comparison data
         hue_input = list(data_df[hue])
         colors = hc.get_blues(len(data_df[hue].value_counts()))
     else:
