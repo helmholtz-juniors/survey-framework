@@ -1,4 +1,3 @@
-# from testing.export import export
 from pathlib import Path
 
 from data_import.data_import import LimeSurveyData

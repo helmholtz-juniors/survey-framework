@@ -11,8 +11,8 @@ from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 
 import plotting.helmholtzcolors as hc
+from plotting.helper_barplots import add_axes_labels
 from plotting.helper_plotenums import PercentCount, ShowAxesLabel
-from plotting.helper_plots import add_axes_labels
 
 
 def plot_bar_side_by_side(

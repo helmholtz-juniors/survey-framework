@@ -172,3 +172,6 @@ output
 
 # Mac files
 .DS_Store
+
+# Caro's local docs
+README_CARO_LOCAL.md

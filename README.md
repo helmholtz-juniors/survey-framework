@@ -10,6 +10,7 @@ n2_survey
 |   |-- data (dummy data)
 |   |-- documentation
 |   |-- src
+|   |-- .venv (python environment)
 |   |-- pyproject.toml
 |   `-- README.md (this file)
 |-- data (CONFIDENTIAL!)
@@ -17,9 +18,9 @@ n2_survey
 |   `-- survey_2024
 |       |-- survey_738345_en.xml (structure description)
 |       `-- results-survey738345-Qcode-Acode.csv (answers)
-|-- .venv (python environment)
 |-- survey-center-specific-2024
-`-- survey-general-2024 
+    `-- .venv (python environment)
+`-- survey-general-2024
 ```
 
 ### Using survey data
@@ -50,9 +51,9 @@ NEVER COMMIT LIMESURVEY DATA TO THIS (OR ANY) REPOSITORY!
     Run the last command whenever you come back to the project to re-activate the virtual environment.
 4. Install this package (in editable mode). This way, it can be used from other packages and still be modified.
     ```sh
-    python3 -m pip install -e .[lint]
+    cd survey_framework
+    python3 -m pip install -e .'[lint]'
     ```
-    (depending on your shell, you might need to escape the brackets like: `\[lint\]`)
 
 ### Kick the tires
 

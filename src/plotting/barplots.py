@@ -1,16 +1,18 @@
+from textwrap import wrap
+
 import matplotlib.pyplot as plt
 import pandas as pd
 from data_import.data_import import LimeSurveyData
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 
-from plotting.helper_plotenums import Orientation, PercentCount, ShowAxesLabel
-from plotting.helper_plots import (
+from plotting.helper_barplots import (
     adapt_legend,
     add_axes_labels,
     add_tick_labels,
     plot_barplot,
 )
+from plotting.helper_plotenums import Orientation, PercentCount, ShowAxesLabel
 
 
 def plot_bar(
@@ -96,6 +98,21 @@ def plot_bar(
             ax.set(xlabel=percentcount, ylabel=label_q_data)
         case Orientation.VERTICAL:
             ax.set(xlabel=label_q_data, ylabel=percentcount)
+
+    # set title
+    ax.set_title(
+        "\n".join(
+            wrap(
+                question
+                + ": "
+                + survey.questions.loc[
+                    survey.questions["question_group"] == question
+                ].question_label.iloc[0],
+                60,
+            )
+        ),
+        fontsize=14,
+    )
 
     ax.autoscale()
     ax.set_autoscale_on(True)

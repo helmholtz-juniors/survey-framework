@@ -46,7 +46,6 @@
 
 # Scatter Plots
 
-
 # Section Overview
 
 A - General

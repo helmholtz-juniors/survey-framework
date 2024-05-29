@@ -41,9 +41,9 @@ def name_response(response: Tag) -> str:
 
         choices = response.find_all("value")
         if len(choices) == 7:
-            return "B4-1"
+            return "B4a"
         elif len(choices) == 8:
-            return "B4-2"
+            return "B4b"
         else:
             raise AssertionError("expected 7 choices for B4-1 and 8 choices for B4-2.")
 
@@ -59,8 +59,8 @@ def rename_question(questions: list[QuestionTypeAlias]) -> list[QuestionTypeAlia
     """
 
     for question in questions:
-        if question["question_group"] == "B4-1":
+        if question["question_group"] == "B4a":
             question["name"] = cast(str, question["name"]) + "_1"
-        elif question["question_group"] == "B4-2":
+        elif question["question_group"] == "B4b":
             question["name"] = cast(str, question["name"]) + "_2"
     return questions
