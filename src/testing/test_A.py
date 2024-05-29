@@ -152,6 +152,6 @@ def test_plots_A2_comparison_A6(survey: LimeSurveyData, output_path: Path) -> No
 def test_A(survey: LimeSurveyData, output_path: Path) -> None:
     test_plots_A2_single(survey, output_path)
 
-    # test_plots_A10_multiple(survey, output_path)
+    test_plots_A10_multiple(survey, output_path)
 
-    # test_plots_A2_comparison_A6(survey, output_path)
+    test_plots_A2_comparison_A6(survey, output_path)
