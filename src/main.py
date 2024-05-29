@@ -2,17 +2,13 @@ from pathlib import Path
 
 from data_import.data_import import LimeSurveyData
 from testing.test_A import test_A
-
-# from testing.test_E import test_E
+from testing.test_E import test_E
 
 
 def main() -> None:
     # important files and paths
     # INPUT_PATH should be an absolute path to the survey
-    # INPUT_PATH = "../data/survey_2024/"
-    INPUT_PATH = (
-        "/Users/carolynguthoff/Documents/05_HelmholtzJuniors/08_Survey2024/Data/survey"
-    )
+    INPUT_PATH = "../data/survey_2024/"
     # file name of survey structure, has ending '.xml'
     XML_FILE_NAME = "survey_738345_en.xml"
     # file name of survey, has ending '.csv'
@@ -24,7 +20,7 @@ def main() -> None:
     )
 
     test_A(survey, Path(OUTPUT_PATH))
-    # test_E(survey, Path(OUTPUT_PATH))
+    test_E(survey, Path(OUTPUT_PATH))
     # export(survey, Path(OUTPUT_PATH))
 
 
