@@ -1,5 +1,6 @@
 import pandas as pd
-from data_import.data_import import LimeSurveyData
+
+from ..data_import.data_import import LimeSurveyData
 
 
 def get_data_for_q(
@@ -7,7 +8,8 @@ def get_data_for_q(
     question_number: str,
 ) -> pd.DataFrame:
     """
-    returns a DataFrame with the responses to a specific question without any contingent answers
+    returns a DataFrame with the responses to a specific question
+    without any contingent answers
 
     Args:
         survey (LimeSurveyData): _description_

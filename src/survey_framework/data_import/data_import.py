@@ -149,7 +149,8 @@ class LimeSurveyData:
 
         if raw_data:
             # Add missing columns for multiple-choice questions with contingent question
-            # A contingent question of a multiple-choice question typically looks like this:
+            # A contingent question of a multiple-choice question typically looks
+            # like this:
             # <response varName="B1T">
             # <fixed>
             #  <category>
@@ -158,8 +159,10 @@ class LimeSurveyData:
             #   <contingentQuestion varName="B1other">
             #    <text>Other</text>
             #     ...
-            # For some reason, LimeSurvey does not export values for the parent <response> (B1T in this case).
-            # So, here we add those columns artificially based on the contingent question values.
+            # For some reason, LimeSurvey does not export values for the parent
+            # <response> (B1T in this case).
+            # So, here we add those columns artificially based on the contingent
+            # question values.
             multiple_choice_questions = self.questions.index[
                 (self.questions["type"] == "multiple-choice")
                 & self.questions["contingent_of_name"].notnull()
@@ -183,16 +186,18 @@ class LimeSurveyData:
         )
         if not_in_structure:
             warnings.warn(
-                f"The following columns in the data csv file are not found in the survey structure and are dropped:\n{not_in_structure}",
-                stacklevel=1,
+                "The following columns in the data csv file are not found "
+                f"in the survey structure and are dropped:\n{not_in_structure}",
+                stacklevel=2,
             )
             question_responses = question_responses.drop(not_in_structure, axis=1)
         # Check for questions not listed in data csv
         not_in_data = list(set(self.questions.index) - set(question_responses.columns))
         if not_in_data:
             warnings.warn(
-                f"The following questions in the survey structure are not found in the data csv file:\n{not_in_data}",
-                stacklevel=1,
+                "The following questions in the survey structure are not found "
+                f"in the data csv file:\n{not_in_data}",
+                stacklevel=2,
             )
 
         self.responses = question_responses
@@ -211,8 +216,8 @@ class LimeSurveyData:
         """Get dtypes for columns in data csv
 
         Args:
-            columns (list): List of column names from data csv
-            renamed_columns (list): List of column names modified to match self.questions entries
+            columns: Column names from data csv
+            renamed_columns: Column names modified to match self.questions entries
 
         Returns:
             dict: Dictionary of column names and dtypes
@@ -223,7 +228,8 @@ class LimeSurveyData:
         dtype_dict: dict[
             str, Union[str, pd.Int32Dtype, pd.UInt32Dtype, pd.Int16Dtype]
         ] = {}
-        # Compile list of datetime columns (because pd.read_csv takes this as separate arg)
+        # Compile list of datetime columns
+        # (because pd.read_csv takes this as separate arg)
         datetime_columns = []
 
         for column, renamed_column in zip(columns, renamed_columns):
@@ -275,10 +281,8 @@ class LimeSurveyData:
         Args:
             output_path (Path): output path to where CSV is saved
         """
-        try:
-            output_path.mkdir(parents=True, exist_ok=False)
-        except FileExistsError:
-            print("Folder is already there")
+        output_path.mkdir(parents=True, exist_ok=True)
+
         output = Path(output_path / "Q.csv")
         self.questions.to_csv(output)
 
@@ -286,8 +290,8 @@ class LimeSurveyData:
         """Get question structure (i.e. subset from self.questions)
 
         Args:
-            question (str): Name of question or subquestion
-            drop_other (bool, optional): Whether to exclude contingent question (i.e. "other")
+            question: Name of question or subquestion
+            drop_other: Whether to exclude contingent question (i.e. "other")
         Raises:
             ValueError: There is no such question or subquestion
 
@@ -312,9 +316,9 @@ class LimeSurveyData:
         """Get choices of a question
 
         * For multiple-choice group, format is `<subquestion code: subquestion title>`,
-        for example, {"C3_SQ001": "I do not like scientific work.", "C3_SQ002": ...}
-        * For all other fixed questions (i.e. array, single choice, subquestion), returns
-          choices of that question or column
+          for example, {"C3_SQ001": "I do not like scientific work.", "C3_SQ002": ...}
+        * For all other fixed questions (i.e. array, single choice, subquestion),
+          returns choices of that question or column
         * For free and contingent, returns None
 
         Args:
@@ -339,7 +343,7 @@ class LimeSurveyData:
             }
         # If single-choice, free, individual subquestion, or array
         else:
-            choices_dict = question_info.choices[0]
+            choices_dict = question_info.choices.iloc[0]
 
         return choices_dict
 
@@ -352,8 +356,8 @@ class LimeSurveyData:
         (and with or without contingent questions).
 
         Args:
-            question (str): Question to get the responses for.
-            drop_other (bool, optional): Whether to exclude contingent question (i.e. "other")
+            question: Question to get the responses for.
+            drop_other: Whether to exclude contingent question (i.e. "other")
 
         Raises:
             ValueError: Inconsistent question types within question groups.
@@ -371,7 +375,8 @@ class LimeSurveyData:
         if question_type == QuestionType.MULTIPLE_CHOICE:
             # ASSUME: question response consists of multiple columns with
             #         'Y' or NaN as entries.
-            # Masked with boolean values the responses with nan only for the columns where is_contingent is True.
+            # Masked with boolean values the responses with nan only for
+            # the columns where is_contingent is True.
             responses[question_group.index[~question_group.is_contingent]] = (
                 responses.loc[:, ~question_group.is_contingent].notnull()
             )
@@ -403,6 +408,13 @@ class LimeSurveyData:
         question_type = QuestionType(question_types[0])
 
         return question_type
+
+    def get_questions_by_type(self, type: QuestionType) -> list[str]:
+        return list(
+            self.questions.loc[self.questions["type"] == type.value]["question_group"]
+            .unique()
+            .tolist()
+        )
 
     def query(self, expr: str) -> pd.DataFrame:
         """Filter responses DataFrame with a boolean expression

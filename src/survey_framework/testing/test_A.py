@@ -2,11 +2,12 @@ from pathlib import Path
 
 import matplotlib.pyplot as plt
 import pandas as pd
-from data_analysis.analysis import get_data_for_q
-from data_import.data_import import LimeSurveyData
-from order.order2024 import order_a2, order_a6
-from plotting.barplots import plot_bar, plot_bar_comparison
-from plotting.helper_plotenums import Orientation, PercentCount, ShowAxesLabel
+
+from ..data_analysis.analysis import get_data_for_q
+from ..data_import.data_import import LimeSurveyData
+from ..order.order2024 import order
+from ..plotting.barplots import plot_bar, plot_bar_comparison
+from ..plotting.helper_plotenums import BarLabels, Orientation, PercentCount
 
 sectionA = "A"
 a1 = "A1"  # participation in last N2 survey
@@ -41,7 +42,7 @@ def test_plots_A2_single(survey: LimeSurveyData, output_path: Path) -> None:
     # TODO: ordering helper
     data_q_counts_sorted = data_q_counts.reset_index()
     data_q_counts_sorted[a2] = pd.Categorical(
-        data_q_counts_sorted[a2], categories=order_a2, ordered=True
+        data_q_counts_sorted[a2], categories=order["A2"], ordered=True
     )
     data_q_counts_sorted = data_q_counts_sorted.sort_values(by=a2)
 
@@ -57,7 +58,7 @@ def test_plots_A2_single(survey: LimeSurveyData, output_path: Path) -> None:
         n_question=N_question,
         label_q_data="Centers",
         orientation=Orientation.VERTICAL,
-        show_axes_labels=ShowAxesLabel.NONE,
+        show_axes_labels=BarLabels.NONE,
     )
 
     plt.savefig(output)
@@ -97,7 +98,7 @@ def test_plots_A10_multiple(survey: LimeSurveyData, output_path: Path) -> None:
         label_q_data="Ethnicity",
         percentcount=PercentCount.COUNT,
         orientation=Orientation.VERTICAL,
-        show_axes_labels=ShowAxesLabel.PERCENT,
+        show_axes_labels=BarLabels.PERCENT,
     )
 
     plt.savefig(output)
@@ -124,7 +125,7 @@ def test_plots_A2_comparison_A6(survey: LimeSurveyData, output_path: Path) -> No
     #     responses_df_counts[a2], categories=order_A2, ordered=True
     # )
     responses_df_counts[a6] = pd.Categorical(
-        responses_df_counts[a6], categories=order_a6, ordered=True
+        responses_df_counts[a6], categories=order["A6"], ordered=True
     )
     responses_df_counts_sorted = responses_df_counts.sort_values(by=[a2, a6])
 
@@ -142,7 +143,7 @@ def test_plots_A2_comparison_A6(survey: LimeSurveyData, output_path: Path) -> No
         label_q_data="Centers",
         orientation=Orientation.HORIZONTAL,
         percentcount=PercentCount.COUNT,
-        show_axes_labels=ShowAxesLabel.COUNT,
+        show_axes_labels=BarLabels.COUNT,
         fontsize_axes_labels=5,
     )
 

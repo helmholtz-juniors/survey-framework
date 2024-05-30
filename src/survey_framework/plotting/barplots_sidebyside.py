@@ -4,15 +4,15 @@ from textwrap import wrap
 import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
-from data_import.data_import import LimeSurveyData
-from matplotlib.axes import Axes
 
 # from matplotlib.container import BarContainer
+from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 
-import plotting.helmholtzcolors as hc
-from plotting.helper_barplots import add_axes_labels
-from plotting.helper_plotenums import PercentCount, ShowAxesLabel
+from ..data_import.data_import import LimeSurveyData
+from . import helmholtzcolors as hc
+from .helper_barplots import add_axes_labels
+from .helper_plotenums import BarLabels, PercentCount
 
 
 def plot_bar_side_by_side(
@@ -46,7 +46,8 @@ def plot_bar_side_by_side(
     Returns:
         tuple[plt.figure, plt.axes]: New Figure and Axes
     """
-    # TODO: check if this signature is flexible enough. What about percentCount, fontsize, etc?
+    # TODO: check if this signature is flexible enough.
+    #       What about percentCount, fontsize, etc?
 
     # set seaborn theme
     hc.set_plotstyle()
@@ -107,8 +108,8 @@ def plot_bar_side_by_side(
     # ]
     # plot_right.bar_label(bar_container, labels=bar_labels_right)
 
-    add_axes_labels(axis[0], ShowAxesLabel.PERCENT, PercentCount.COUNT, N_left, 11)
-    add_axes_labels(axis[1], ShowAxesLabel.PERCENT, PercentCount.COUNT, N_right, 11)
+    add_axes_labels(axis[0], BarLabels.PERCENT, PercentCount.COUNT, N_left, 11)
+    add_axes_labels(axis[1], BarLabels.PERCENT, PercentCount.COUNT, N_right, 11)
 
     # get titles
     if title_left == "":
@@ -134,7 +135,7 @@ def plot_bar_side_by_side(
     plot_right.set_yticklabels(y_ticklabels)
 
     # more space between both subfigures
-    # https: // www.geeksforgeeks.org / how - to - set - the - spacing - between - subplots - in -matplotlib - in -python /
+    # https://www.geeksforgeeks.org/how-to-set-the-spacing-between-subplots-in-matplotlib-in-python/
     figure.tight_layout(pad=0.5)
 
     plt.text(0, 0.99, f"N = {N_left}", ha="left", va="top", transform=axis[0].transAxes)

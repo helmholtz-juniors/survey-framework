@@ -1,8 +1,10 @@
 from pathlib import Path
 
-from data_import.data_import import LimeSurveyData
-from testing.test_A import test_A
-from testing.test_E import test_E
+from survey_framework.data_import.data_import import LimeSurveyData
+from survey_framework.testing.export import export
+from survey_framework.testing.test_A import test_A
+from survey_framework.testing.test_D import test_D
+from survey_framework.testing.test_E import test_E
 
 
 def main() -> None:
@@ -20,8 +22,9 @@ def main() -> None:
     )
 
     test_A(survey, Path(OUTPUT_PATH))
+    test_D(survey, Path(OUTPUT_PATH))
     test_E(survey, Path(OUTPUT_PATH))
-    # export(survey, Path(OUTPUT_PATH))
+    export(survey, Path(OUTPUT_PATH))
 
 
 if __name__ == "__main__":

@@ -2,17 +2,17 @@ from textwrap import wrap
 
 import matplotlib.pyplot as plt
 import pandas as pd
-from data_import.data_import import LimeSurveyData
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 
-from plotting.helper_barplots import (
+from ..data_import.data_import import LimeSurveyData
+from ..plotting.helper_barplots import (
     adapt_legend,
     add_axes_labels,
     add_tick_labels,
     plot_barplot,
 )
-from plotting.helper_plotenums import Orientation, PercentCount, ShowAxesLabel
+from ..plotting.helper_plotenums import BarLabels, Orientation, PercentCount
 
 
 def plot_bar(
@@ -26,7 +26,7 @@ def plot_bar(
     fig_size_x: int = 16,
     fig_size_y: int = 10,
     fontsize: int = 10,
-    show_axes_labels: ShowAxesLabel = ShowAxesLabel.NONE,
+    show_axes_labels: BarLabels = BarLabels.NONE,
     fontsize_axes_labels: int = 10,
     text_wrap: int = 25,
 ) -> tuple[Figure, Axes]:
@@ -34,18 +34,19 @@ def plot_bar(
     plot bar plots (single and multiple)
 
     Args:
-        survey (LimeSurveyData): _description_
-        data_df (pd.DataFrame): _description_
-        question (str): _description_
-        n_question (int): _description_
-        label_q_data (str): Label for axis with data from question. Defaults to "".
-        orientation (Orientation, optional): Options: 'h' = horizontal, 'v' = vertical. Defaults to 'h'.
-        percentcount (PercentCount, optional): 'p' = percent, 'c' = count. Defaults to 'c'.
-        fig_size_x (int, optional): Width of figure. Defaults to 16.
-        fig_size_y (int, optional): Height of figure. Defaults to 10.
-        fontsize (int, optional): Size of font. Defaults to 10.
-        show_axes_labels (ShowAxesLabel, optional): 'n' = show none, 'c' = show counts, 'p' = show percent. Defaults to 'n'.
-        text_wrap (int, optional): Number of letters after which text labels warp. Defaults to 25.
+        survey: The LimeSurvey object
+        data_df: DataFrame with responses to be plotted
+        question: The question code
+        n_question: Number of participants
+        label_q_data: Label for axis with data from question. Defaults to "".
+        orientation: Plot orientation. Defaults to HORIZONTAL.
+        percentcount: Plot absolute values or percentages? Defaults to COUNT.
+        fig_size_x: Width of figure. Defaults to 16.
+        fig_size_y: Height of figure. Defaults to 10.
+        fontsize: Font size for tick labels. Defaults to 10.
+        show_axes_labels: How to format bar labels. Defaults to NONE (no labels).
+        fontsize_axes_labels: Font size for bar labels. Defaults to 10.
+        text_wrap: Number of letters after which text labels wrap. Defaults to 25.
 
     Returns:
         tuple[plt.figure, plt.axes, plt.axes]: _description_
@@ -95,9 +96,9 @@ def plot_bar(
     # add general labels to axes
     match orientation:
         case Orientation.HORIZONTAL:
-            ax.set(xlabel=percentcount, ylabel=label_q_data)
+            ax.set(xlabel=percentcount.value.capitalize, ylabel=label_q_data)
         case Orientation.VERTICAL:
-            ax.set(xlabel=label_q_data, ylabel=percentcount)
+            ax.set(xlabel=label_q_data, ylabel=percentcount.value.capitalize)
 
     # set title
     ax.set_title(
@@ -132,7 +133,7 @@ def plot_bar_comparison(
     fig_size_x: int = 16,
     fig_size_y: int = 10,
     fontsize: int = 10,
-    show_axes_labels: ShowAxesLabel = ShowAxesLabel.NONE,
+    show_axes_labels: BarLabels = BarLabels.NONE,
     fontsize_axes_labels: int = 10,
     text_wrap: int = 25,
 ) -> tuple[Figure, Axes]:
@@ -140,19 +141,20 @@ def plot_bar_comparison(
     plot comparison bar plots (single and multiple)
 
     Args:
-        survey (LimeSurveyData): _description_
-        data_df (pd.DataFrame): _description_
-        question (str): _description_
-        question_comparison (str): _description_
-        n_question (int): _description_
-        label_q_data (str): Label for axis with data from question. Defaults to "".
-        orientation (Orientation, optional): Options: 'h' = horizontal, 'v' = vertical. Defaults to 'h'.
-        percentcount (PercentCount, optional): 'p' = percent, 'c' = count. Defaults to 'c'.
-        fig_size_x (int, optional): Width of figure. Defaults to 16.
-        fig_size_y (int, optional): Height of figure. Defaults to 10.
-        fontsize (int, optional): Size of font. Defaults to 10.
-        show_axes_labels (ShowAxesLabel, optional): 'n' = show none, 'c' = show counts, 'p' = show percent. Defaults to 'n'.
-        text_wrap (int, optional): Number of letters after which text labels warp. Defaults to 25.
+        survey: The LimeSurvey object
+        data_df: DataFrame with responses to be plotted
+        question: Question code for the first question
+        question_comparison: Question code for the second question
+        n_question: Number of participants
+        label_q_data: Label for axis with data from question. Defaults to "".
+        orientation: Plot orientation. Defaults to HORIZONTAL.
+        percentcount: Plot absolute values or percentages? Defaults to COUNT.
+        fig_size_x: Width of figure. Defaults to 16.
+        fig_size_y: Height of figure. Defaults to 10.
+        fontsize: Font size for tick labels. Defaults to 10.
+        show_axes_labels: How to format bar labels. Defaults to NONE (no labels).
+        fontsize_axes_labels: Font size for bar labels. Defaults to 10.
+        text_wrap: Number of letters after which text labels wrap. Defaults to 25.
 
     Returns:
         tuple[plt.figure, plt.axes, plt.axes]: _description_
