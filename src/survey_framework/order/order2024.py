@@ -266,10 +266,9 @@
 #     d4,
 # ]
 
-
-# ordering dictionary for answers.
-# Keys are the question codes, values are lists of answer codes.
+# TODO: add orders for all relevant questions (GH issue #36)
 ORDER = {
+    ### SECTION A
     "A1": ["A1", "A2", "A3", "A4"],
     "A2": [
         "A01",
@@ -292,6 +291,94 @@ ORDER = {
         "A19",  # other
     ],
     "A3": [
+        "A15",  # Agriculture
+        "A5",  # Biology
+        "A1",  # Chemistry
+        "A13",  # Comp. Sc.
+        "A12",  # Engineering
+        "A3",  # Geosciences
+        "A14",  # Health Sciences
+        "A11",  # Humanities
+        "A7",  # Law / Econ
+        "A4",  # Mathematics
+        "A6",  # Medicine
+        "A2",  # Physics
+        "A8",  # Social Sciences
+        "A10",  # IDWA
+        "-oth-",
+    ],
+    "A4": ["A1", "A2", "A3", "A4", "A5", "A6", "A7", "-oth-"],
+    "A5": [  # years, sorted chronologically
+        "A1",
+        "A20",
+        "A21",
+        "A38",
+        "A22",
+        "A23",
+        "A24",
+        "A25",
+        "A26",
+        "A27",
+        "A28",
+        "A29",
+        "A30",
+        "A31",
+        "A32",
+        "A2",
+        "A3",
+        "A4",
+        "A5",
+        "A6",
+        "A7",
+        "A8",
+        "A9",
+        "A10",
+        "A11",
+        "A12",
+        "A13",
+        "A14",
+        "A15",
+        "A16",
+        "A17",
+        "A33",
+        "A34",
+        "A35",
+        "A36",
+        "A18",
+        "A19",
+        "-oth-",
+    ],
+    "A6": [
+        "A1",  # Woman
+        "A3",  # Man
+        "A4",  # Gender-diverse
+        "A5",  # Non-binary
+        "A6",  # IDK
+        "-oth-",
+        "A2",  # IDWA
+    ],
+    "A7": [
+        "A1",  # Hetero
+        "A2",  # Homo
+        "-oth-",  # Queer
+        "A8",  # IDK
+        "A6",  # IDWA
+    ],
+    "A8": [  # years, sorted chronologically
+        "A8",
+        "A6",
+        "A5",
+        "A4",
+        "A3",
+        "A2",
+        "A1",
+        "A10",
+        "A11",
+        "A12",
+        "A9",  # IDK
+        "A13",  # IDWA
+    ],
+    "A8a": [  # months, sorted chronologically
         "A1",
         "A2",
         "A3",
@@ -300,44 +387,86 @@ ORDER = {
         "A6",
         "A7",
         "A8",
+        "A9",
+        "A10",
         "A11",
         "A12",
-        "A13",
-        "A14",
-        "A15",
-        "A16",
-        "A17",
-        "A18",
+        "A13",  # IDK
+        "A14",  # IDWA
+    ],
+    "A9": [  # years, sorted chronologically
+        "A4",
+        "A5",
+        "A6",
+        "A7",
+        "A8",
+        "A9",
         "A10",
-        "-oth-",
+        "A11",
+        "A12",  # submitted
+        "A15",  # unable to
+        "A13",  # IDK
+        "A14",  # IDWA
     ],
-    "A4": ["A1", "A2", "A3", "A4", "A5", "A6", "A7", "-oth-"],
-    # order2024_A5 = [""]
-    "A6": ["A1", "A3", "A4", "A5", "A2", "-oth-"],
+    "A9a": [
+        "A1",
+        "A2",
+        "A3",
+        "A4",
+        "A5",
+        "A6",
+        "A7",
+        "A8",
+        "A9",
+        "A10",
+        "A11",
+        "A12",
+        "A13",  # unable to
+        "A14",  # IDK
+        "A15",  # IDWA
+    ],
     "A10": [
-        "A10_SQ001",
-        "A10_SQ002",
-        "A10_SQ003",
-        "A10_SQ004",
-        "A10_SQ005",
-        "A10_SQ006",
-        "A10_SQ007",
-        "A10_SQ008",
-        "A10_SQ009",
-        "A10_SQ010",
-        "A10T",
+        "A10_SQ09",  # Central America and Carribean
+        "A10_SQ06",  # East / Central Asia
+        "A10_SQ01",  # Europe
+        "A10_SQ08",  # North America
+        "A10_SQ02",  # North and sub-Saharan Africa
+        "A10_SQ07",  # Pacific / Oceania
+        "A10_SQ03",  # South Africa
+        "A10_SQ010",  # South America
+        "A10_SQ05",  # South / Southeast Asia
+        "A10_SQ04",  # West Asia / Middle East
+        "A10_SQ011",  # IDK
+        "A10_SQ012",  # IDWA
     ],
-    # array questions below (likert ordering)
-    "B5": ["A1", "A3", "A2"],
-    "C1": ["A5", "A4", "A3", "A6", "A2", "A1"],
-    "C4": ["A5", "A4", "A3", "A6", "A2", "A1"],
-    "D4": ["A4", "A3", "A5", "A2"],
-    "E12": ["A5", "A4", "A3", "A6", "A2", "A1"],
-    "E13": ["A5", "A4", "A3", "A6", "A2", "A1"],
-    "I2": ["A1", "A2", "A3", "A6", "A4", "A5"],
-    "I4": ["A3", "A4", "A5", "A2", "A1"],
+    "A12a": ["A2", "A3", "A4", "A5", "A1"],
+    "A12b": ["A3", "A2", "A1"],
+    ### SECTION B
+    "B5": ["A1", "A3", "A2"],  # Likert
+    ### SECTION C
+    "C1": ["A5", "A4", "A3", "A6", "A2", "A1"],  # Likert
+    "C4": ["A5", "A4", "A3", "A6", "A2", "A1"],  # Likert
+    ### SECTION D
+    "D4": ["A4", "A3", "A5", "A2"],  # Likert
+    ### SECTION E
+    "E12": ["A5", "A4", "A3", "A6", "A2", "A1"],  # Likert
+    "E13": ["A5", "A4", "A3", "A6", "A2", "A1"],  # Likert
+    ### SECTION I
+    "I2": ["A1", "A2", "A3", "A6", "A4", "A5"],  # Likert
+    "I4": ["A3", "A4", "A5", "A2", "A1"],  # Likert
 }
+"""
+Ordering dictionary for answers.
+Keys are the question codes, values are lists of answer codes.
 
+Note, only questions that need to be re-ordered are present.
+### Usage example
+```python
+orderlist = ORDER.get(question)
+if orderlist:
+    do_stuff(orderlist)
+```
+"""
 
 # bar labels
 # bar_label_a1 = "Participated in N2 survey 2019"
