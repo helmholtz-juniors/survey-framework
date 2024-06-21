@@ -98,7 +98,7 @@ def plot_bar(
         case Orientation.HORIZONTAL:
             ax.set(xlabel=percentcount.value.capitalize, ylabel=label_q_data)
         case Orientation.VERTICAL:
-            ax.set(xlabel=label_q_data, ylabel=percentcount.value.capitalize)
+            ax.set(xlabel=label_q_data, ylabel=percentcount.value.capitalize())
 
     # set title
     ax.set_title(
