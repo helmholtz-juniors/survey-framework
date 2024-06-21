@@ -269,7 +269,7 @@ l1 = "L1"
 
 # ordering dictionary for answers.
 # Keys are the question codes, values are lists of answer codes.
-order = {
+ORDER = {
     "A1": ["A1", "A2", "A3", "A4"],
     "A2": [
         "A01",
