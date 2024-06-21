@@ -96,7 +96,7 @@ def plot_bar(
     # add general labels to axes
     match orientation:
         case Orientation.HORIZONTAL:
-            ax.set(xlabel=percentcount.value.capitalize, ylabel=label_q_data)
+            ax.set(xlabel=percentcount.value.capitalize(), ylabel=label_q_data)
         case Orientation.VERTICAL:
             ax.set(xlabel=label_q_data, ylabel=percentcount.value.capitalize())
 
