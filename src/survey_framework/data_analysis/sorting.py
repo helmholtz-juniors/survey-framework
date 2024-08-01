@@ -3,6 +3,7 @@ from typing import List, Optional
 from survey_framework.data_import.data_import import LimeSurveyData
 
 
+# ToDo: not used, remove?
 def order_alphabetical(
     survey: LimeSurveyData, question: str, append_last: Optional[List[str]] = None
 ) -> List[str]:
@@ -23,6 +24,3 @@ def order_alphabetical(
         choices.extend(append_last)
 
     return choices
-
-
-# ToDo: order by value (asc / desc)

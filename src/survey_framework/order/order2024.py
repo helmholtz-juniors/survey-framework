@@ -456,6 +456,146 @@ ORDER = {
     "E11": ["A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8", "A9", "A10", "A11"],
     "E12": ["A5", "A4", "A3", "A6", "A2", "A1"],  # Likert
     "E13": ["A5", "A4", "A3", "A6", "A2", "A1"],  # Likert
+    ### SECTION F
+    "F1": [
+        "F1_SQ001",
+        "F1_SQ018",
+        "F1_SQ003",
+        "F1_SQ004",
+        "F1_SQ015",
+        "F1_SQ006",
+        "F1_SQ007",
+        "F1_SQ008",
+        "F1_SQ014",
+        "F1_SQ021",
+        "F1_SQ020",  # Other
+        "F1_SQ009",  # Not aware of any
+        "F1_SQ011",  # IDWA
+    ],
+    "F2a": [
+        "F2a_SQ001",
+        "F2a_SQ002",
+        "F2a_SQ009",
+        "F2a_SQ003",
+        "F2a_SQ004",
+        "F2a_SQ005",
+        "F2a_SQ006",
+        "F2a_SQ010",  # Other
+        "F2a_SQ007",  # IDK
+        "F2a_SQ008",  # IDWA
+    ],
+    "F4": [
+        "F4_SQ009",  # No
+        "F4_SQ001",
+        "F4_SQ002",
+        "F4_SQ003",
+        "F4_SQ004",
+        "F4_SQ005",
+        "F4_SQ006",
+        "F4_SQ007",
+        "F4_SQ008",
+        "F4_SQ012",  # Other
+        "F4_SQ010",  # IDK
+        "F4_SQ011",  # IDWA
+    ],
+    "F6": [
+        "F6_SQ011",  # No
+        "F6_SQ002",
+        "F6_SQ003",
+        "F6_SQ004",
+        "F6_SQ005",
+        "F6_SQ006",
+        "F6_SQ007",
+        "F6_SQ008",
+        "F6_SQ009",
+        "F6_SQ010",
+        "F6_SQ014",  # Other
+        "F6_SQ012",  # IDK
+        "F6_SQ013",  # IDWA
+    ],
+    "F6a": [
+        "F6a_SQ001",  # Gender
+        "F6a_SQ002",  # Nationality
+        "F6a_SQ003",  # Ethnicity
+        "F6a_SQ004",  # Age
+        "F6a_SQ005",  # Sexual orientation
+        "F6a_SQ006",  # Gender identity
+        "F6a_SQ007",  # Religion
+        "F6a_SQ012",  # Physical appearance
+        "F6a_SQ008",  # Disability
+        "F6a_SQ013",  # Position of power
+        "F6a_SQ011",  # Mental health
+        "F6a_SQ009",  # Pregnancy
+        "F6a_SQ017",  # Other
+        "F6a_SQ015",  # IDK
+        "F6a_SQ016",  # IDWA
+    ],
+    "F7": [
+        "F7_SQ014",  # No
+        "F7_SQ002",  # Gender
+        "F7_SQ003",  # Nationality
+        "F7_SQ004",  # Ethnicity
+        "F7_SQ005",  # Age
+        "F7_SQ006",  # Sexual orientation
+        "F7_SQ007",  # Gender identity
+        "F7_SQ008",  # Religion
+        "F7_SQ009",  # Physical appearance
+        "F7_SQ010",  # Disability
+        "F7_SQ011",  # Position of Power
+        "F7_SQ012",  # Mental health
+        "F7_SQ013",  # Pregnancy
+        "F7_SQ017",  # Other
+        "F7_SQ015",  # IDK
+        "F7_SQ016",  # IDWA
+    ],
+    "F8": [
+        "F8_SQ008",  # No
+        "F8_SQ001",
+        "F8_SQ002",
+        "F8_SQ003",
+        "F8_SQ004",
+        "F8_SQ005",
+        "F8_SQ006",
+        "F8_SQ007",
+        "F8_SQ011",  # Other
+        "F8_SQ009",  # IDK
+        "F8_SQ010",  # IDWA
+    ],
+    "F8c": [
+        "F8c_SQ001",  # Gender
+        "F8c_SQ002",  # Nationality
+        "F8c_SQ003",  # Ethnicity
+        "F8c_SQ004",  # Age
+        "F8c_SQ005",  # Sexual orientation
+        "F8c_SQ006",  # Gender identity
+        "F8c_SQ007",  # Religion
+        "F8c_SQ008",  # Physical appearance
+        "F8c_SQ009",  # Disability
+        "F8c_SQ010",  # Position of power
+        "F8c_SQ011",  # Mental health
+        "F8c_SQ012",  # Pregnancy
+        "F8c_SQ013",  # Other
+        "F8c_SQ014",  # IDK
+        "F8c_SQ015",  # IDWA
+    ],
+    "F9c": [
+        "F9c_SQ001",  # Gender
+        "F9c_SQ002",  # Nationality
+        "F9c_SQ003",  # Ethnicity
+        "F9c_SQ004",  # Age
+        "F9c_SQ005",  # Sexual orientation
+        "F9c_SQ006",  # Gender identity
+        "F9c_SQ007",  # Religion
+        "F9c_SQ008",  # Physical appearance
+        "F9c_SQ009",  # Disability
+        "F9c_SQ010",  # Position of power
+        "F9c_SQ011",  # Mental health
+        "F9c_SQ012",  # Pregnancy
+        "F9c_SQ013",  # Other
+        "F9c_SQ015",  # IDK
+        "F9c_SQ014",  # IDWA
+    ],
+    "F10": ["A2", "A3", "A7", "A4", "A5", "A6"],
     ### SECTION I
     "I2": ["A1", "A2", "A3", "A6", "A4", "A5"],  # Likert
     "I4": ["A3", "A4", "A5", "A2", "A1"],  # Likert
