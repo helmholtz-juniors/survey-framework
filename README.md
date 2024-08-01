@@ -59,7 +59,7 @@ NEVER COMMIT LIMESURVEY DATA TO THIS (OR ANY) REPOSITORY!
 
 To check if everything works, run (inside the survey_framework directory):
 ```sh
-python3 src/main.py
+pytest
 ```
 This should run the test cases and generate a few basic plots in the output subdirectory.
 

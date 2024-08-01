@@ -2,9 +2,9 @@ from pathlib import Path
 
 import matplotlib.pyplot as plt
 
-from ..data_analysis.analysis import get_data_for_q
-from ..data_import.data_import import LimeSurveyData
-from ..plotting.likertplot import plot_likertplot
+from survey_framework.data_analysis.analysis import get_data_for_q
+from survey_framework.data_import.data_import import LimeSurveyData
+from survey_framework.plotting.likertplot import plot_likertplot
 
 
 def test_plots_D(survey: LimeSurveyData, output_path: Path) -> None:
@@ -25,12 +25,3 @@ def test_plots_D(survey: LimeSurveyData, output_path: Path) -> None:
     )
 
     plt.savefig(output)
-
-
-def test_D(survey: LimeSurveyData, output_path: Path) -> None:
-    test_plots_D(survey, output_path)
-
-    # get all array questions (Likert plot candidates)
-    # for q, _ in survey.questions.iterrows():
-    #     if survey.get_question_type(q) == "array":
-    #         print(q)

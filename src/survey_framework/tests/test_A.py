@@ -3,11 +3,15 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import pandas as pd
 
-from ..data_analysis.analysis import get_data_for_q
-from ..data_import.data_import import LimeSurveyData
-from ..order.order2024 import ORDER
-from ..plotting.barplots import plot_bar, plot_bar_comparison
-from ..plotting.helper_plotenums import BarLabels, Orientation, PercentCount
+from survey_framework.data_analysis.analysis import get_data_for_q
+from survey_framework.data_import.data_import import LimeSurveyData
+from survey_framework.order.order2024 import ORDER
+from survey_framework.plotting.barplots import plot_bar, plot_bar_comparison
+from survey_framework.plotting.helper_plotenums import (
+    BarLabels,
+    Orientation,
+    PercentCount,
+)
 
 sectionA = "A"
 a1 = "A1"  # participation in last N2 survey
@@ -30,8 +34,8 @@ a14 = "A14"  # longtext feedback to section
 
 
 def test_plots_A2_single(survey: LimeSurveyData, output_path: Path) -> None:
-    output = output_path / Path(sectionA)
-    output.mkdir(exist_ok=True)
+    output = output_path / sectionA
+    output.mkdir(exist_ok=True, parents=True)
     output = output / Path(a2 + ".pdf")
 
     N_question = survey.responses[a2].count()
@@ -65,8 +69,8 @@ def test_plots_A2_single(survey: LimeSurveyData, output_path: Path) -> None:
 
 
 def test_plots_A10_multiple(survey: LimeSurveyData, output_path: Path) -> None:
-    output = output_path / Path(sectionA)
-    output.mkdir(exist_ok=True)
+    output = output_path / sectionA
+    output.mkdir(exist_ok=True, parents=True)
     output = output / Path(a10 + ".pdf")
 
     data_q_all = get_data_for_q(survey, a10)
@@ -105,8 +109,8 @@ def test_plots_A10_multiple(survey: LimeSurveyData, output_path: Path) -> None:
 
 
 def test_plots_A2_comparison_A6(survey: LimeSurveyData, output_path: Path) -> None:
-    output = output_path / Path(sectionA)
-    output.mkdir(exist_ok=True)
+    output = output_path / sectionA
+    output.mkdir(exist_ok=True, parents=True)
     output = output / Path(a2 + "_" + a6 + ".pdf")
 
     responses_df_all = survey.get_responses(a2, drop_other=True)
@@ -148,11 +152,3 @@ def test_plots_A2_comparison_A6(survey: LimeSurveyData, output_path: Path) -> No
     )
 
     plt.savefig(output)
-
-
-def test_A(survey: LimeSurveyData, output_path: Path) -> None:
-    test_plots_A2_single(survey, output_path)
-
-    test_plots_A10_multiple(survey, output_path)
-
-    test_plots_A2_comparison_A6(survey, output_path)

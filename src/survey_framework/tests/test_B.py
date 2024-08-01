@@ -1,0 +1,41 @@
+from pathlib import Path
+from textwrap import wrap
+from typing import cast
+
+import matplotlib.pyplot as plt
+
+from survey_framework.data_analysis.analysis import get_data_for_q
+from survey_framework.data_import.data_import import LimeSurveyData
+
+
+def test_swarm(survey: LimeSurveyData, output_path: Path) -> None:
+    """
+    WARNING: This is WIP, the generated plot does _not_ adhere to our style.
+    """
+    section = "B"
+    q = "B14"
+
+    output = output_path / section / (q + ".pdf")
+    output.parent.mkdir(exist_ok=True, parents=True)
+
+    data_df = get_data_for_q(survey, q)
+    fig, ax = plt.subplots(dpi=300, figsize=(16, 10), layout="constrained")
+
+    import seaborn as sns
+
+    ax = sns.violinplot(
+        data_df,
+        ax=ax,
+        orient="h",
+    )  # jitter=0.2)
+
+    # tick labels (TODO re-use code!!!)
+    new_labels = []
+    for old_label in ax.get_yticklabels():
+        label = cast(str, survey.questions.loc[old_label.get_text()]["label"])
+        new_labels.append("\n".join(wrap(label, 30)))
+    ax.set_yticklabels(new_labels)
+
+    plt.savefig(output)
+
+    print(data_df)

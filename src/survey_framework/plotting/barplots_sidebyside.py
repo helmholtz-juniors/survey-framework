@@ -1,11 +1,8 @@
 from textwrap import wrap
 
-# from typing import cast
 import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
-
-# from matplotlib.container import BarContainer
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 
@@ -27,7 +24,7 @@ def plot_bar_side_by_side(
     title_right: str = "",
     width: int = 12,
     height: int = 10,
-) -> tuple[Figure, Axes]:
+) -> tuple[Figure, tuple[Axes, Axes]]:
     """_summary_
 
     Args:
@@ -56,9 +53,11 @@ def plot_bar_side_by_side(
     # nrows, ncols = number of rows, columns of the subplot grid
     # sharey = share the Y axis
     # https://stackoverflow.com/questions/16150819/common-xlabel-ylabel-for-matplotlib-subplots
-    figure, axis = plt.subplots(
+    figure, axs = plt.subplots(
         nrows=1, ncols=2, dpi=300, figsize=(width, height), sharey=True
     )
+    ax0: Axes = axs[0]  # type: ignore [index] # axs is an 2x1 ndarray
+    ax1: Axes = axs[1]  # type: ignore [index] # (see matplotlib docs)
 
     # determine order according to answers
     order_left = [i for i in survey.questions.choices[y_left]]
@@ -67,29 +66,29 @@ def plot_bar_side_by_side(
     # .loc[:,var] -> left side is for index, right side for column
     # make countplots for total numbers
     plot_left = sns.countplot(
-        ax=axis[0], data=data_left, y=y_left, color=color_left, order=order_left
+        ax=ax0, data=data_left, y=y_left, color=color_left, order=order_left
     )
     plot_right = sns.countplot(
-        ax=axis[1], data=data_right, y=y_right, color=color_right, order=order_right
+        ax=ax1, data=data_right, y=y_right, color=color_right, order=order_right
     )
 
     # remove spines from figure
-    axis[0].spines["top"].set_visible(False)
-    axis[0].spines["right"].set_visible(False)
-    axis[0].spines["bottom"].set_visible(False)
-    axis[0].spines["left"].set_visible(False)
-    axis[1].spines["top"].set_visible(False)
-    axis[1].spines["right"].set_visible(False)
-    axis[1].spines["bottom"].set_visible(False)
-    axis[1].spines["left"].set_visible(False)
+    ax0.spines["top"].set_visible(False)
+    ax0.spines["right"].set_visible(False)
+    ax0.spines["bottom"].set_visible(False)
+    ax0.spines["left"].set_visible(False)
+    ax1.spines["top"].set_visible(False)
+    ax1.spines["right"].set_visible(False)
+    ax1.spines["bottom"].set_visible(False)
+    ax1.spines["left"].set_visible(False)
 
     # set xlim equal on both sides
-    axis[0].set_xlim(axis[1].get_xlim())
+    ax0.set_xlim(ax1.get_xlim())
 
     # flip left side
     # https://stackoverflow.com/questions/68858330/right-align-horizontal-seaborn-barplot
-    axis[0].invert_xaxis()
-    axis[0].yaxis.tick_right()
+    ax0.invert_xaxis()
+    ax0.yaxis.tick_right()
 
     # calculate how many people answered this question
     N_left = len(data_left.index)
@@ -108,8 +107,8 @@ def plot_bar_side_by_side(
     # ]
     # plot_right.bar_label(bar_container, labels=bar_labels_right)
 
-    add_axes_labels(axis[0], BarLabels.PERCENT, PercentCount.COUNT, N_left, 11)
-    add_axes_labels(axis[1], BarLabels.PERCENT, PercentCount.COUNT, N_right, 11)
+    add_axes_labels(ax0, BarLabels.PERCENT, PercentCount.COUNT, N_left, 11)
+    add_axes_labels(ax1, BarLabels.PERCENT, PercentCount.COUNT, N_right, 11)
 
     # get titles
     if title_left == "":
@@ -122,8 +121,8 @@ def plot_bar_side_by_side(
     plot_right.set_title("\n".join(wrap(title_right, 40)), fontsize=14)
 
     # set y axis big label to ""
-    axis[0].set_ylabel("")
-    axis[1].set_ylabel("")
+    ax0.set_ylabel("")
+    ax1.set_ylabel("")
 
     # set y axis small labels; labels on the right side are not shown
     # https://stackoverflow.com/questions/11244514/modify-tick-label-text
@@ -138,9 +137,9 @@ def plot_bar_side_by_side(
     # https://www.geeksforgeeks.org/how-to-set-the-spacing-between-subplots-in-matplotlib-in-python/
     figure.tight_layout(pad=0.5)
 
-    plt.text(0, 0.99, f"N = {N_left}", ha="left", va="top", transform=axis[0].transAxes)
+    plt.text(0, 0.99, f"N = {N_left}", ha="left", va="top", transform=ax0.transAxes)
     plt.text(
-        0.99, 0.99, f"N = {N_right}", ha="right", va="top", transform=axis[1].transAxes
+        0.99, 0.99, f"N = {N_right}", ha="right", va="top", transform=ax1.transAxes
     )
 
-    return figure, axis
+    return figure, (ax0, ax1)

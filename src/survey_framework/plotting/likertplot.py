@@ -1,9 +1,11 @@
 import warnings
 from textwrap import wrap
+from typing import cast
 
 import matplotlib.pyplot as plt
 import pandas as pd
 from matplotlib.axes import Axes
+from matplotlib.container import BarContainer
 from matplotlib.figure import Figure
 from plot_likert import plot_likert as _likert  # type: ignore
 
@@ -67,7 +69,7 @@ def plot_likertplot(
     # set subquestion labels (y ticks)
     new_labels = []
     for old_label in ax.get_yticklabels():
-        label = survey.questions.loc[old_label.get_text()]["label"]
+        label = cast(str, survey.questions.loc[old_label.get_text()]["label"])
         new_labels.append("\n".join(wrap(label, text_wrap)))
     ax.set_yticklabels(new_labels)
     # TODO: use plot_helpers instead?
@@ -78,8 +80,8 @@ def plot_likertplot(
     choices = survey.questions.loc[survey.questions["question_group"] == question][
         "choices"
     ].iloc[0]  # underlying assumption: all subquestions use the same scale
-    for label in ax.get_legend().get_texts():
-        label.set_text(choices[label.get_text()])
+    for text in ax.get_legend().get_texts():
+        text.set_text(choices[text.get_text()])
 
     # reposition legend
     ax.get_legend().set_bbox_to_anchor((1, 0.97))
@@ -108,7 +110,11 @@ def plot_likertplot(
     # set bar labels
     for bc in ax.containers[1:]:
         ax.bar_label(
-            bc, label_type="center", weight="bold", color="white", fmt=cutoff_fmt
+            container=cast(BarContainer, bc),
+            label_type="center",
+            weight="bold",
+            color="white",
+            fmt=cutoff_fmt,
         )
 
     return fig, ax
