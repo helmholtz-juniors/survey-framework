@@ -1,12 +1,10 @@
-from typing import List, Optional
-
 from survey_framework.data_import.data_import import LimeSurveyData
 
 
 # ToDo: not used, remove?
 def order_alphabetical(
-    survey: LimeSurveyData, question: str, append_last: Optional[List[str]] = None
-) -> List[str]:
+    survey: LimeSurveyData, question: str, append_last: list[str] | None = None
+) -> list[str]:
     """
     Infer an alphabetical answer order for the given question.
     Unwanted options can be moved to the end by adding them to `append_last`.

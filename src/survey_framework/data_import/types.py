@@ -1,13 +1,13 @@
-from typing import Optional, TypeAlias, TypedDict, Union
+from typing import TypeAlias, TypedDict
 
 
 class ResponseData(TypedDict):
     name: str
-    format: Optional[str]
-    length: Optional[str]
-    label: Optional[str]
-    choices: Optional[dict[str, str]]
+    format: str | None
+    length: str | None
+    label: str | None
+    choices: dict[str, str] | None
 
 
-ResponseTypeAlias: TypeAlias = "tuple[ResponseData, Optional[dict[str, str]]]"
-QuestionTypeAlias: TypeAlias = "dict[str, Union[str, dict[str, str], None]]"
+ResponseTypeAlias: TypeAlias = "tuple[ResponseData, dict[str, str] | None]"
+QuestionTypeAlias: TypeAlias = "dict[str, str | dict[str, str] | None]"

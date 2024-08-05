@@ -1,5 +1,6 @@
+from collections.abc import Iterable
 from textwrap import wrap
-from typing import Iterable, cast
+from typing import cast
 
 import pandas as pd
 import seaborn as sns

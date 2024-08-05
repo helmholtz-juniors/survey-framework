@@ -1,8 +1,9 @@
 import re
 import warnings
+from collections.abc import Iterable
 from enum import StrEnum, auto
 from pathlib import Path
-from typing import Iterable, Optional, Union, cast
+from typing import cast
 
 import pandas as pd
 
@@ -81,7 +82,7 @@ class LimeSurveyData:
     def read_responses(
         self,
         responses_file: Path,
-        transformation_questions: Optional[dict[str, str]] = None,
+        transformation_questions: dict[str, str] | None = None,
     ) -> None:
         """Read responses CSV file
 
@@ -115,7 +116,9 @@ class LimeSurveyData:
             parse_dates=datetime_columns,
             # infer_datetime_format=True,
         )
-        responses = responses.rename(columns=dict(zip(columns, renamed_columns)))
+        responses = responses.rename(
+            columns=dict(zip(columns, renamed_columns, strict=True))
+        )
 
         if "datestamp" in columns:
             # CSV file is unprocessed data
@@ -211,7 +214,7 @@ class LimeSurveyData:
     def _get_dtype_info(
         self, columns: Iterable[str], renamed_columns: Iterable[str]
     ) -> tuple[
-        dict[str, Union[str, pd.Int32Dtype, pd.UInt32Dtype, pd.Int16Dtype]], list[str]
+        dict[str, str | pd.Int32Dtype | pd.UInt32Dtype | pd.Int16Dtype], list[str]
     ]:
         """Get dtypes for columns in data csv
 
@@ -225,14 +228,12 @@ class LimeSurveyData:
         """
 
         # Compile dict with dtype for each column
-        dtype_dict: dict[
-            str, Union[str, pd.Int32Dtype, pd.UInt32Dtype, pd.Int16Dtype]
-        ] = {}
+        dtype_dict: dict[str, str | pd.Int32Dtype | pd.UInt32Dtype | pd.Int16Dtype] = {}
         # Compile list of datetime columns
         # (because pd.read_csv takes this as separate arg)
         datetime_columns = []
 
-        for column, renamed_column in zip(columns, renamed_columns):
+        for column, renamed_column in zip(columns, renamed_columns, strict=True):
             # First try to infer dtype from XML structure information
             if renamed_column in self.questions.index:
                 response_format = self.questions.loc[renamed_column, "format"]
@@ -432,7 +433,7 @@ class LimeSurveyData:
     def add_responses(
         self,
         responses: pd.DataFrame,
-        question: Optional[Union[str, tuple[tuple[str, str], tuple[str, str]]]] = None,
+        question: str | tuple[tuple[str, str] | tuple[str, str]] | None = None,
     ) -> None:
         """Add responses to specified question to self.responses DataFrame
 
@@ -447,7 +448,7 @@ class LimeSurveyData:
 
     def transform_question(
         self,
-        question: Union[str, tuple[tuple[str, str], tuple[str, str]]],
+        question: str | tuple[tuple[str, str] | tuple[str, str]],
         transform: str,
     ) -> pd.DataFrame:
         """Perform transformation on responses to given question
