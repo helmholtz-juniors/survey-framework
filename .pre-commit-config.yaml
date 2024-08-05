@@ -21,6 +21,7 @@ repos:
           [
             types-beautifulsoup4==4.12.0.20240106,
             types-seaborn==0.13.2.20240205,
+            plot-likert==0.5.0,
             pytest==8.3.2
           ]
         args: [--strict]
