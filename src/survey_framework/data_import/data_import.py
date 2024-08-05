@@ -127,7 +127,7 @@ class LimeSurveyData:
             question_columns = renamed_columns[first_question : last_question + 1]
 
             # Split df into question responses and timing info
-            question_responses = responses.loc[:, question_columns]  # type: ignore  # the indexing works perfectly with the given slice, I think mypy got confused here?
+            question_responses = responses.loc[:, question_columns]  # type: ignore [index] # the indexing works perfectly with the given slice, I think mypy got confused here?
             system_info = responses.iloc[:, ~renamed_columns.isin(question_columns)]
 
         else:
@@ -369,7 +369,7 @@ class LimeSurveyData:
         question_group = self.get_question(question, drop_other=drop_other)
         question_type = self.get_question_type(question)
 
-        responses = self.responses.loc[:, question_group.index]  # type:ignore  # see similar issue in read_responses; unclear if mypy is wrong or we actually misuse pandas here
+        responses = self.responses.loc[:, question_group.index]  # type:ignore [index] # see similar issue in read_responses; unclear if mypy is wrong or we actually misuse pandas here
 
         # convert multiple-choice responses
         if question_type == QuestionType.MULTIPLE_CHOICE:

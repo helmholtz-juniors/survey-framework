@@ -53,11 +53,9 @@ def plot_bar_side_by_side(
     # nrows, ncols = number of rows, columns of the subplot grid
     # sharey = share the Y axis
     # https://stackoverflow.com/questions/16150819/common-xlabel-ylabel-for-matplotlib-subplots
-    figure, axs = plt.subplots(
+    figure, (ax0, ax1) = plt.subplots(
         nrows=1, ncols=2, dpi=300, figsize=(width, height), sharey=True
     )
-    ax0: Axes = axs[0]  # type: ignore [index] # axs is an 2x1 ndarray
-    ax1: Axes = axs[1]  # type: ignore [index] # (see matplotlib docs)
 
     # determine order according to answers
     order_left = [i for i in survey.questions.choices[y_left]]

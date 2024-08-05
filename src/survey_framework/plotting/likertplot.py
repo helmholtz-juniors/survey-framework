@@ -7,7 +7,7 @@ import pandas as pd
 from matplotlib.axes import Axes
 from matplotlib.container import BarContainer
 from matplotlib.figure import Figure
-from plot_likert import plot_likert as _likert  # type: ignore
+from plot_likert import plot_likert as _likert  # type: ignore [import-untyped]
 
 from ..data_import.data_import import LimeSurveyData
 from . import helmholtzcolors as hc

@@ -1,277 +1,20 @@
-# questions
-
-sectionA = "A"  # GENERAL
-a1 = "A1"  # participation in last N2 survey
-a2 = "A2"  # institute/section/center association
-a3 = "A3"  # field of work (subject)
-a4 = "A4"  # type of work
-a5 = "A5"  # year of birth
-a6 = "A6"  # gender representation
-a7 = "A7"  # sexual orientation
-a8a = "A8a"  # start of PhD - month
-a8 = "A8"  # start of PhD - year
-a9a = "A9a"  # expected submission date PhD - month
-a9 = "A9"  # expected submission date PhD - year
-a10 = "A10"  # ethnicity - MULTI
-a11 = "A11"  # citizenship
-a12a = "A12a"  # parents born in Germany
-a12b = "A12b"  # participant born in Gerany
-a13 = "A13"  # disability present
-
-sectionB = "B"  # WORKING CONDITIONS
-b1 = "B1"  # financing of doctorate
-b1a = "B1a"
-b1b = "B1b"
-b1c = "B1c"  # MULTI
-b1d = "B1d"
-b2 = "B2"
-b2a = "B2a"
-b3 = "B3"
-b4a = "B4a"  # ARRAY --> special array
-b4b = "B4b"  # ARRAY --> special array
-b5 = "B5"  # ARRAY
-b6 = "B6"
-b7 = "B7"  # MULTI
-b8 = "B8"
-b9 = "B9"
-b9a = "B9a"  # MULTI
-b10 = "B10"
-b11 = "B11"
-b12 = "B12"
-b13 = "B13"  # MULTI
-b14 = "B14"  # ARRAY
-b15 = "B15"
-b16 = "B16"
-b17 = "B17"
-b18 = "B18"  # MULTI
-b19 = "B19"
-
-sectionC = "C"  # SATISFACTION
-c1 = "C1"  # ARRAY
-c2 = "C2"
-c3 = "C3"  # MULTI
-c4 = "C4"  # ARRAY
-c5 = "C5"  # ARRAY
-
-sectionE = "E"  # SUPERVISION
-e1 = "E1"  # MULTI
-e2 = "E2"
-e3 = "E3"
-e4 = "E4"  # MULTI
-e5 = "E5"
-e6 = "E6"  # MULTI
-e7 = "E7"
-e8 = "E8"
-e9 = "E9"
-e10 = "E10"
-e11 = "E11"
-e12 = "E12"  # ARRAY
-e13 = "E13"  # ARRAY
-e14 = "E14"  # MULTI
-e15 = "E15"
-
-sectionH = "H"  # INTEGRATION
-h1a = "H1a"  # MULTI
-h1b = "H1b"  # MULTI
-h2 = "H2"
-h3 = "H3"
-h4 = "H4"
-h5 = "H5"  # MULTI
+# order2024.py
+# LimeSurvey assigns answer labels in non-ascending order to some questions,
+# which we manually sort as intended here.
+#
+# Note: A previous version of this file also included lists of all questions
+# by their question type; for this, use LimeSurveyData.get_questions_by_type().
 
 
-sectionI = "I"  # CAREER DEVELOPMENT
-i1 = "I1"
-i2 = "I2"  # ARRAY
-i3 = "I3"  # MULTI
-i4 = "I4"  # ARRAY
-i5 = "I5"
-i6 = "I6"
-i7 = "I7"
-i8 = "I8"
-
-sectionJ = "J"  # FAMILY
-j1 = "J1"
-j1b = "J1b"
-j2 = "J2"  # MULTI
-j3 = "J3"  # MULTI
-j4 = "J4"
-j5 = "J5"
-j6 = "J6"
-j7 = "J7"
-
-sectionF = "F"  # POWER ABUSE
-f1 = "F1"  # MULTI
-f2 = "F2"
-f2a = "F2a"  # MULTI
-f3 = "F3"
-f4 = "F4"  # MULTI
-f4a = "F4a"
-f5 = "F5"
-f5a = "F5a"
-f6 = "F6"  # MULTI
-f6a = "F6a"  # MULTI
-f6b = "F6b"
-f7 = "F7"  # MULTI
-f7a = "F7a"
-f8 = "F8"  # MULTI
-f8a = "F8a"
-f8c = "F8c"  # MULTI
-f9 = "F9"
-f9a = "F9a"
-f9c = "F9c"  # MULTI
-f10 = "F10"
-
-sectionD = "D"  # MENTAL HEALTH
-d0 = "D0"
-d1 = "D1"  # ARRAY
-d2 = "D2"  # ARRAY
-d3 = "D3"  # ARRAY
-d3a = "D3a"
-d3b = "D3b"
-d3c = "D3c"
-d3d = "D3d"  # ARRAY
-d4 = "D4"  # ARRAY
-d5 = "D5"
-d6 = "D6"
-d7 = "D7"
-d8 = "D8"
-d9 = "D9"
-
-l1 = "L1"
-
-# list of questions
-
-### DEPRECATED ### use LimeSurveyData.get_questions_by_type() instead.
-# single_choice = [
-#     a1,
-#     a2,
-#     a3,
-#     a4,
-#     a5,
-#     a6,
-#     a7,
-#     a8,
-#     a9,
-#     a11,
-#     a12a,
-#     a12b,
-#     a13,
-#     b1,
-#     b1a,
-#     b1b,
-#     b1d,
-#     b2,
-#     b2a,
-#     b3,
-#     b6,
-#     b8,
-#     b9,
-#     b10,
-#     b11,
-#     b12,
-#     b15,
-#     b16,
-#     b17,
-#     b19,
-#     c2,
-#     e2,
-#     e3,
-#     e5,
-#     e7,
-#     e8,
-#     e9,
-#     e10,
-#     e11,
-#     e15,
-#     h2,
-#     h3,
-#     h4,
-#     i1,
-#     i5,
-#     i6,
-#     i7,
-#     i8,
-#     j1,
-#     j1b,
-#     j4,
-#     j5,
-#     j6,
-#     j7,
-#     f2,
-#     f3,
-#     f4a,
-#     f5,
-#     f5a,
-#     f6b,
-#     f7a,
-#     f8a,
-#     f9,
-#     f9a,
-#     f10,
-#     d0,
-#     d3a,
-#     d3b,
-#     d3c,
-#     d5,
-#     d6,
-#     d7,
-#     d8,
-#     d9,
-#     l1,
-# ]
-# multiple_choice = [
-#     a10,
-#     b1c,
-#     b7,
-#     b9a,
-#     b13,
-#     b18,
-#     c3,
-#     e1,
-#     e4,
-#     e6,
-#     e14,
-#     h1a,
-#     h1b,
-#     h5,
-#     i3,
-#     j2,
-#     j3,
-#     f1,
-#     f2a,
-#     f4,
-#     f6,
-#     f6a,
-#     f7,
-#     f8,
-#     f8c,
-#     f9c,
-# ]
-# array = [
-#     b4a,
-#     b4b,
-#     b5,
-#     b14,
-#     c1,
-#     c4,
-#     c5,
-#     e12,
-#     e13,
-#     i2,
-#     i4,
-#     d1,
-#     d2,
-#     d3,
-#     d3d,
-#     d4,
-# ]
-
-
-# ordering dictionary for answers.
-# Keys are the question codes, values are lists of answer codes.
 ORDER = {
-    "A1": ["A1", "A2", "A3", "A4"],
-    "A2": [
+    ### SECTION A: General
+    "A1": [  # participation in last N2 survey
+        "A1",
+        "A2",
+        "A3",
+        "A4",
+    ],
+    "A2": [  # institute/section/center association
         "A01",
         "A18",
         "A02",
@@ -291,7 +34,104 @@ ORDER = {
         "A17",
         "A19",  # other
     ],
-    "A3": [
+    "A3": [  # field of work (subject)
+        "A15",  # Agriculture
+        "A5",  # Biology
+        "A1",  # Chemistry
+        "A13",  # Comp. Sc.
+        "A12",  # Engineering
+        "A3",  # Geosciences
+        "A14",  # Health Sciences
+        "A11",  # Humanities
+        "A7",  # Law / Econ
+        "A4",  # Mathematics
+        "A6",  # Medicine
+        "A2",  # Physics
+        "A8",  # Social Sciences
+        "A10",  # IDWA
+        "-oth-",
+    ],
+    "A4": [  # type of work
+        "A1",
+        "A2",
+        "A3",
+        "A4",
+        "A5",
+        "A6",
+        "A7",
+        "-oth-",
+    ],
+    "A5": [  # year of birth, sorted chronologically
+        "A1",
+        "A20",
+        "A21",
+        "A38",
+        "A22",
+        "A23",
+        "A24",
+        "A25",
+        "A26",
+        "A27",
+        "A28",
+        "A29",
+        "A30",
+        "A31",
+        "A32",
+        "A2",
+        "A3",
+        "A4",
+        "A5",
+        "A6",
+        "A7",
+        "A8",
+        "A9",
+        "A10",
+        "A11",
+        "A12",
+        "A13",
+        "A14",
+        "A15",
+        "A16",
+        "A17",
+        "A33",
+        "A34",
+        "A35",
+        "A36",
+        "A18",
+        "A19",
+        "-oth-",
+    ],
+    "A6": [  # gender representation
+        "A1",  # Woman
+        "A3",  # Man
+        "A4",  # Gender-diverse
+        "A5",  # Non-binary
+        "A6",  # IDK
+        "-oth-",
+        "A2",  # IDWA
+    ],
+    "A7": [  # sexual orientation
+        "A1",  # Hetero
+        "A2",  # Homo
+        "-oth-",  # Queer
+        "A8",  # IDK
+        "A6",  # IDWA
+    ],
+    "A8": [  # start of PhD - years, sorted chronologically
+        "A8",
+        "A6",
+        "A5",
+        "A4",
+        "A3",
+        "A2",
+        "A1",
+        "A10",
+        "A11",
+        "A12",
+        "A9",  # IDK
+        "A13",  # IDWA
+    ],
+    "A8a": [  # start of PhD - month, sorted chronologically
         "A1",
         "A2",
         "A3",
@@ -300,66 +140,241 @@ ORDER = {
         "A6",
         "A7",
         "A8",
+        "A9",
+        "A10",
         "A11",
         "A12",
-        "A13",
-        "A14",
-        "A15",
-        "A16",
-        "A17",
-        "A18",
+        "A13",  # IDK
+        "A14",  # IDWA
+    ],
+    "A9": [  # expected submission date PhD - years, sorted chronologically
+        "A4",
+        "A5",
+        "A6",
+        "A7",
+        "A8",
+        "A9",
         "A10",
-        "-oth-",
+        "A11",
+        "A12",  # submitted
+        "A15",  # unable to
+        "A13",  # IDK
+        "A14",  # IDWA
     ],
-    "A4": ["A1", "A2", "A3", "A4", "A5", "A6", "A7", "-oth-"],
-    # order2024_A5 = [""]
-    "A6": ["A1", "A3", "A4", "A5", "A2", "-oth-"],
-    "A10": [
-        "A10_SQ001",
-        "A10_SQ002",
-        "A10_SQ003",
-        "A10_SQ004",
-        "A10_SQ005",
-        "A10_SQ006",
-        "A10_SQ007",
-        "A10_SQ008",
-        "A10_SQ009",
-        "A10_SQ010",
-        "A10T",
+    "A9a": [  # expected submission date PhD - month, sorted chronologically
+        "A1",
+        "A2",
+        "A3",
+        "A4",
+        "A5",
+        "A6",
+        "A7",
+        "A8",
+        "A9",
+        "A10",
+        "A11",
+        "A12",
+        "A13",  # unable to
+        "A14",  # IDK
+        "A15",  # IDWA
     ],
-    # array questions below (likert ordering)
-    "B5": ["A1", "A3", "A2"],
-    "C1": ["A5", "A4", "A3", "A6", "A2", "A1"],
-    "C4": ["A5", "A4", "A3", "A6", "A2", "A1"],
-    "D4": ["A4", "A3", "A5", "A2"],
-    "E12": ["A5", "A4", "A3", "A6", "A2", "A1"],
-    "E13": ["A5", "A4", "A3", "A6", "A2", "A1"],
-    "I2": ["A1", "A2", "A3", "A6", "A4", "A5"],
-    "I4": ["A3", "A4", "A5", "A2", "A1"],
+    "A10": [  # ethnicity
+        "A10_SQ09",  # Central America and Carribean
+        "A10_SQ06",  # East / Central Asia
+        "A10_SQ01",  # Europe
+        "A10_SQ08",  # North America
+        "A10_SQ02",  # North and sub-Saharan Africa
+        "A10_SQ07",  # Pacific / Oceania
+        "A10_SQ03",  # South Africa
+        "A10_SQ010",  # South America
+        "A10_SQ05",  # South / Southeast Asia
+        "A10_SQ04",  # West Asia / Middle East
+        "A10_SQ011",  # IDK
+        "A10_SQ012",  # IDWA
+    ],
+    "A12a": [  # parents born in Germany
+        "A2",
+        "A3",
+        "A4",
+        "A5",
+        "A1",
+    ],
+    "A12b": [  # participant born in Germany
+        "A3",
+        "A2",
+        "A1",
+    ],
+    ### SECTION B: Working Conditions
+    "B5": ["A1", "A3", "A2"],  # Likert
+    ### SECTION C: Satisfaction
+    "C1": ["A5", "A4", "A3", "A6", "A2", "A1"],  # Likert
+    "C4": ["A5", "A4", "A3", "A6", "A2", "A1"],  # Likert
+    ### SECTION D: Mental Health
+    "D4": ["A4", "A3", "A5", "A2"],  # Likert
+    "D9": ["A1", "A2", "-oth-", "A3"],
+    ### SECTION E: Supervision
+    "E2": ["A1", "A2", "A3", "A4", "A7", "A5", "A6"],
+    "E8": ["A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8", "A9", "A10", "A11"],
+    "E9": ["A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8", "A9", "A10", "A11"],
+    "E10": ["A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8", "A9", "A10", "A11"],
+    "E11": ["A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8", "A9", "A10", "A11"],
+    "E12": ["A5", "A4", "A3", "A6", "A2", "A1"],  # Likert
+    "E13": ["A5", "A4", "A3", "A6", "A2", "A1"],  # Likert
+    ### SECTION F: Power Abuse
+    "F1": [
+        "F1_SQ001",
+        "F1_SQ018",
+        "F1_SQ003",
+        "F1_SQ004",
+        "F1_SQ015",
+        "F1_SQ006",
+        "F1_SQ007",
+        "F1_SQ008",
+        "F1_SQ014",
+        "F1_SQ021",
+        "F1_SQ020",  # Other
+        "F1_SQ009",  # Not aware of any
+        "F1_SQ011",  # IDWA
+    ],
+    "F2a": [
+        "F2a_SQ001",
+        "F2a_SQ002",
+        "F2a_SQ009",
+        "F2a_SQ003",
+        "F2a_SQ004",
+        "F2a_SQ005",
+        "F2a_SQ006",
+        "F2a_SQ010",  # Other
+        "F2a_SQ007",  # IDK
+        "F2a_SQ008",  # IDWA
+    ],
+    "F4": [
+        "F4_SQ009",  # No
+        "F4_SQ001",
+        "F4_SQ002",
+        "F4_SQ003",
+        "F4_SQ004",
+        "F4_SQ005",
+        "F4_SQ006",
+        "F4_SQ007",
+        "F4_SQ008",
+        "F4_SQ012",  # Other
+        "F4_SQ010",  # IDK
+        "F4_SQ011",  # IDWA
+    ],
+    "F6": [
+        "F6_SQ011",  # No
+        "F6_SQ002",
+        "F6_SQ003",
+        "F6_SQ004",
+        "F6_SQ005",
+        "F6_SQ006",
+        "F6_SQ007",
+        "F6_SQ008",
+        "F6_SQ009",
+        "F6_SQ010",
+        "F6_SQ014",  # Other
+        "F6_SQ012",  # IDK
+        "F6_SQ013",  # IDWA
+    ],
+    "F6a": [
+        "F6a_SQ001",  # Gender
+        "F6a_SQ002",  # Nationality
+        "F6a_SQ003",  # Ethnicity
+        "F6a_SQ004",  # Age
+        "F6a_SQ005",  # Sexual orientation
+        "F6a_SQ006",  # Gender identity
+        "F6a_SQ007",  # Religion
+        "F6a_SQ012",  # Physical appearance
+        "F6a_SQ008",  # Disability
+        "F6a_SQ013",  # Position of power
+        "F6a_SQ011",  # Mental health
+        "F6a_SQ009",  # Pregnancy
+        "F6a_SQ017",  # Other
+        "F6a_SQ015",  # IDK
+        "F6a_SQ016",  # IDWA
+    ],
+    "F7": [
+        "F7_SQ014",  # No
+        "F7_SQ002",  # Gender
+        "F7_SQ003",  # Nationality
+        "F7_SQ004",  # Ethnicity
+        "F7_SQ005",  # Age
+        "F7_SQ006",  # Sexual orientation
+        "F7_SQ007",  # Gender identity
+        "F7_SQ008",  # Religion
+        "F7_SQ009",  # Physical appearance
+        "F7_SQ010",  # Disability
+        "F7_SQ011",  # Position of Power
+        "F7_SQ012",  # Mental health
+        "F7_SQ013",  # Pregnancy
+        "F7_SQ017",  # Other
+        "F7_SQ015",  # IDK
+        "F7_SQ016",  # IDWA
+    ],
+    "F8": [
+        "F8_SQ008",  # No
+        "F8_SQ001",
+        "F8_SQ002",
+        "F8_SQ003",
+        "F8_SQ004",
+        "F8_SQ005",
+        "F8_SQ006",
+        "F8_SQ007",
+        "F8_SQ011",  # Other
+        "F8_SQ009",  # IDK
+        "F8_SQ010",  # IDWA
+    ],
+    "F8c": [
+        "F8c_SQ001",  # Gender
+        "F8c_SQ002",  # Nationality
+        "F8c_SQ003",  # Ethnicity
+        "F8c_SQ004",  # Age
+        "F8c_SQ005",  # Sexual orientation
+        "F8c_SQ006",  # Gender identity
+        "F8c_SQ007",  # Religion
+        "F8c_SQ008",  # Physical appearance
+        "F8c_SQ009",  # Disability
+        "F8c_SQ010",  # Position of power
+        "F8c_SQ011",  # Mental health
+        "F8c_SQ012",  # Pregnancy
+        "F8c_SQ013",  # Other
+        "F8c_SQ014",  # IDK
+        "F8c_SQ015",  # IDWA
+    ],
+    "F9c": [
+        "F9c_SQ001",  # Gender
+        "F9c_SQ002",  # Nationality
+        "F9c_SQ003",  # Ethnicity
+        "F9c_SQ004",  # Age
+        "F9c_SQ005",  # Sexual orientation
+        "F9c_SQ006",  # Gender identity
+        "F9c_SQ007",  # Religion
+        "F9c_SQ008",  # Physical appearance
+        "F9c_SQ009",  # Disability
+        "F9c_SQ010",  # Position of power
+        "F9c_SQ011",  # Mental health
+        "F9c_SQ012",  # Pregnancy
+        "F9c_SQ013",  # Other
+        "F9c_SQ015",  # IDK
+        "F9c_SQ014",  # IDWA
+    ],
+    "F10": ["A2", "A3", "A7", "A4", "A5", "A6"],
+    ### SECTION H: Integration
+    ### SECTION I: Career Development
+    "I2": ["A1", "A2", "A3", "A6", "A4", "A5"],  # Likert
+    "I4": ["A3", "A4", "A5", "A2", "A1"],  # Likert
+    ### SECTION J: Family
 }
+"""
+Ordering dictionary for answers.
+Keys are the question codes, values are lists of answer codes.
 
-
-# bar labels
-
-bar_label_a1 = "Participated in N2 survey 2019"
-bar_label_a2 = "Centers"
-bar_label_a3 = "Field"
-bar_label_a4 = "Predominant Type of Work"
-bar_label_a5 = "Year of Birth"
-bar_label_a6 = "Gender"
-bar_label_a7 = "Sexual Orientation"
-bar_label_a8 = "Start of PhD"
-bar_label_a9 = "Expected Submission Date of PhD Thesis"
-bar_label_a10 = "Ethnicity"
-bar_label_a11 = "Citizenship"
-bar_label_a12a = "Parents of Participants born in Germany"
-bar_label_a12b = "Participants born in Germany"
-bar_label_a13 = "Disability"
-
-bar_label_b1 = "Financing of Doctoral Research"
-bar_label_b1a = "Top-Up Contracts to Stipends at Centers/Institutes"
-bar_label_b1b = "Time worked on PhD without Pay"
-bar_label_b1c = "Reasons for Non-Payment"
-bar_label_b1d = 'Unemployment Benefits ("Arbeitslosengeld")'
-bar_label_b2 = "Monthy Income"
-bar_label_b3 = "Monthly Living Expenses"
+Note, only questions that need to be re-ordered are present.
+### Usage example
+```python
+orderlist = ORDER.get(question)
+if orderlist:
+    do_stuff(orderlist)
+```
+"""
