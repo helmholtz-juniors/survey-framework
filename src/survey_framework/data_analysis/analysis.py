@@ -3,20 +3,17 @@ import pandas as pd
 from ..data_import.data_import import LimeSurveyData
 
 
-def get_data_for_q(
-    survey: LimeSurveyData,
-    question_number: str,
-) -> pd.DataFrame:
+def get_data_for_q(survey: LimeSurveyData, question_number: str) -> pd.DataFrame:
     """
-    returns a DataFrame with the responses to a specific question
-    without any contingent answers
+    Returns a DataFrame with the responses to a specific question
+    without any contingent answers.
 
     Args:
-        survey (LimeSurveyData): _description_
-        question_number (str): _description_
+        survey: The LimeSurvey object
+        question_number: The question ID (like 'A1')
 
     Returns:
-        pd.DataFrame: _description_
+        A DataFrame with all answers to the specified question
     """
     responses = survey.get_responses(question_number, drop_other=True)
     # change types of all columns to object
@@ -26,3 +23,28 @@ def get_data_for_q(
     # change id column to type string
     responses = responses.astype({"id": "string"})
     return responses
+
+
+def filter_by_center_v2(
+    survey: LimeSurveyData, responses: pd.DataFrame, center_code: str
+) -> pd.DataFrame:
+    """
+    Filter responses by center.
+
+    Args:
+        survey: The survey object
+        responses: DataFrame with responses
+        center_code: ID of the center to filter by (like 'A01')
+
+    Returns:
+        Filtered DataFrame
+    """
+    # A2 is the "center" question
+    CQ = "A2"
+
+    # get IDs for the given center, then filter by the IDs
+    centers = get_data_for_q(survey, CQ).filter([CQ])
+    center_students = centers[centers[CQ] == center_code]
+    filtered = responses[responses.index.isin(center_students.index)]
+
+    return filtered

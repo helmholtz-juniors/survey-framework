@@ -185,7 +185,11 @@ class LimeSurveyData:
         # Validate data structure
         # Check for columns not listed in survey structure df
         not_in_structure = list(
-            set(question_responses.columns) - set(self.questions.index)
+            filter(
+                # this disables the warning for question D11, which is not a question.
+                lambda s: None if s.startswith("D11") else s,
+                set(question_responses.columns) - set(self.questions.index),
+            )
         )
         if not_in_structure:
             warnings.warn(

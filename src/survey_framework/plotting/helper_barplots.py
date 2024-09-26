@@ -1,3 +1,4 @@
+import warnings
 from collections.abc import Iterable
 from textwrap import wrap
 from typing import cast
@@ -163,6 +164,13 @@ def add_tick_labels(
     Returns:
         Axes: _description_
     """
+
+    if data_df.empty:
+        warnings.warn(
+            f"Cannot create tick labels from an empty dataframe (question {question})",
+            stacklevel=2,
+        )
+        return ax
 
     # function to rename a single label using the survey data
     def renamed(label: str) -> str:
