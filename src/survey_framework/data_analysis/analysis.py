@@ -25,7 +25,7 @@ def get_data_for_q(survey: LimeSurveyData, question_number: str) -> pd.DataFrame
     return responses
 
 
-def filter_by_center_v2(
+def filter_by_center(
     survey: LimeSurveyData, responses: pd.DataFrame, center_code: str
 ) -> pd.DataFrame:
     """
