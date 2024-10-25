@@ -1,7 +1,6 @@
 import pandas as pd
+from survey_framework.data_import.data_import import LimeSurveyData
 from survey_framework.order.order2024 import ORDER
-
-from ..data_import.data_import import LimeSurveyData
 
 
 def get_data_for_q(survey: LimeSurveyData, question_number: str) -> pd.DataFrame:
