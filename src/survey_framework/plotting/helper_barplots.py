@@ -212,7 +212,12 @@ def add_tick_labels(
 
 
 def adapt_legend(
-    survey: LimeSurveyData, ax: Axes, question: str, text_wrap: int
+    survey: LimeSurveyData,
+    ax: Axes,
+    question: str,
+    text_wrap: int,
+    anchor_x: float = 1,
+    anchor_y: float = 0.97,
 ) -> Axes:
     """
     rename legend and move below N
@@ -231,6 +236,28 @@ def adapt_legend(
     for i in range(0, len(labels)):
         label = survey.questions.choices[question][labels[i]]
         labels[i] = "\n".join(wrap(label, text_wrap))
-    ax.legend(handles=handles, labels=labels, bbox_to_anchor=(1, 0.97))
+    ax.legend(handles=handles, labels=labels, bbox_to_anchor=(anchor_x, anchor_y))
 
     return ax
+
+
+def get_hue_left(
+    data_df: pd.DataFrame, hue: str
+) -> tuple[list[str], list[tuple[float, float, float]]]:
+    hue_input = list()
+    colors = list()
+    hue_input = list(data_df[hue])
+    colors = hc.get_blues(len(data_df[hue].value_counts()))
+
+    return hue_input, colors
+
+
+def get_hue_right(
+    data_df: pd.DataFrame, hue: str
+) -> tuple[list[str], list[tuple[float, float, float]]]:
+    hue_input = list()
+    colors = list()
+    hue_input = list(data_df[hue])
+    colors = hc.get_greens(len(data_df[hue].value_counts()))
+
+    return hue_input, colors

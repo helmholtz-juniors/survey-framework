@@ -1,6 +1,7 @@
 import pandas as pd
 
-from ..data_import.data_import import LimeSurveyData
+from survey_framework.data_import.data_import import LimeSurveyData
+from survey_framework.order.order2024 import ORDER
 
 
 def get_data_for_q(survey: LimeSurveyData, question_number: str) -> pd.DataFrame:
@@ -48,3 +49,36 @@ def filter_by_center(
     filtered = responses[responses.index.isin(center_students.index)]
 
     return filtered
+
+
+def get_data_for_single_barplot_comparison(
+    survey: LimeSurveyData, base_q: str, comp_q: str
+) -> tuple[int, pd.DataFrame]:
+    responses_df_all = survey.get_responses(base_q, drop_other=True)
+    responses_df_comparison = survey.get_responses(comp_q, drop_other=True)
+    N_question = len(responses_df_all.index)
+
+    responses_df_all_concat = pd.concat(
+        [responses_df_comparison.transpose(), responses_df_all.transpose()]
+    ).transpose()
+
+    responses_df_counts = (
+        responses_df_all_concat[[base_q, comp_q]]
+        .value_counts()
+        .reset_index(name="count")
+    )
+
+    responses_df_counts[base_q] = pd.Categorical(
+        responses_df_counts[base_q], categories=ORDER[base_q], ordered=True
+    )
+    responses_df_counts[comp_q] = pd.Categorical(
+        responses_df_counts[comp_q], categories=ORDER[comp_q], ordered=True
+    )
+    responses_df_counts_sorted = responses_df_counts.sort_values(by=[base_q, comp_q])
+
+    responses_df_counts_sorted_precentages = responses_df_counts_sorted
+    responses_df_counts_sorted_precentages["percentages"] = (
+        responses_df_counts_sorted_precentages["count"] / N_question * 100
+    )
+
+    return N_question, responses_df_counts_sorted_precentages
