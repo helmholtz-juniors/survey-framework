@@ -125,11 +125,11 @@ def test_plots_A2_comparison_A6(survey: LimeSurveyData, output_path: Path) -> No
         responses_df_all_concat[[a2, a6]].value_counts().reset_index(name="count")
     )
 
-    # responses_df_counts[a2] = pd.Categorical(
-    #     responses_df_counts[a2], categories=order_A2, ordered=True
-    # )
+    responses_df_counts[a2] = pd.Categorical(
+        responses_df_counts[a2], categories=ORDER[a2], ordered=True
+    )
     responses_df_counts[a6] = pd.Categorical(
-        responses_df_counts[a6], categories=ORDER["A6"], ordered=True
+        responses_df_counts[a6], categories=ORDER[a6], ordered=True
     )
     responses_df_counts_sorted = responses_df_counts.sort_values(by=[a2, a6])
 
