@@ -8,8 +8,14 @@ from matplotlib.figure import Figure
 
 from ..data_import.data_import import LimeSurveyData
 from . import helmholtzcolors as hc
-from .helper_barplots import add_axes_labels, get_hue_left, get_hue_right, add_tick_labels
-from .helper_plotenums import BarLabels, PercentCount, Orientation
+from .helper_barplots import (
+    adapt_legend,
+    add_axes_labels,
+    add_tick_labels,
+    get_hue_left,
+    get_hue_right,
+)
+from .helper_plotenums import BarLabels, Orientation, PercentCount
 
 
 def plot_bar_side_by_side(
@@ -144,53 +150,58 @@ def plot_bar_side_by_side(
 
 
 def plot_sidebyside_comparison_singleQ(
-        survey: LimeSurveyData,
-        data_left: pd.DataFrame, 
-        data_right: pd.DataFrame,
-        base_q_left: str, 
-        base_q_right: str, 
-        comp_q: str, 
-        n_question: int,
-        title_left: str = "",
-        title_right: str = "",
-        fig_size_x: int = 12,
-        fig_size_y: int = 10,
-        fontsize: int = 10,
-        percentcount: PercentCount = PercentCount.COUNT,
-        show_axes_labels: BarLabels = BarLabels.NONE,
-        fontsize_axes_labels: int = 10,
-        text_wrap: int = 25,
-    ):
-
+    survey: LimeSurveyData,
+    data_left: pd.DataFrame,
+    data_right: pd.DataFrame,
+    base_q_left: str,
+    base_q_right: str,
+    comp_q: str,
+    N_left: int,
+    N_right: int,
+    title_left: str = "",
+    title_right: str = "",
+    fig_size_x: int = 12,
+    fig_size_y: int = 10,
+    fontsize: int = 10,
+    percentcount: PercentCount = PercentCount.COUNT,
+    show_axes_labels: BarLabels = BarLabels.NONE,
+    fontsize_axes_labels: int = 10,
+    text_wrap: int = 25,
+):
     # set seaborn theme
     hc.set_plotstyle()
 
     figure, (ax0, ax1) = plt.subplots(
-        nrows=1, ncols=2, dpi=300, figsize=(fig_size_x, fig_size_y), sharey=True, layout="constrained"
-    )    
-    
+        nrows=1,
+        ncols=2,
+        dpi=300,
+        figsize=(fig_size_x, fig_size_y),
+        sharey=True,
+        layout="constrained",
+    )
+
     hue_input_left, colors_left = get_hue_left(data_left, comp_q)
     hue_input_right, colors_right = get_hue_right(data_right, comp_q)
 
     # left
     plot_left = sns.barplot(
-                ax=ax0,
-                x=data_left[percentcount.value],
-                y=list(data_left[base_q_left]),
-                hue=hue_input_left,
-                palette=colors_left,
-                orient="h",
-            )
+        ax=ax0,
+        x=data_left[percentcount.value],
+        y=list(data_left[base_q_left]),
+        hue=hue_input_left,
+        palette=colors_left,
+        orient="h",
+    )
     # right
     plot_right = sns.barplot(
-                ax=ax1,
-                x=data_right[percentcount.value],
-                y=list(data_right[base_q_right]),
-                hue=hue_input_right,
-                palette=colors_right,
-                orient="h",
-            )
-    
+        ax=ax1,
+        x=data_right[percentcount.value],
+        y=list(data_right[base_q_right]),
+        hue=hue_input_right,
+        palette=colors_right,
+        orient="h",
+    )
+
     # remove spines from figure
     ax0.spines["top"].set_visible(False)
     ax0.spines["right"].set_visible(False)
@@ -220,32 +231,34 @@ def plot_sidebyside_comparison_singleQ(
         text_wrap=text_wrap,
     )
 
-    if title_left == "": 
-        title_left = base_q_left + ": "+ survey.questions.loc[
-                    survey.questions["question_group"] == base_q_left
-                ].question_label.iloc[0]
+    if title_left == "":
+        title_left = (
+            base_q_left
+            + ": "
+            + survey.questions.loc[
+                survey.questions["question_group"] == base_q_left
+            ].question_label.iloc[0]
+        )
     if title_right == "":
-        title_right =  base_q_right + ": " + survey.questions.loc[
-                    survey.questions["question_group"] == base_q_right
-                ].question_label.iloc[0]
-        
+        title_right = (
+            base_q_right
+            + ": "
+            + survey.questions.loc[
+                survey.questions["question_group"] == base_q_right
+            ].question_label.iloc[0]
+        )
+
     # set title
     plot_left.set_title(
-        "\n".join(
-            wrap(title_left, 60)
-        ),
+        "\n".join(wrap(title_left, 60)),
         fontsize=fontsize,
     )
     plot_right.set_title(
-        "\n".join(
-            wrap(title_right, 60)
-        ),
+        "\n".join(wrap(title_right, 60)),
         fontsize=fontsize,
     )
 
     return figure, (ax0, ax1)
-
-    
 
     # add bar labels (the ones on top or next to bars within the plot)
     plot_left = add_axes_labels(
@@ -258,14 +271,22 @@ def plot_sidebyside_comparison_singleQ(
 
     # adapt legend
     ax0 = adapt_legend(
-        survey=survey, ax=ax0, question=comp_q, text_wrap=text_wrap, anchor_x=0.4, anchor_y=0.18
+        survey=survey,
+        ax=ax0,
+        question=comp_q,
+        text_wrap=text_wrap,
+        anchor_x=0.4,
+        anchor_y=0.18,
     )
 
     ax1 = adapt_legend(
-        survey=survey, ax=ax1, question=comp_q, text_wrap=text_wrap, anchor_x=1, anchor_y=0.18
+        survey=survey,
+        ax=ax1,
+        question=comp_q,
+        text_wrap=text_wrap,
+        anchor_x=1,
+        anchor_y=0.18,
     )
-
-    
 
     # set titles
     # plot_left.set_title("\n".join(wrap(title_left, 40)), fontsize=fontsize)
@@ -277,4 +298,6 @@ def plot_sidebyside_comparison_singleQ(
 
     # add number of participants to top right corner
     ax0.text(0, 0.99, f"N = {N_left}", ha="left", va="top", transform=ax0.transAxes)
-    ax1.text(0.99, 0.99, f"N = {N_right}", ha="right", va="top", transform=ax1.transAxes)
+    ax1.text(
+        0.99, 0.99, f"N = {N_right}", ha="right", va="top", transform=ax1.transAxes
+    )

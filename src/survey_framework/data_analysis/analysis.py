@@ -1,7 +1,7 @@
 import pandas as pd
+from survey_framework.order.order2024 import ORDER
 
 from ..data_import.data_import import LimeSurveyData
-from survey_framework.order.order2024 import ORDER
 
 
 def get_data_for_q(survey: LimeSurveyData, question_number: str) -> pd.DataFrame:
@@ -51,7 +51,9 @@ def filter_by_center(
     return filtered
 
 
-def get_data_for_single_barplot_comparison(survey: LimeSurveyData, base_q: str, comp_q: str) -> pd.DataFrame:
+def get_data_for_single_barplot_comparison(
+    survey: LimeSurveyData, base_q: str, comp_q: str
+) -> pd.DataFrame:
     responses_df_all = survey.get_responses(base_q, drop_other=True)
     responses_df_comparison = survey.get_responses(comp_q, drop_other=True)
     N_question = len(responses_df_all.index)
@@ -61,7 +63,9 @@ def get_data_for_single_barplot_comparison(survey: LimeSurveyData, base_q: str, 
     ).transpose()
 
     responses_df_counts = (
-        responses_df_all_concat[[base_q, comp_q]].value_counts().reset_index(name="count")
+        responses_df_all_concat[[base_q, comp_q]]
+        .value_counts()
+        .reset_index(name="count")
     )
 
     responses_df_counts[base_q] = pd.Categorical(
