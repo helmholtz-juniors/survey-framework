@@ -1,7 +1,7 @@
 name: Lint and Typing
 on: [push]
 jobs:
-  build:
+  setup:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -9,6 +9,14 @@ jobs:
       with:
         python-version: "3.11"
     - run: pip install .[lint]
+  linter:
+    runs-on: ubuntu-latest
+    needs: setup
+    steps:
     - run: ruff check src
     - run: ruff format --check src
+  typechecker:
+    runs-on: ubuntu-latest
+    needs: setup
+    steps:
     - run: mypy --strict src
