@@ -212,12 +212,12 @@ def add_tick_labels(
 
 
 def adapt_legend(
-    survey: LimeSurveyData, 
-    ax: Axes, 
-    question: str, 
+    survey: LimeSurveyData,
+    ax: Axes,
+    question: str,
     text_wrap: int,
     anchor_x: float = 1,
-    anchor_y: float = 0.97
+    anchor_y: float = 0.97,
 ) -> Axes:
     """
     rename legend and move below N
@@ -241,7 +241,9 @@ def adapt_legend(
     return ax
 
 
-def get_hue_left(data_df, hue):
+def get_hue_left(
+    data_df: pd.DataFrame, hue: str
+) -> tuple[list[str], list[tuple[float, float, float]]]:
     hue_input = list()
     colors = list()
     hue_input = list(data_df[hue])
@@ -249,7 +251,10 @@ def get_hue_left(data_df, hue):
 
     return hue_input, colors
 
-def get_hue_right(data_df, hue):
+
+def get_hue_right(
+    data_df: pd.DataFrame, hue: str
+) -> tuple[list[str], list[tuple[float, float, float]]]:
     hue_input = list()
     colors = list()
     hue_input = list(data_df[hue])

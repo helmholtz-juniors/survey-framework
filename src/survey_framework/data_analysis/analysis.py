@@ -52,7 +52,7 @@ def filter_by_center(
 
 def get_data_for_single_barplot_comparison(
     survey: LimeSurveyData, base_q: str, comp_q: str
-) -> pd.DataFrame:
+) -> tuple[int, pd.DataFrame]:
     responses_df_all = survey.get_responses(base_q, drop_other=True)
     responses_df_comparison = survey.get_responses(comp_q, drop_other=True)
     N_question = len(responses_df_all.index)

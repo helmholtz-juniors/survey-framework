@@ -167,7 +167,7 @@ def plot_sidebyside_comparison_singleQ(
     show_axes_labels: BarLabels = BarLabels.NONE,
     fontsize_axes_labels: int = 10,
     text_wrap: int = 25,
-):
+) -> tuple[Figure, tuple[Axes, Axes]]:
     # set seaborn theme
     hc.set_plotstyle()
 
