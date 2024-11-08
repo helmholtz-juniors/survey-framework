@@ -1,3 +1,5 @@
+from typing import cast
+
 import pandas as pd
 
 from survey_framework.data_import.data_import import LimeSurveyData
@@ -49,6 +51,21 @@ def filter_by_center(
     filtered = responses[responses.index.isin(center_students.index)]
 
     return filtered
+
+
+def get_as_numeric(
+    survey: LimeSurveyData, q_code: str, blocklist: list[str]
+) -> "pd.Series[float]":
+    """
+    Helper to filter out non-numeric answers and then map answer codes to integers.
+    """
+    answers = survey.get_responses(q_code)
+    filtered = answers.loc[~answers[q_code].isin(blocklist)]
+
+    choices = survey.get_choices(q_code)
+    mapped = filtered.map(lambda a_code: choices[a_code])
+    numeric = cast("pd.Series[float]", mapped.apply(pd.to_numeric).squeeze())
+    return numeric
 
 
 def get_data_for_single_barplot_comparison(

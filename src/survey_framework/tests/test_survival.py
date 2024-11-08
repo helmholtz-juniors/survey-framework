@@ -1,8 +1,6 @@
 from pathlib import Path
-from typing import cast
 
-import pandas as pd
-
+from survey_framework.data_analysis.analysis import get_as_numeric
 from survey_framework.data_import.data_import import LimeSurveyData
 from survey_framework.plotting.survivalplot import plot_survival_plot
 
@@ -13,21 +11,6 @@ Q_END = {"year": "A9", "month": "A9a"}
 # we collected the data in January 2024
 SURVEY_YEAR = 2024
 SURVEY_MONTH = 1
-
-
-def get_as_numeric(
-    survey: LimeSurveyData, q_code: str, blocklist: list[str]
-) -> "pd.Series[float]":
-    """
-    Helper to filter out non-numeric answers and then map answer codes to integers.
-    """
-    answers = survey.get_responses(q_code)
-    filtered = answers.loc[~answers[q_code].isin(blocklist)]
-
-    choices = survey.get_choices(q_code)
-    mapped = filtered.map(lambda a_code: choices[a_code])
-    numeric = cast("pd.Series[float]", mapped.apply(pd.to_numeric).squeeze())
-    return numeric
 
 
 def test_survival(survey: LimeSurveyData, output_path: Path) -> None:

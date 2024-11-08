@@ -17,6 +17,7 @@ def plot_survival_plot(
     tick_map: Callable[[int], str] = str,
     legend_replace: dict[str, str] | None = None,
     legend_title: str | None = None,
+    colors: list[tuple[float, float, float]] | None = None,
     fig_size_x: int = 6,
     fig_size_y: int = 4,
 ) -> tuple[Figure, Axes]:
@@ -30,6 +31,7 @@ def plot_survival_plot(
         tick_map (optional): Function to generate strings from ticks. Defaults to str.
         legend_replace (optional): Replacements for legend entries. Defaults to None.
         legend_title (optional): Heading for the legend. Defaults to None.
+        colors (optional): Line colors, instead of shades of blue. Defaults to None.
         fig_size_x (optional): Horizontal figure size. Defaults to 6.
         fig_size_y (optional): Vertical figure size. Defaults to 4.
 
@@ -45,11 +47,9 @@ def plot_survival_plot(
     )
     ax: Axes = axs
 
-    if category:
+    if not colors and category:
         n_colors = len(pd.unique(df[category]))
         colors = hc.get_blues(n_colors)
-    else:
-        colors = None
 
     sns.ecdfplot(
         data=df,
@@ -84,7 +84,7 @@ def plot_survival_plot(
 
             new_label = "\n".join(wrap(f"{replacement} ({group_n})", 25))
             tt.set_text(new_label)
-        if legend_title:
+        if legend_title is not None:
             legend.set_title(legend_title)
     else:
         # place the number of participants in the top right corner
