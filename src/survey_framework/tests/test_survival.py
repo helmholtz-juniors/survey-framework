@@ -8,9 +8,9 @@ Q_FIELD = "A3"
 Q_START = {"year": "A8", "month": "A8a"}
 Q_END = {"year": "A9", "month": "A9a"}
 
-# we collected the data in January 2024
+# we collected the data in April / May 2024
 SURVEY_YEAR = 2024
-SURVEY_MONTH = 1
+SURVEY_MONTH = 5
 
 
 def test_survival(survey: LimeSurveyData, output_path: Path) -> None:
