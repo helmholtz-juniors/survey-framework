@@ -8,9 +8,9 @@ Q_FIELD = "A3"
 Q_START = {"year": "A8", "month": "A8a"}
 Q_END = {"year": "A9", "month": "A9a"}
 
-# we collected the data in January 2024
+# we collected the data in April / May 2024
 SURVEY_YEAR = 2024
-SURVEY_MONTH = 1
+SURVEY_MONTH = 5
 
 
 def test_survival(survey: LimeSurveyData, output_path: Path) -> None:
@@ -32,6 +32,7 @@ def test_survival(survey: LimeSurveyData, output_path: Path) -> None:
     )
     phd_current_year = phd_current_month.floordiv(12).add(1)
     phd_current_year.clip(0, 6, inplace=True)  # clamp after 6 years
+    phd_current_year = phd_current_year[phd_current_year != 0]  # remove year 0
 
     # calculate estimated total phd duration in months
     # if end month is missing, assume December
@@ -52,7 +53,7 @@ def test_survival(survey: LimeSurveyData, output_path: Path) -> None:
         category="phd_year",
         ticks=range(0, 144, 24),
         tick_map=lambda x: str(x // 12),
-        legend_replace={"0": "not started", "6": "6+"},
+        legend_replace={"6": "6+"},
         legend_title="Year of PhD",
     )
 

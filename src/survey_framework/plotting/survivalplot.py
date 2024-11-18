@@ -78,7 +78,7 @@ def plot_survival_plot(
                 group_n = counts.loc[label]["data"]
             except KeyError:
                 # ...for integer keys
-                group_n = counts.iloc[int(label)]["data"]
+                group_n = counts.loc[int(label)]["data"]
             # also replace the label if it's in the replacement dictionary
             replacement = legend_replace.get(label, label)
 
