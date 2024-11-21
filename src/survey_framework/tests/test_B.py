@@ -19,15 +19,17 @@ def test_swarm(survey: LimeSurveyData, output_path: Path) -> None:
     output.parent.mkdir(exist_ok=True, parents=True)
 
     data_df = get_data_for_q(survey, q)
+    # data_df = data_df.drop("id", axis=1).floordiv(5)  # divide by 5
     fig, ax = plt.subplots(dpi=300, figsize=(16, 10), layout="constrained")
 
     import seaborn as sns
 
-    ax = sns.violinplot(
+    ax = sns.boxenplot(
         data_df,
         ax=ax,
         orient="h",
-    )  # jitter=0.2)
+        # jitter=0.2,
+    )
 
     # tick labels (TODO re-use code!!!)
     new_labels = []
@@ -35,6 +37,9 @@ def test_swarm(survey: LimeSurveyData, output_path: Path) -> None:
         label = cast(str, survey.questions.loc[old_label.get_text()]["label"])
         new_labels.append("\n".join(wrap(label, 30)))
     ax.set_yticklabels(new_labels)
+
+    ax.set_xlabel("Time Allocated [%]")
+    ax.set_ylabel("Task")
 
     plt.savefig(output)
 
