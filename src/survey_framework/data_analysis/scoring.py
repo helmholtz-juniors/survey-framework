@@ -143,6 +143,20 @@ def rate_mental_health(
     return df
 
 
+class Scale(StrEnum):
+    EX = "Exhaustion"
+    CY = "Cynicism"
+    PE = "Professional Efficacy"
+
+
+class Profile(StrEnum):
+    ENGAGED = "Engaged"
+    INEFFECTIVE = "Ineffective"
+    OVEREXTENDED = "Overextended"
+    DISENGAGED = "Disengaged"
+    BURNOUT = "Burnout"
+
+
 def rate_burnout(responses: pd.DataFrame) -> pd.DataFrame:
     """Calculate burnout scores for the MBI-GS scale according to the
             Maslach Burnout Inventory Manual, Fourth Edition.
@@ -163,11 +177,6 @@ def rate_burnout(responses: pd.DataFrame) -> pd.DataFrame:
         "A7": 5,  # "A few times a week"
         "A8": 6,  # "Every day"
     }
-
-    class Scale(StrEnum):
-        EX = "Exhaustion"
-        CY = "Cynicism"
-        PE = "Professional Efficacy"
 
     scales = [
         Scale.EX,  # I feel emotionally drained from my work.
@@ -203,7 +212,7 @@ def rate_burnout(responses: pd.DataFrame) -> pd.DataFrame:
     df["CY_critical"] = df[Scale.CY].div(5).map(lambda x: x >= 2.86, na_action="ignore")
     df["PE_critical"] = df[Scale.PE].div(6).map(lambda x: x > 4.30, na_action="ignore")
 
-    def classify(row: "pd.Series[Any]") -> str | None:
+    def classify(row: "pd.Series[Any]") -> Profile | None:
         """assign burnout profiles according to Table 1 in the manual
 
         Args:
@@ -221,19 +230,17 @@ def rate_burnout(responses: pd.DataFrame) -> pd.DataFrame:
         assert isinstance(effective, bool)
 
         if not exhausted and not cynical and effective:
-            profile = "Engaged"
+            return Profile.ENGAGED
         elif not exhausted and not cynical and not effective:
-            profile = "Ineffective"
+            return Profile.INEFFECTIVE
         elif exhausted and not cynical and not effective:
-            profile = "Overextended"
+            return Profile.OVEREXTENDED
         elif not exhausted and cynical and not effective:
-            profile = "Disengaged"
+            return Profile.DISENGAGED
         elif exhausted and cynical and not effective:
-            profile = "Burnout"
+            return Profile.BURNOUT
         else:
-            profile = None
-
-        return profile
+            return None
 
     df["Profile"] = df.dropna().apply(classify, axis=1, result_type="reduce")
     return df
