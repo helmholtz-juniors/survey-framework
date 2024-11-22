@@ -236,7 +236,6 @@ def rate_burnout(responses: pd.DataFrame) -> pd.DataFrame:
         return profile
 
     df["Profile"] = df.dropna().apply(classify, axis=1, result_type="reduce")
-    print(df.groupby("Profile").count())
     return df
 
 
