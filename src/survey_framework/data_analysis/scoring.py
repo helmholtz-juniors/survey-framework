@@ -1,4 +1,5 @@
 from enum import StrEnum
+from typing import Any
 
 import pandas as pd
 
@@ -80,9 +81,7 @@ def rate_mental_health(
             ]
             # choice_codes = ["A1", "A2", "A3", "A4", "A5"]
 
-    # sanity checks
-    if len(responses.columns) != num_subquestions:
-        raise ValueError(f"expected {num_subquestions} subquestions for {condition}")
+    # sanity check
     q_code = responses.columns[0].split("_")[0]
     if q_code != condition:
         raise ValueError(f"expected question {condition}, got {q_code}")
@@ -114,7 +113,7 @@ def rate_mental_health(
 
     # Map responses from code to score
     df = pd.DataFrame()
-    for column, conv in zip(responses.columns, conversion, strict=False):
+    for column, conv in zip(responses.columns, conversion, strict=True):
         df[f"{column}_score"] = responses[column].map(
             conversion_dicts[conv], na_action="ignore"
         )
@@ -141,6 +140,103 @@ def rate_mental_health(
     if not keep_subscores:
         df = df.drop(df.columns[:-2], axis=1)
 
+    return df
+
+
+def rate_burnout(responses: pd.DataFrame) -> pd.DataFrame:
+    """Calculate burnout scores for the MBI-GS scale according to the
+            Maslach Burnout Inventory Manual, Fourth Edition.
+
+    Args:
+        responses: responses to question D3d (burnout)
+
+    Returns:
+        A DataFrame with SUM scores for each dimension and a burnout profile.
+    """
+
+    SCORE_MAP = {
+        "A2": 0,  # "Never"
+        "A3": 1,  # "A few times a year or less"
+        "A4": 2,  # "Once a month or less"
+        "A5": 3,  # "A few times a month"
+        "A6": 4,  # "Once a week"
+        "A7": 5,  # "A few times a week"
+        "A8": 6,  # "Every day"
+    }
+
+    class Scale(StrEnum):
+        EX = "Exhaustion"
+        CY = "Cynicism"
+        PE = "Professional Efficacy"
+
+    scales = [
+        Scale.EX,  # I feel emotionally drained from my work.
+        Scale.EX,  # I feel used up at the end of the workday.
+        Scale.EX,  # I feel tired when I get up in the morning and have to ...
+        Scale.EX,  # Working all day is really a strain for me.
+        Scale.PE,  # I can effectively solve the problems that arise in my work.
+        Scale.EX,  # I feel burned out from my work.
+        Scale.PE,  # I feel I am making an effective contribution to what ...
+        Scale.CY,  # I have become less interested in my work since I ...
+        Scale.CY,  # I have become less enthusiastic about my work.
+        Scale.PE,  # In my opinion, I am good at my job.
+        Scale.PE,  # I feel exhilarated when I accomplish something at work.
+        Scale.PE,  # I have accomplished many worthwhile things in this job.
+        Scale.CY,  # I just want to do my job and not be bothered.
+        Scale.CY,  # I have become more cynical about whether my work ...
+        Scale.CY,  # I doubt the significance of my work.
+        Scale.PE,  # At my work, I feel confident that I am effective at ...
+    ]
+
+    # make empty df with three columns
+    df = pd.DataFrame(responses.index)
+    df[Scale.EX], df[Scale.CY], df[Scale.PE] = 0, 0, 0
+
+    for col, scale in zip(responses.columns, scales, strict=True):
+        # sum up the score in the relevant category
+        col_scores = responses[col].map(SCORE_MAP, na_action="ignore")
+        df[scale] += col_scores
+
+    # boolean classification according to Table 3 in the manual
+    # for PE, critical == good, hence the ">" instead of ">="
+    df["EX_critical"] = df[Scale.EX].div(5).map(lambda x: x >= 2.90, na_action="ignore")
+    df["CY_critical"] = df[Scale.CY].div(5).map(lambda x: x >= 2.86, na_action="ignore")
+    df["PE_critical"] = df[Scale.PE].div(6).map(lambda x: x > 4.30, na_action="ignore")
+
+    def classify(row: "pd.Series[Any]") -> str | None:
+        """assign burnout profiles according to Table 1 in the manual
+
+        Args:
+            row (pd.Series): a single participant
+
+        Returns:
+            str | None: profile of the participant, None if not classifiable
+        """
+
+        exhausted = row["EX_critical"]
+        cynical = row["CY_critical"]
+        effective = row["PE_critical"]
+        assert isinstance(exhausted, bool)
+        assert isinstance(cynical, bool)
+        assert isinstance(effective, bool)
+
+        if not exhausted and not cynical and effective:
+            profile = "Engaged"
+        elif not exhausted and not cynical and not effective:
+            profile = "Ineffective"
+        elif exhausted and not cynical and not effective:
+            profile = "Overextended"
+        elif not exhausted and cynical and not effective:
+            profile = "Disengaged"
+        elif exhausted and cynical and not effective:
+            profile = "Burnout"
+        else:
+            profile = None
+
+        return profile
+
+    df["Profile"] = df.dropna().apply(classify, axis=1, result_type="reduce")
+    print(df.groupby("Profile").count())
     return df
 
 

@@ -2,7 +2,11 @@ from pathlib import Path
 
 import pytest
 
-from survey_framework.data_analysis.scoring import Condition, rate_mental_health
+from survey_framework.data_analysis.scoring import (
+    Condition,
+    rate_burnout,
+    rate_mental_health,
+)
 from survey_framework.data_import.data_import import LimeSurveyData
 
 
@@ -45,3 +49,8 @@ def test_invalid_question(survey: LimeSurveyData, output_path: Path) -> None:
         rate_mental_health(
             survey.get_responses(Condition.TRAIT_ANXIETY), Condition.DEPRESSION
         )
+
+
+def test_burnout(survey: LimeSurveyData, output_path: Path) -> None:
+    res_df = rate_burnout(survey.get_responses("D3d"))
+    print(res_df)
