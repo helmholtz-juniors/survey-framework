@@ -144,12 +144,16 @@ def rate_mental_health(
 
 
 class Scale(StrEnum):
+    """The three burnout scales defined by the MBI"""
+
     EX = "Exhaustion"
     CY = "Cynicism"
     PE = "Professional Efficacy"
 
 
 class Profile(StrEnum):
+    """The five burnout profiles defined in the MBI manual"""
+
     ENGAGED = "Engaged"
     INEFFECTIVE = "Ineffective"
     OVEREXTENDED = "Overextended"
@@ -165,7 +169,7 @@ def rate_burnout(responses: pd.DataFrame) -> pd.DataFrame:
         responses: responses to question D3d (burnout)
 
     Returns:
-        A DataFrame with SUM scores for each dimension and a burnout profile.
+        SUM scores for each `Scale` (3 ints) and a burnout `Profile` (1 string)
     """
 
     SCORE_MAP = {
@@ -212,14 +216,14 @@ def rate_burnout(responses: pd.DataFrame) -> pd.DataFrame:
     df["CY_critical"] = df[Scale.CY].div(5).map(lambda x: x >= 2.86, na_action="ignore")
     df["PE_critical"] = df[Scale.PE].div(6).map(lambda x: x > 4.30, na_action="ignore")
 
-    def classify(row: "pd.Series[Any]") -> Profile | None:
+    def classify(row: "pd.Series[Any]") -> Profile:
         """assign burnout profiles according to Table 1 in the manual
 
         Args:
-            row (pd.Series): a single participant
+            row: a single participant
 
         Returns:
-            str | None: profile of the participant, None if not classifiable
+            burnout `Profile` of the participant
         """
 
         exhausted = row["EX_critical"]
@@ -233,14 +237,14 @@ def rate_burnout(responses: pd.DataFrame) -> pd.DataFrame:
             return Profile.ENGAGED
         elif not exhausted and not cynical and not effective:
             return Profile.INEFFECTIVE
-        elif exhausted and not cynical and not effective:
+        elif exhausted and not cynical:
             return Profile.OVEREXTENDED
-        elif not exhausted and cynical and not effective:
+        elif not exhausted and cynical:
             return Profile.DISENGAGED
-        elif exhausted and cynical and not effective:
+        elif exhausted and cynical:
             return Profile.BURNOUT
         else:
-            return None
+            raise AssertionError("unreachable")
 
     df["Profile"] = df.dropna().apply(classify, axis=1, result_type="reduce")
     return df
