@@ -143,10 +143,11 @@ def rate_mental_health(
 
     return df
 
+
 def rate_PHQ15(
     responses: pd.DataFrame,
-    condition: Condition, 
-    #keep_subscores: bool = False,
+    condition: Condition,
+    # keep_subscores: bool = False,
 ) -> pd.DataFrame:
     """Calculate Patient Health Questionaire (PHQ15) based on responses to
         question based on:
@@ -158,41 +159,39 @@ def rate_PHQ15(
     Args:
         responses: DataFrame containing responses data
         condition: Here, PHQ15
-    
+
     Returns:
         pd.DataFrame: PHQ15 classifications
     """
 
     num_subquestions = 14
     base_score = 1
-    classification_boundaries = [-1,5, 10, 15,30]
+    classification_boundaries = [-1, 5, 10, 15, 30]
     classes = [
-        "No somatic symptoms", 
-        "Mild somatic symptoms", 
+        "No somatic symptoms",
+        "Mild somatic symptoms",
         "Moderate somatic symptoms",
-        "Severe somatic symptoms"
+        "Severe somatic symptoms",
     ]
     # choice_codes = ["A1", "A2", "A3", "A4", "A5"]
 
     # sanity check
     if condition != Condition.PHQ15:
         raise ValueError(f"Expected condition {Condition.PHQ15}, got {condition}")
-   
+
     # Set up score conversion dicts
     scores = {
         "A2": 0 * base_score,  # "Not bothered
         "A3": 1 * base_score,  # "Bothered a little"
         "A4": 2 * base_score,  # "Bothered a lot
-        # "A5": np.nan,  
+        # "A5": np.nan,
         # "A6": np.nan
     }
 
     # Map responses from code to score
     df = pd.DataFrame()
     for column in responses.columns:
-        df[f"{column}_score"] = responses[column].map(
-            scores, na_action="ignore"
-        )
+        df[f"{column}_score"] = responses[column].map(scores, na_action="ignore")
 
     # Calculate total anxiety or depression scores
     # scaled by number of non-NaN responses
@@ -214,6 +213,7 @@ def rate_PHQ15(
     )
 
     return df
+
 
 class Scale(StrEnum):
     """The three burnout scales defined by the MBI"""
