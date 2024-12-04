@@ -11,6 +11,7 @@ from survey_framework.data_analysis.scoring import (
     Scale,
     rate_burnout,
     rate_mental_health,
+    rate_somatic,
 )
 from survey_framework.data_import.data_import import LimeSurveyData
 from survey_framework.plotting.helper_barplots import plot_barplot
@@ -41,6 +42,11 @@ def test_depression(survey: LimeSurveyData, output_path: Path) -> None:
         Condition.DEPRESSION,
         keep_subscores=True,
     )
+    print(res_df)
+
+
+def test_somatic(survey: LimeSurveyData, output_path: Path) -> None:
+    res_df = rate_somatic(survey.get_responses("D4"))
     print(res_df)
 
 

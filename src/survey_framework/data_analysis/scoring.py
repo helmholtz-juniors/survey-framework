@@ -82,6 +82,9 @@ def rate_mental_health(
             ]
             # choice_codes = ["A1", "A2", "A3", "A4", "A5"]
 
+        case _:
+            raise AssertionError("unreachable")
+
     # sanity check
     q_code = responses.columns[0].split("_")[0]
     if q_code != condition:
@@ -144,10 +147,8 @@ def rate_mental_health(
     return df
 
 
-def rate_PHQ15(
+def rate_somatic(
     responses: pd.DataFrame,
-    condition: Condition,
-    # keep_subscores: bool = False,
 ) -> pd.DataFrame:
     """Calculate Patient Health Questionaire (PHQ15) based on responses to
         question based on:
@@ -158,14 +159,19 @@ def rate_PHQ15(
 
     Args:
         responses: DataFrame containing responses data
-        condition: Here, PHQ15
 
     Returns:
         pd.DataFrame: PHQ15 classifications
     """
+    PHQ15 = "D4"
+
+    # sanity check
+    q_code = responses.columns[0].split("_")[0]
+    if q_code != PHQ15:
+        raise ValueError(f"expected question {PHQ15}, got {q_code}")
 
     num_subquestions = 14
-    base_score = 1
+    base_score = 15 / 14
     classification_boundaries = [-1, 5, 10, 15, 30]
     classes = [
         "No somatic symptoms",
@@ -175,17 +181,11 @@ def rate_PHQ15(
     ]
     # choice_codes = ["A1", "A2", "A3", "A4", "A5"]
 
-    # sanity check
-    if condition != Condition.PHQ15:
-        raise ValueError(f"Expected condition {Condition.PHQ15}, got {condition}")
-
     # Set up score conversion dicts
     scores = {
         "A2": 0 * base_score,  # "Not bothered
         "A3": 1 * base_score,  # "Bothered a little"
         "A4": 2 * base_score,  # "Bothered a lot
-        # "A5": np.nan,
-        # "A6": np.nan
     }
 
     # Map responses from code to score
@@ -197,17 +197,17 @@ def rate_PHQ15(
     # scaled by number of non-NaN responses
     # e.g. scale by 8/5 if 5/8 subquestions answered
     responses_counts = df.notna().sum(axis=1)
-    df[f"{condition}_score"] = (
+    df[f"{PHQ15}_score"] = (
         df.sum(axis=1, skipna=True).div(responses_counts).mul(num_subquestions)
     )
 
     # Suppress entries with less than half of all subquestions answered
     # TODO: we might want to be more strict here
-    df.loc[responses_counts < num_subquestions / 2, f"{condition}_score"] = None
+    df.loc[responses_counts < num_subquestions / 2, f"{PHQ15}_score"] = None
 
     # Classify into categories
-    df[f"{condition}_score"] = pd.cut(
-        df[f"{condition}_score"],
+    df[f"{PHQ15}_score"] = pd.cut(
+        df[f"{PHQ15}_score"],
         bins=classification_boundaries,
         labels=classes,
     )
