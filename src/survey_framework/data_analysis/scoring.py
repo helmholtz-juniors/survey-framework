@@ -8,6 +8,7 @@ class Condition(StrEnum):
     STATE_ANXIETY = "D1"
     TRAIT_ANXIETY = "D2"
     DEPRESSION = "D3"
+    PHQ15 = "D4"
 
 
 def rate_mental_health(
@@ -142,6 +143,77 @@ def rate_mental_health(
 
     return df
 
+def rate_PHQ15(
+    responses: pd.DataFrame,
+    condition: Condition, 
+    #keep_subscores: bool = False,
+) -> pd.DataFrame:
+    """Calculate Patient Health Questionaire (PHQ15) based on responses to
+        question based on:
+            K. Kroenke, R. L. Spitzer, J. B. W. William, and B. Löwe., The
+                Patient Health Questionnaire somatic, anxiety,and depressive
+                symptom scales: a systematic review. General Hospital
+                Psychiatry, 32(4):345-359, 2010.
+
+    Args:
+        responses: DataFrame containing responses data
+        condition: Here, PHQ15
+    
+    Returns:
+        pd.DataFrame: PHQ15 classifications
+    """
+
+    num_subquestions = 14
+    base_score = 1
+    classification_boundaries = [-1,5, 10, 15,30]
+    classes = [
+        "No somatic symptoms", 
+        "Mild somatic symptoms", 
+        "Moderate somatic symptoms",
+        "Severe somatic symptoms"
+    ]
+    # choice_codes = ["A1", "A2", "A3", "A4", "A5"]
+
+    # sanity check
+    if condition != Condition.PHQ15:
+        raise ValueError(f"Expected condition {Condition.PHQ15}, got {condition}")
+   
+    # Set up score conversion dicts
+    scores = {
+        "A2": 0 * base_score,  # "Not bothered
+        "A3": 1 * base_score,  # "Bothered a little"
+        "A4": 2 * base_score,  # "Bothered a lot
+        # "A5": np.nan,  
+        # "A6": np.nan
+    }
+
+    # Map responses from code to score
+    df = pd.DataFrame()
+    for column in responses.columns:
+        df[f"{column}_score"] = responses[column].map(
+            scores, na_action="ignore"
+        )
+
+    # Calculate total anxiety or depression scores
+    # scaled by number of non-NaN responses
+    # e.g. scale by 8/5 if 5/8 subquestions answered
+    responses_counts = df.notna().sum(axis=1)
+    df[f"{condition}_score"] = (
+        df.sum(axis=1, skipna=True).div(responses_counts).mul(num_subquestions)
+    )
+
+    # Suppress entries with less than half of all subquestions answered
+    # TODO: we might want to be more strict here
+    df.loc[responses_counts < num_subquestions / 2, f"{condition}_score"] = None
+
+    # Classify into categories
+    df[f"{condition}_score"] = pd.cut(
+        df[f"{condition}_score"],
+        bins=classification_boundaries,
+        labels=classes,
+    )
+
+    return df
 
 class Scale(StrEnum):
     """The three burnout scales defined by the MBI"""
