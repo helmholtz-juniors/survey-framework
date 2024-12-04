@@ -8,7 +8,6 @@ class Condition(StrEnum):
     STATE_ANXIETY = "D1"
     TRAIT_ANXIETY = "D2"
     DEPRESSION = "D3"
-    PHQ15 = "D4"
 
 
 def rate_mental_health(
