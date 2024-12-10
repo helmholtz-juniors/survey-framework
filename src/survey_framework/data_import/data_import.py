@@ -82,18 +82,11 @@ class LimeSurveyData:
     def read_responses(
         self,
         responses_file: Path,
-        transformation_questions: dict[str, str] | None = None,
     ) -> None:
         """Read responses CSV file
 
         Args:
             responses_file (str): Path to the responses CSV file
-            transformation_questions (dict, optional): Dict of questions
-                requiring transformation of raw data, e.g. {'depression': 'D3'}
-                or {'supervision': ['E7a', 'E7b']}
-        TODO: we do not currently support the transformation dict.
-              - if unnecessary, remove
-              - if not, move to data_analysis
         """
 
         # Read 1st line of the csv file
@@ -209,11 +202,6 @@ class LimeSurveyData:
 
         self.responses = question_responses
         self.lime_system_info = system_info
-
-        if transformation_questions:
-            for transform, questions in transformation_questions.items():
-                for question in questions:
-                    self.add_responses(self.transform_question(question, transform))
 
     def _get_dtype_info(
         self, columns: Iterable[str], renamed_columns: Iterable[str]
@@ -433,38 +421,6 @@ class LimeSurveyData:
         """
 
         return self.responses.query(expr)
-
-    def add_responses(
-        self,
-        responses: pd.DataFrame,
-        question: str | tuple[tuple[str, str] | tuple[str, str]] | None = None,
-    ) -> None:
-        """Add responses to specified question to self.responses DataFrame
-
-        Args:
-            responses (pd.Series or pd.DataFrame): responses to be added
-                to self.responses
-            question (list or str, optional): Name (id) of question to which
-                the responses correspond. If not given, the column/Series name
-                is taken as the name
-        """
-        raise NotImplementedError
-
-    def transform_question(
-        self,
-        question: str | tuple[tuple[str, str] | tuple[str, str]],
-        transform: str,
-    ) -> pd.DataFrame:
-        """Perform transformation on responses to given question
-
-        Args:
-            question (str or tuple of str): Question(s) to transform
-            transform (str): Type of transform to perform
-
-        Returns:
-            pd.DataFrame: Transformed DataFrame to be concatenated to self.responses
-        """
-        raise NotImplementedError
 
 
 def main() -> None:
