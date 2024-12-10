@@ -68,6 +68,60 @@ def get_as_numeric(
     return numeric
 
 
+def get_phd_duration(
+    survey: LimeSurveyData,
+) -> tuple["pd.Series[int]", "pd.Series[int]"]:
+    """Calculate relevant numbers from questions A8 and A9, namely:
+        * How long has the participant been a doctoral researcher [years]?
+        * How long do they estimate their project to last _in total_ [months]?
+
+    Args:
+        survey (LimeSurveyData): The survey object
+
+    Returns:
+        tuple[pd.Series[int], pd.Series[int]]: Tuple of current year and estimation.
+    """
+
+    Q_START = {"year": "A8", "month": "A8a"}
+    Q_END = {"year": "A9", "month": "A9a"}
+
+    # we collected the data in April / May 2024
+    SURVEY_YEAR = 2024
+    SURVEY_MONTH = 5
+
+    # filter out "before 2015" / I don't know / IDWA
+    startyear = get_as_numeric(survey, Q_START["year"], ["A8", "A9", "A13"])
+    startmonth = get_as_numeric(survey, Q_START["month"], ["A13", "A14"])
+    endyear = get_as_numeric(survey, Q_END["year"], ["A11", "A12", "A13", "A14", "A15"])
+    endmonth = get_as_numeric(survey, Q_END["month"], ["A13", "A14", "A15"])
+
+    # calculate phd year relative to survey time (0 means not yet started)
+    phd_current_month = (
+        startyear.rsub(SURVEY_YEAR)
+        .mul(12)
+        .add(
+            startmonth.rsub(SURVEY_MONTH),
+        )
+        .dropna()
+        .astype(int)
+    )
+    phd_current_year = phd_current_month.floordiv(12).add(1)
+    phd_current_year.clip(0, 6, inplace=True)  # clamp after 6 years
+    phd_current_year = phd_current_year[phd_current_year != 0]  # remove year 0
+
+    # calculate estimated total phd duration in months
+    # if end month is missing, assume December
+    phd_estimation_months = (
+        endyear.sub(startyear)
+        .mul(12)
+        .add(
+            endmonth.sub(startmonth, fill_value=12),
+        )
+    )
+
+    return (phd_current_year, phd_estimation_months)
+
+
 def get_data_for_single_barplot_comparison(
     survey: LimeSurveyData, base_q: str, comp_q: str
 ) -> tuple[int, pd.DataFrame]:
