@@ -46,10 +46,16 @@ def filter_by_center(
     CQ = "A2"
 
     # get IDs for the given center, then filter by the IDs
-    centers = get_data_for_q(survey, CQ).filter([CQ])
+    centers = survey.get_responses(CQ)
     center_students = centers[centers[CQ] == center_code]
-    filtered = responses[responses.index.isin(center_students.index)]
+    if "id" in responses.columns:
+        filtered = responses.loc[
+            responses["id"].astype(int).isin(center_students.index)
+        ]
+    else:
+        filtered = responses[responses.index.isin(center_students.index)]
 
+    assert len(filtered) == len(center_students)
     return filtered
 
 
