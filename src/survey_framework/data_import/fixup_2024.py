@@ -35,9 +35,9 @@ def name_response(response: Tag) -> str:
     if name is None:
         assert response.parent is not None
         for sq in response.parent.find_all("subQuestion"):
-            assert sq["varName"].startswith(
-                "B4_SQ"
-            ), "only question B4 is known to have empty response tags"
+            assert sq["varName"].startswith("B4_SQ"), (
+                "only question B4 is known to have empty response tags"
+            )
 
         choices = response.find_all("value")
         if len(choices) == 7:
