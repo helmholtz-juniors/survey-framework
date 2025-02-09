@@ -1,7 +1,5 @@
 from pathlib import Path
 
-import matplotlib.pyplot as plt
-
 from survey_framework.data_analysis.analysis import (
     get_data_for_q,
     get_data_for_single_barplot_comparison,
@@ -30,7 +28,7 @@ def test_plots_E(survey: LimeSurveyData, output_path: Path) -> None:
     data_e5_all = data_e5_all.dropna()
     data_e6_all = data_e6_all.dropna()
 
-    figure, axs = plot_bar_side_by_side(
+    fig, _ = plot_bar_side_by_side(
         survey=survey,
         data_left=data_e5_all,
         data_right=data_e6_all,
@@ -38,7 +36,7 @@ def test_plots_E(survey: LimeSurveyData, output_path: Path) -> None:
         y_right=e6a,
     )
 
-    plt.savefig(output)
+    fig.savefig(output)
 
 
 def test_plots_E8_E9_comparison_A6(survey: LimeSurveyData, output_path: Path) -> None:
@@ -55,8 +53,8 @@ def test_plots_E8_E9_comparison_A6(survey: LimeSurveyData, output_path: Path) ->
     N_left, df_left = get_data_for_single_barplot_comparison(survey, e8, a6)
     N_right, df_right = get_data_for_single_barplot_comparison(survey, e9, a6)
 
-    figure, axs = plot_sidebyside_comparison_singleQ(
+    fig, _ = plot_sidebyside_comparison_singleQ(
         survey, df_left, df_right, e8, e9, a6, N_left, N_right
     )
 
-    plt.savefig(output)
+    fig.savefig(output)

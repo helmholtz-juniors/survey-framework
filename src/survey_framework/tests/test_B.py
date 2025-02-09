@@ -41,6 +41,6 @@ def test_swarm(survey: LimeSurveyData, output_path: Path) -> None:
     ax.set_xlabel("Time Allocated [%]")
     ax.set_ylabel("Task")
 
-    plt.savefig(output)
+    fig.savefig(output)
 
     print(data_df)

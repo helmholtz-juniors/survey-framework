@@ -1,7 +1,6 @@
 from pathlib import Path
 
 import pandas as pd
-from matplotlib import pyplot as plt
 
 from survey_framework.data_analysis.analysis import get_data_for_q
 from survey_framework.data_import.data_import import LimeSurveyData
@@ -40,9 +39,9 @@ def test_sankey(survey: LimeSurveyData, output_path: Path) -> None:
     data_df = pd.DataFrame(d)
     data_df = data_df.replace(regex={r".*don't want.*": "DWTA"})
 
-    plot_sankey(
+    fig = plot_sankey(
         data_df=data_df,
         titles=["Actual Frequency", "Preferred Frequency"],
     )
 
-    plt.savefig(output)
+    fig.savefig(output)
