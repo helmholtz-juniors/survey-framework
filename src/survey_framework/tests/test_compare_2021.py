@@ -2,6 +2,7 @@ from collections.abc import Callable, Mapping
 from pathlib import Path
 
 import matplotlib.pyplot as plt
+import pandas as pd
 
 from survey_framework.data_analysis.helpers import shorten_center_name
 from survey_framework.data_import.data_import import LimeSurveyData
@@ -52,8 +53,8 @@ def test_gender_distribution(survey: LimeSurveyData, output_path: Path) -> None:
         "Non-binary": "Diverse",
         "Other": "Diverse",
         "Other gender representations:": "Diverse",
-        "I don't know": "Diverse",  # is this correct? or should we drop instead?
-        # "I don't want to answer this question"
+        # "I don't know": "Diverse",
+        # "I don't want to answer this question": None,
     }
 
     plot_comparison_2021(
@@ -111,8 +112,7 @@ def plot_comparison_2021(
     )
     counts_2024 = answers_2024.value_counts()
 
-    combined = counts_2021.to_frame("2021")
-    combined["2024"] = counts_2024
+    combined = pd.concat([counts_2021, counts_2024], axis=1, join="outer")
 
     set_plotstyle()
     fig, ax = plt.subplots(layout="constrained")
