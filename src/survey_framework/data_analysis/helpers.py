@@ -20,7 +20,7 @@ def shorten_center_name(long: str) -> str | None:
     elif "Hereon" in long:
         return "Hereon"
     elif "Helmholtz Zentrum München" in long:
-        return "HMGU"
+        return "Helmholtz Munich"
 
     # probably not a center
     return None
