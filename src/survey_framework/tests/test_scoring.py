@@ -74,9 +74,10 @@ def test_burnout_plot(survey: LimeSurveyData, output_path: Path) -> None:
 
     res_df = rate_burnout(survey.get_responses("D3d"))
     raw_df = res_df[[Scale.EX, Scale.CY, Scale.PE]]
-    _ax = sns.kdeplot(raw_df)
-    plt.savefig(output_path / SECTION / "D3d_raw.pdf")
-    plt.close()
+
+    fig, ax = plt.subplots(layout="constrained")
+    _ = sns.kdeplot(data=raw_df, ax=ax)
+    fig.savefig(output_path / SECTION / "D3d_raw.pdf")
 
     # shake this into the right data form to use our plot_barplot helper
     n = len(raw_df.dropna())

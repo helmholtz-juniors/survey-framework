@@ -1,6 +1,5 @@
 from pathlib import Path
 
-import matplotlib.pyplot as plt
 import pandas as pd
 
 from survey_framework.data_analysis.analysis import get_data_for_q
@@ -55,7 +54,7 @@ def test_plots_A2_single(survey: LimeSurveyData, output_path: Path) -> None:
         data_q_counts_sorted_percentages["count"] / N_question * 100
     )
 
-    fig, ax = plot_bar(
+    fig, _ = plot_bar(
         survey=survey,
         data_df=data_q_counts_sorted_percentages,
         question=a2,
@@ -65,7 +64,7 @@ def test_plots_A2_single(survey: LimeSurveyData, output_path: Path) -> None:
         show_axes_labels=BarLabels.NONE,
     )
 
-    plt.savefig(output)
+    fig.savefig(output)
 
 
 def test_plots_A10_multiple(survey: LimeSurveyData, output_path: Path) -> None:
@@ -94,7 +93,7 @@ def test_plots_A10_multiple(survey: LimeSurveyData, output_path: Path) -> None:
         responses_df_counts_sorted_percentages["count"] / N_question * 100
     )
 
-    fig, ax = plot_bar(
+    fig, _ = plot_bar(
         survey=survey,
         data_df=responses_df_counts_sorted_percentages,
         question=a10,
@@ -105,7 +104,7 @@ def test_plots_A10_multiple(survey: LimeSurveyData, output_path: Path) -> None:
         show_axes_labels=BarLabels.PERCENT,
     )
 
-    plt.savefig(output)
+    fig.savefig(output)
 
 
 def test_plots_A2_comparison_A6(survey: LimeSurveyData, output_path: Path) -> None:
@@ -138,7 +137,7 @@ def test_plots_A2_comparison_A6(survey: LimeSurveyData, output_path: Path) -> No
         responses_df_counts_sorted_precentages["count"] / N_question * 100
     )
 
-    fig, ax = plot_bar_comparison(
+    fig, _ = plot_bar_comparison(
         survey=survey,
         data_df=responses_df_counts_sorted_precentages,
         question=a2,
@@ -151,4 +150,4 @@ def test_plots_A2_comparison_A6(survey: LimeSurveyData, output_path: Path) -> No
         fontsize_axes_labels=5,
     )
 
-    plt.savefig(output)
+    fig.savefig(output)

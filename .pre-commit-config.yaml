@@ -6,7 +6,7 @@ default_language_version:
 repos:
   - repo: https://github.com/astral-sh/ruff-pre-commit
     # Ruff version.
-    rev: v0.7.1
+    rev: v0.9.5
     hooks:
       # Run the linter.
       - id: ruff
@@ -14,12 +14,12 @@ repos:
       - id: ruff-format
 
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: "v1.13.0" # Use the sha / tag you want to point at
+    rev: "v1.15.0" # Use the sha / tag you want to point at
     hooks:
       - id: mypy
         additional_dependencies:
           [
-            types-beautifulsoup4~=4.12.0,
+            beautifulsoup4~=4.13.3,
             types-seaborn~=0.13.2,
             plot-likert~=0.5.0,
             pytest~=8.3.3,

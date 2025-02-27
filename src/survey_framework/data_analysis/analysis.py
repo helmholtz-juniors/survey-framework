@@ -136,8 +136,8 @@ def get_data_for_single_barplot_comparison(
     N_question = len(responses_df_all.index)
 
     responses_df_all_concat = pd.concat(
-        [responses_df_comparison.transpose(), responses_df_all.transpose()]
-    ).transpose()
+        [responses_df_comparison, responses_df_all], axis=1
+    )
 
     responses_df_counts = (
         responses_df_all_concat[[base_q, comp_q]]
