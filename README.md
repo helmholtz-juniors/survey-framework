@@ -90,7 +90,7 @@ If you use a decent IDE (recommendations: VS Code or PyCharm), it will display d
 ## Beginner's guide to git
 ### How to upload (commit) your work
 
-> [!INFO]  
+> [!IMPORTANT]  
 > Please don't commit directly to main, this makes it easier to work in parallel
 > and we can review each other's code before it gets merged.
 
