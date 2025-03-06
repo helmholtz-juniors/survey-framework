@@ -1,6 +1,11 @@
 # survey_framework
 This repo should contain the code for data import, analysis and plotting.
 
+[!WARNING]  
+> Never commit actual survey data to this repository! Due to internals of git,
+> it is almost impossible to erase accidentally committed data from history.
+> We suggest you follow the folder structure outlined below.
+
 ## Getting started
 
 We suggest the following folder structure:
@@ -24,8 +29,6 @@ n2_survey
 ```
 
 ### Using survey data
-
-NEVER COMMIT LIMESURVEY DATA TO THIS (OR ANY) REPOSITORY!
 
 1. Sign NDA
 2. Get access to the data
@@ -85,28 +88,23 @@ If you use a decent IDE (recommendations: VS Code or PyCharm), it will display d
 
 
 ## Beginner's guide to git
-### How to Commit
-DON'T COMMIT TO MAIN! (We cannot enforce it right now, but please don't).
+### How to upload (commit) your work
 
-1. pull the current project status `git pull`
-    1. if git tells you to clean up your repository first, stash your code with `git stash`
-    2. afterwards pull the current status with `git pull`
-    3. pop the stash to resolve merge conflicts with git `git stash pop`
-        1. remember that there can be more than one stash, if you don't want to pop the last one check `git stash list` and then use `git stash apply` or `git stash apply stash@{2}` or whichever one you want to apply
-        2. `git stash pop` will also remove the last added stash from the stash list
-2. add files to be comitted 
-3. use `pre-commit` to check whether `ruff` and `mypy` are happy 
-    1. do this within the `(.venv)` environment to make sure your version complys with the requirements in `requirements.txt`
-4. commit everything to a (new) branch
-5. github checks with lint what mistakes are still in the code
-6. make ruff happy
-7. create a pull request on github
-    1. go to Pull requests in the top menu
-    2. click on `New pull request` in the top right
-8. request review in pull request 
+[!INFO]  
+> Please don't commit directly to main, this makes it easier to work in parallel
+> and we can review each other's code before it gets merged.
+
+1. Create a new branch like `git branch 'my-epic-branch-name'` and switch to it (`git switch 'my-epic-branch-name'`).
+2. Mark files for upload by name using `git add <file>`. Finally, `git commit` everything.
+3. Upload your commit using `git push -u origin 'my-epic-branch-name'`.
+4. Create a pull request for the new branch on GitHub.
+5. GitHub CI checks for compliance with our linting rules (see below).
+   Request a review in the pull request, don't merge it yourself.
 
 ### Helpful commands to locally apply
-- use `pre-commit` in the Terminal to check for errors
+We use linting and type checking to enforce a certain degree of code quality.
+You can run the following tools after activating the virtual environment:
+- use `pre-commit` in the Terminal to run the CI checks locally
 - use `ruff format` to format files, e.g. `ruff format test.py` to format `test.py` or `ruff format` to format everything
-- use `mypy --strict [folder]` for typing errors, also makes sense for debugging
-- use `ruff check --fix` for python linter that warns for imports you didn't use or things you did wrong
+- use `mypy --strict [folder]` to check for typing errors, also makes sense for debugging
+- use `ruff check --fix` to have the linter check your code (and automatically fix some simple issues).
