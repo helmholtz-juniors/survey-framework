@@ -1,7 +1,7 @@
 # survey_framework
 This repo should contain the code for data import, analysis and plotting.
 
-[!WARNING]  
+> [!WARNING]  
 > Never commit actual survey data to this repository! Due to internals of git,
 > it is almost impossible to erase accidentally committed data from history.
 > We suggest you follow the folder structure outlined below.
@@ -90,7 +90,7 @@ If you use a decent IDE (recommendations: VS Code or PyCharm), it will display d
 ## Beginner's guide to git
 ### How to upload (commit) your work
 
-[!INFO]  
+> [!INFO]  
 > Please don't commit directly to main, this makes it easier to work in parallel
 > and we can review each other's code before it gets merged.
 
