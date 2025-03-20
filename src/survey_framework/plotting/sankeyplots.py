@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
 from matplotlib.figure import Figure
+from textwrap import wrap
 
 from . import helmholtzcolors as hc
 
@@ -10,8 +11,10 @@ from . import helmholtzcolors as hc
 def plot_sankey(
     data_df: pd.DataFrame,
     titles: list[str] | None = None,
-    width: int = 12,
-    height: int = 10,
+    title: str = "Two staged sanke diagram",
+    width: int = 16,
+    height: int = 30,
+    fontsize: int = 15
 ) -> Figure:
     """Plots a two staged sankey diagram
 
@@ -46,9 +49,14 @@ def plot_sankey(
         titles=titles,
         valign="center",
         color_dict=color_dict,
-        value_loc=["none", "none"],
+        # value_loc=["right", "left"],
         node_gap=0.04,
-        fontsize=11,
+        fontsize=fontsize,
+    )
+
+    plt.title(
+        "\n".join(wrap(title, 60)),
+        fontsize=20,
     )
 
     return figure
