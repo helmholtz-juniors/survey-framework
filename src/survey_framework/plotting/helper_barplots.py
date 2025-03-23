@@ -1,4 +1,3 @@
-import warnings
 from collections.abc import Iterable
 from textwrap import wrap
 from typing import cast
@@ -48,9 +47,9 @@ def add_axes_labels(
             case BarLabels.COUNT, PercentCount.COUNT:
                 return f"{n:g}"
             case BarLabels.PERCENT, PercentCount.PERCENT:
-                return f"{n:0.2f}%"
+                return f"{n * 100:.1f}%"
             case BarLabels.PERCENT, PercentCount.COUNT:
-                return f"{n * 100 / n_question:.2f}%"
+                return f"{n * 100 / n_question:.1f}%"
             case BarLabels.COUNT, PercentCount.PERCENT:
                 raise NotImplementedError(
                     "Percentages on axis with absolute counts on bars not implemented."
@@ -141,7 +140,6 @@ def plot_barplot(
 def add_tick_labels(
     survey: LimeSurveyData,
     ax: Axes,
-    data_df: pd.DataFrame,
     question: str,
     orientation: Orientation,
     fontsize: int,
@@ -165,18 +163,12 @@ def add_tick_labels(
         Axes: _description_
     """
 
-    if data_df.empty:
-        warnings.warn(
-            f"Cannot create tick labels from an empty dataframe (question {question})",
-            stacklevel=2,
-        )
-        return ax
-
     # function to rename a single label using the survey data
     def renamed(label: str) -> str:
         match survey.get_question_type(question=question):
             case QuestionType.SINGLE_CHOICE:
-                new_label = survey.questions.choices[question][label]
+                lookup_name = survey.questions.choices[question].get(label)
+                new_label = label if lookup_name is None else lookup_name
             case QuestionType.MULTIPLE_CHOICE:
                 new_label = survey.questions.choices[label]["Y"]
             case other:
@@ -191,7 +183,7 @@ def add_tick_labels(
             y_ticklabels = [renamed(item.get_text()) for item in ax.get_yticklabels()]
 
             # update labels
-            ax.set_yticks(range(len(data_df)))
+            ax.set_yticks(ax.get_yticks())
             ax.set_yticklabels(y_ticklabels, fontsize=fontsize)
 
         case Orientation.VERTICAL:
@@ -199,7 +191,7 @@ def add_tick_labels(
             x_ticklabels = [renamed(item.get_text()) for item in ax.get_xticklabels()]
 
             # update labels
-            ax.set_xticks(range(len(data_df)))
+            ax.set_xticks(ax.get_xticks())
             ax.set_xticklabels(
                 x_ticklabels,
                 fontsize=fontsize,

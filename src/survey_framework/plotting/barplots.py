@@ -4,10 +4,10 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure
+from matplotlib.ticker import PercentFormatter
 
 from ..data_import.data_import import LimeSurveyData
 from ..plotting.helper_barplots import (
-    adapt_legend,
     add_axes_labels,
     add_tick_labels,
     plot_barplot,
@@ -86,7 +86,6 @@ def plot_bar(
     ax = add_tick_labels(
         survey=survey,
         ax=ax,
-        data_df=data_df,
         question=question,
         orientation=orientation,
         fontsize=fontsize,
@@ -126,7 +125,6 @@ def plot_bar_comparison(
     data_df: pd.DataFrame,
     question: str,
     question_comparison: str,
-    n_question: int,
     label_q_data: str = "",
     orientation: Orientation = Orientation.HORIZONTAL,
     percentcount: PercentCount = PercentCount.COUNT,
@@ -173,22 +171,22 @@ def plot_bar_comparison(
     )
 
     # add number of participants to top right corner
-    plt.text(
-        0.99,
-        0.99,
-        f"N = {n_question}",
-        ha="right",
-        va="top",
-        transform=ax.transAxes,
-        fontsize=fontsize,
-    )
+    # plt.text(
+    #     0.99,
+    #     0.99,
+    #     f"N = {n_question}",
+    #     ha="right",
+    #     va="top",
+    #     transform=ax.transAxes,
+    #     fontsize=fontsize,
+    # )
 
     # add bar labels (the ones on top or next to bars within the plot)
     ax = add_axes_labels(
         ax=ax,
         show_axes_labels=show_axes_labels,
         percentcount=percentcount,
-        n_question=n_question,
+        n_question=0,  # will crash if used for division
         fontsize=fontsize_axes_labels,
     )
 
@@ -196,7 +194,6 @@ def plot_bar_comparison(
     ax = add_tick_labels(
         survey=survey,
         ax=ax,
-        data_df=pd.DataFrame(data_df[question].value_counts()),
         question=question,
         orientation=orientation,
         fontsize=fontsize,
@@ -204,16 +201,21 @@ def plot_bar_comparison(
     )
 
     # adapt legend
-    ax = adapt_legend(
-        survey=survey, ax=ax, question=question_comparison, text_wrap=text_wrap
-    )
+    # ax = adapt_legend(
+    #     survey=survey, ax=ax, question=question_comparison, text_wrap=text_wrap
+    # )
 
     # add general labels to axes
+    pct_fmt = PercentFormatter(1.0, decimals=0, symbol=None)
     match orientation:
         case Orientation.HORIZONTAL:
-            ax.set(xlabel=percentcount, ylabel=label_q_data)
+            ax.set(ylabel=label_q_data)
+            if percentcount == PercentCount.PERCENT:
+                ax.xaxis.set_major_formatter(pct_fmt)
         case Orientation.VERTICAL:
-            ax.set(xlabel=label_q_data, ylabel=percentcount)
+            ax.set(xlabel=label_q_data)
+            if percentcount == PercentCount.PERCENT:
+                ax.yaxis.set_major_formatter(pct_fmt)
 
     ax.autoscale()
     ax.set_autoscale_on(True)

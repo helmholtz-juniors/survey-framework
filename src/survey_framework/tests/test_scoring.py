@@ -99,11 +99,11 @@ def test_burnout_plot(survey: LimeSurveyData, output_path: Path) -> None:
     groups = (
         res_df.groupby("Profile")
         .count()["id"]
-        .to_frame("count")
+        .to_frame("Count")
         .sort_index(key=lambda x: x.map(sorting))
         .reset_index()
     )
-    groups["percentages"] = groups["count"].div(n)
+    groups["Percent"] = groups["Count"].div(n)
     print(groups)
 
     fig, ax = plot_barplot(

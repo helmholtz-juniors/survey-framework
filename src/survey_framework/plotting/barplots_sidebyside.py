@@ -224,7 +224,7 @@ def plot_sidebyside_comparison_singleQ(
     ax0 = add_tick_labels(
         survey=survey,
         ax=ax0,
-        data_df=pd.DataFrame(data_left[base_q_left].value_counts()),
+        # data_df=pd.DataFrame(data_left[base_q_left].value_counts()),
         question=base_q_left,
         orientation=Orientation.HORIZONTAL,
         fontsize=fontsize,

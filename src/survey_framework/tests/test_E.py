@@ -11,6 +11,7 @@ from survey_framework.plotting.barplots_sidebyside import (
 )
 
 
+# test side-by-side bar plots
 def test_plots_E(survey: LimeSurveyData, output_path: Path) -> None:
     section = "E"
     # e5a = "E5a"
@@ -39,6 +40,8 @@ def test_plots_E(survey: LimeSurveyData, output_path: Path) -> None:
     fig.savefig(output)
 
 
+# test "comparison" side-by-side bar plots
+# (i.e., side-by-side with hue for a different question)
 def test_plots_E8_E9_comparison_A6(survey: LimeSurveyData, output_path: Path) -> None:
     section = "E"
     e8 = "E8"
