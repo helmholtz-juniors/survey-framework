@@ -1,9 +1,10 @@
+from textwrap import wrap
+
 import ausankey as sky  # type: ignore
 import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
 from matplotlib.figure import Figure
-from textwrap import wrap
 
 from . import helmholtzcolors as hc
 
@@ -14,7 +15,7 @@ def plot_sankey(
     title: str = "Two staged sanke diagram",
     width: int = 16,
     height: int = 30,
-    fontsize: int = 15
+    fontsize: int = 15,
 ) -> Figure:
     """Plots a two staged sankey diagram
 
