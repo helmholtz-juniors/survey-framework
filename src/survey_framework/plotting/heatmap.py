@@ -17,8 +17,8 @@ from survey_framework.data_import.data_import import LimeSurveyData
 def plot_heatmap(
     df: pd.DataFrame,
     survey: LimeSurveyData,
-    fig_size_x: int = 10,
-    fig_size_y: int = 6,
+    width: int = 10,
+    height: int = 6,
 ) -> tuple[Figure, Axes]:
     """Correlation heatmap of the input dataframe vs. all (mental) health scores.
     This is currently hard-coded to use Spearman's rho.
@@ -70,9 +70,7 @@ def plot_heatmap(
     print(correlations)
 
     hc.set_plotstyle()
-    figure, ax = plt.subplots(
-        dpi=300, figsize=(fig_size_x, fig_size_y), layout="constrained"
-    )
+    figure, ax = plt.subplots(dpi=300, figsize=(width, height), layout="constrained")
 
     ax = sns.heatmap(correlations, annot=True, ax=ax)
     ax.set_xticklabels(ax.get_xticklabels(), rotation=45, ha="right")
