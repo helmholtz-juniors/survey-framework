@@ -128,6 +128,8 @@ def get_phd_duration(
     return (phd_current_year, phd_estimation_months)
 
 
+# TODO: There is a duplicate of this currently in the center specific report.
+#       This could also use some refactoring and documentation for readability.
 def get_data_for_single_barplot_comparison(
     survey: LimeSurveyData, base_q: str, comp_q: str
 ) -> tuple[int, pd.DataFrame]:
@@ -142,7 +144,7 @@ def get_data_for_single_barplot_comparison(
     responses_df_counts = (
         responses_df_all_concat[[base_q, comp_q]]
         .value_counts()
-        .reset_index(name="count")
+        .reset_index(name="Count")
     )
 
     responses_df_counts[base_q] = pd.Categorical(
@@ -154,8 +156,8 @@ def get_data_for_single_barplot_comparison(
     responses_df_counts_sorted = responses_df_counts.sort_values(by=[base_q, comp_q])
 
     responses_df_counts_sorted_precentages = responses_df_counts_sorted
-    responses_df_counts_sorted_precentages["percentages"] = (
-        responses_df_counts_sorted_precentages["count"] / N_question * 100
+    responses_df_counts_sorted_precentages["Percent"] = (
+        responses_df_counts_sorted_precentages["Count"] / N_question
     )
 
     return N_question, responses_df_counts_sorted_precentages

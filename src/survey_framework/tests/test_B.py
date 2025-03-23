@@ -36,6 +36,7 @@ def test_swarm(survey: LimeSurveyData, output_path: Path) -> None:
     for old_label in ax.get_yticklabels():
         label = cast(str, survey.questions.loc[old_label.get_text()]["label"])
         new_labels.append("\n".join(wrap(label, 30)))
+    ax.set_yticks(ax.get_yticks())
     ax.set_yticklabels(new_labels)
 
     ax.set_xlabel("Time Allocated [%]")
