@@ -18,8 +18,8 @@ def plot_survival_plot(
     legend_replace: dict[str, str] | None = None,
     legend_title: str | None = None,
     colors: list[tuple[float, float, float]] | None = None,
-    fig_size_x: int = 6,
-    fig_size_y: int = 4,
+    width: int = 6,
+    height: int = 4,
 ) -> tuple[Figure, Axes]:
     """
     Plots the given DataFrame as a survival plot, approaching zero.
@@ -32,8 +32,8 @@ def plot_survival_plot(
         legend_replace (optional): Replacements for legend entries. Defaults to None.
         legend_title (optional): Heading for the legend. Defaults to None.
         colors (optional): Line colors, instead of shades of blue. Defaults to None.
-        fig_size_x (optional): Horizontal figure size. Defaults to 6.
-        fig_size_y (optional): Vertical figure size. Defaults to 4.
+        width (optional): Horizontal figure size. Defaults to 6.
+        height (optional): Vertical figure size. Defaults to 4.
 
     Returns:
         tuple[Figure, Axes]: The matplotlib figure and axes.
@@ -42,10 +42,7 @@ def plot_survival_plot(
         legend_replace = dict()
     hc.set_plotstyle()
 
-    figure, axs = plt.subplots(
-        dpi=300, figsize=(fig_size_x, fig_size_y), layout="constrained"
-    )
-    ax: Axes = axs
+    figure, ax = plt.subplots(dpi=300, figsize=(width, height), layout="constrained")
 
     if not colors and category:
         n_colors = len(pd.unique(df[category]))

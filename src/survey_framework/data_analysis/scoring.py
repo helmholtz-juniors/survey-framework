@@ -46,7 +46,6 @@ def rate_mental_health(
             label = "state_anxiety"
             classification_boundaries = [0, 37, 44, 80]
             classes = ["no or low anxiety", "moderate anxiety", "high anxiety"]
-            # choice_codes = ["A1", "A2", "A3"]
 
         case Condition.TRAIT_ANXIETY:
             num_subquestions = 8
@@ -64,7 +63,6 @@ def rate_mental_health(
             label = "trait_anxiety"
             classification_boundaries = [0, 37, 44, 80]
             classes = ["no or low anxiety", "moderate anxiety", "high anxiety"]
-            # choice_codes = ["A1", "A2", "A3"]
 
         case Condition.DEPRESSION:
             num_subquestions = 8
@@ -79,7 +77,6 @@ def rate_mental_health(
                 "moderately severe depression",
                 "severe depression",
             ]
-            # choice_codes = ["A1", "A2", "A3", "A4", "A5"]
 
         case _:
             raise AssertionError("unreachable")
@@ -148,6 +145,7 @@ def rate_mental_health(
 
 def rate_somatic(
     responses: pd.DataFrame,
+    keep_subscores: bool = False,
 ) -> pd.DataFrame:
     """Calculate Patient Health Questionaire (PHQ15) based on responses to
         question based on:
@@ -158,11 +156,15 @@ def rate_somatic(
 
     Args:
         responses: DataFrame containing responses data
+        keep_subscores (optional): Whether to include scores from subquestions
+            in the output DataFrame, or only total score and classification.
+            Default False.
 
     Returns:
         pd.DataFrame: PHQ15 classifications
     """
     PHQ15 = "D4"
+    label = "somatic"
 
     # sanity check
     q_code = responses.columns[0].split("_")[0]
@@ -178,7 +180,6 @@ def rate_somatic(
         "Moderate somatic symptoms",
         "Severe somatic symptoms",
     ]
-    # choice_codes = ["A1", "A2", "A3", "A4", "A5"]
 
     # Set up score conversion dicts
     scores = {
@@ -192,24 +193,26 @@ def rate_somatic(
     for column in responses.columns:
         df[f"{column}_score"] = responses[column].map(scores, na_action="ignore")
 
-    # Calculate total anxiety or depression scores
-    # scaled by number of non-NaN responses
+    # Calculate total scores scaled by number of non-NaN responses
     # e.g. scale by 8/5 if 5/8 subquestions answered
     responses_counts = df.notna().sum(axis=1)
-    df[f"{PHQ15}_score"] = (
+    df[f"{label}_score"] = (
         df.sum(axis=1, skipna=True).div(responses_counts).mul(num_subquestions)
     )
 
     # Suppress entries with less than half of all subquestions answered
     # TODO: we might want to be more strict here
-    df.loc[responses_counts < num_subquestions / 2, f"{PHQ15}_score"] = None
+    df.loc[responses_counts < num_subquestions / 2, f"{label}_score"] = None
 
     # Classify into categories
-    df[f"{PHQ15}_score"] = pd.cut(
-        df[f"{PHQ15}_score"],
+    df[f"{label}_class"] = pd.cut(
+        df[f"{label}_score"],
         bins=classification_boundaries,
         labels=classes,
     )
+
+    if not keep_subscores:
+        df = df.drop(df.columns[:-2], axis=1)
 
     return df
 
@@ -321,171 +324,45 @@ def rate_burnout(responses: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-def _rate_satisfaction(
-    question_label: str,
+def rate_satisfaction(
     responses: pd.DataFrame,
-    choices: dict[str, str],
-    keep_subscores: bool = False,
+    calc_average: bool = True,
 ) -> pd.DataFrame:
-    """Calculate average overall satisfaction rating
+    """Calculate satisfaction rating for each subquestion and average over all
+    subquestions. Numeric scale from 1 = very dissatisfied to 5 = very satisfied.
+
     Args:
-        question_label (str): Question label to use for transformation type inference
-        responses (pd.DataFrame): DataFrame containing responses data
-        choices (dict): dict for answer choice conversion
-        keep_subscores (bool, optional): Whether to include scores from subquestions
-            in the output DataFrame, or only total score and classification.
-            Default False.
+        responses: DataFrame containing responses data
+        calc_average: Whether to calculate average satisfaction. Default True.
     Returns:
-        pd.DataFrame: Rounded satisfaction ratings and classifications
+        Satisfaction ratings for each component (and overall average)
     """
-    # Infer labels from question
-    if "satisfied" in question_label:
-        label = "satisfaction"
-    else:
-        raise ValueError("Question incompatible with specified transformation.")
-    # Satisfation classes sorted from high to low (high score equals high satisfaction)
-    satisfaction_classes = [
-        "very satisfied",
-        "satisfied",
-        "neither/nor",
-        "dissatisfied",
-        "very dissatisfied",
-    ]
-    satisfaction_class_codes = ["A1", "A2", "A3", "A4", "A5"]
-    satisfaction_class_scores = [5.0, 4.0, 3.0, 2.0, 1.0]
+    # safety check: only questions where we verified that they use a scale from
+    # A1 (very satisfied) to A5 (very dissatisfied) should be added to this list
+    SATISFACTION_QUESTIONS = ["C1"]
+
+    q_code = responses.columns[0].split("_")[0]
+    if q_code not in SATISFACTION_QUESTIONS:
+        raise ValueError(f"{q_code} is not a satisfaction-scale question")
 
     # Set up score conversion dicts for individual questions
     satisfaction_question_scores = {
-        "Very satisfied": 5.0,
-        "Satisfied": 4.0,
-        "Neither/nor": 3.0,
-        "Dissatisfied": 2.0,
-        "Very dissatisfied": 1.0,
-    }
-    # Inverse satisfaction transformation: Score (5.0) --> Class ('Very satisfied')
-    satisfaction_score_to_class = {
-        score: the_class
-        for the_class, score in zip(
-            satisfaction_classes, satisfaction_class_scores, strict=False
-        )
-    }
-    # Inverse satisfaction transformation: Class ('Very satisfied') --> Code ('A1')
-    satisfaction_class_to_code = {
-        the_class: code
-        for code, the_class in zip(
-            satisfaction_class_codes, satisfaction_classes, strict=False
-        )
+        "A1": 5.0,  # "Very satisfied"
+        "A2": 4.0,  # "Satisfied"
+        "A3": 3.0,  # "Neither/nor"
+        "A4": 2.0,  # "Dissatisfied"
+        "A5": 1.0,  # "Very dissatisfied"
     }
 
-    # Map responses from code to text then to score
+    # Map responses to score
     df = pd.DataFrame()
     for column in responses.columns:
-        df[f"{column}_score"] = (
-            responses[column]
-            .map(choices)
-            .map(satisfaction_question_scores, na_action="ignore")
+        df[f"{column}_score"] = responses[column].map(
+            satisfaction_question_scores, na_action="ignore"
         )
 
     # Calculate mean rating and round (ignoring NaN)
-    df[f"{label}_score"] = df.mean(axis=1, skipna=True).round()
-
-    # Classify into categories
-    df[f"{label}_class"] = pd.Categorical(
-        df[f"{label}_score"]
-        .map(satisfaction_score_to_class, na_action="ignore")
-        .map(satisfaction_class_to_code, na_action="ignore"),
-        categories=satisfaction_class_codes,
-        ordered=True,
-    )
-
-    if not keep_subscores:
-        df = df.drop(df.columns[:-2], axis=1)
-
-    return df
-
-
-def _rate_supervision(
-    question_label: str,
-    responses: pd.DataFrame,
-    choices: dict[str, str],
-    keep_subscores: bool = False,
-) -> pd.DataFrame:
-    """Calculate average direct/formal supervision rating
-
-    Args:
-        question_label (str): Question label to use for transformation type inference
-        responses (pd.DataFrame): DataFrame containing responses data
-        choices (dict): dict for answer choice conversion
-        keep_subscores (bool, optional): Whether to include scores from subquestions
-            in the output DataFrame, or only total score and classification.
-            Default False.
-
-    Returns:
-        pd.DataFrame: Rounded supervision ratings and classifications
-    """
-    # Infer labels from question
-    if "formal supervisor" in question_label:
-        label = "formal_supervision"
-    elif "direct supervisor" in question_label:
-        label = "direct_supervision"
-    else:
-        raise ValueError("Question incompatible with specified transformation.")
-    # Supervision classes sorted from high to low (high score equals high satisfaction)
-    supervision_classes = [
-        "very satisfied",
-        "rather satisfied",
-        "neither satisfied nor dissatisfied",
-        "rather dissatisfied",
-        "very dissatisfied",
-    ]
-    supervision_class_codes = ["A1", "A2", "A3", "A4", "A5"]
-    supervision_class_scores = [5.0, 4.0, 3.0, 2.0, 1.0]
-
-    # Set up score conversion dicts for individual questions
-    supervision_question_scores = {
-        "Fully agree": 5.0,
-        "Partially agree": 4.0,
-        "Neither agree nor disagree": 3.0,
-        "Partially disagree": 2.0,
-        "Fully disagree": 1.0,
-    }
-    # Inverse supervision transformation: Score (5.0) --> Class ('Very satisfied')
-    supervision_score_to_class = {
-        score: the_class
-        for the_class, score in zip(
-            supervision_classes, supervision_class_scores, strict=False
-        )
-    }
-    # Inverse supervision transformation: Class ('Very satisfied') --> Code ('A1')
-    supervision_class_to_code = {
-        the_class: code
-        for code, the_class in zip(
-            supervision_class_codes, supervision_classes, strict=False
-        )
-    }
-
-    # Map responses from code to text then to score
-    df = pd.DataFrame()
-    for column in responses.columns:
-        df[f"{column}_score"] = (
-            responses[column]
-            .map(choices)
-            .map(supervision_question_scores, na_action="ignore")
-        )
-
-    # Calculate mean rating and round (ignoring NaN)
-    df[f"{label}_score"] = df.mean(axis=1, skipna=True).round()
-
-    # Classify into categories
-    df[f"{label}_class"] = pd.Categorical(
-        df[f"{label}_score"]
-        .map(supervision_score_to_class, na_action="ignore")
-        .map(supervision_class_to_code, na_action="ignore"),
-        categories=supervision_class_codes,
-        ordered=True,
-    )
-
-    if not keep_subscores:
-        df = df.drop(df.columns[:-2], axis=1)
+    if calc_average:
+        df[f"{q_code}_score"] = df.mean(axis=1, skipna=True).round()
 
     return df

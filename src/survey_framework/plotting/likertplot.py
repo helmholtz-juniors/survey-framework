@@ -20,8 +20,8 @@ def plot_likertplot(
     question: str,
     order: list[str],
     bar_labels: BarLabels = BarLabels.PERCENT,
-    fig_size_x: int = 16,
-    fig_size_y: int = 10,
+    width: int = 16,
+    height: int = 10,
     text_wrap: int = 30,
 ) -> tuple[Figure, Axes]:
     """
@@ -32,10 +32,10 @@ def plot_likertplot(
         data_df: dataframe containing answers to be plotted
         question: question code (e.g. 'D4')
         order: ordered list of answer options. **The rest will be dropped!**
-        bar_labels: which kind of labels bars should have. Defaults to PERCENT.
-        fig_size_x: width of the figure. Defaults to 16.
-        fig_size_y: height of the figure. Defaults to 10.
-        text_wrap: number of characters before a question label wraps. Defaults to 30.
+        bar_labels (optional): which kind of bar labels to use. Defaults to PERCENT.
+        width (optional): width of the figure. Defaults to 16.
+        height (optional): height of the figure. Defaults to 10.
+        text_wrap (optional): wrap question labels after x characters. Defaults to 30.
 
     Returns:
         The matplotlib figure and axis
@@ -44,13 +44,11 @@ def plot_likertplot(
     hc.set_plotstyle()
     colors = hc.palette[len(order)]
 
-    fig, ax = plt.subplots(
-        dpi=300, figsize=(fig_size_x, fig_size_y), layout="constrained"
-    )
+    fig, ax = plt.subplots(dpi=300, figsize=(width, height), layout="constrained")
 
     # remove values not present in order
     drop = set(survey.get_choices(question).keys()).difference(order)
-    dropped_df = data_df.drop(columns="id").replace(drop, value=None)
+    dropped_df = data_df.drop(columns="id").replace(list(drop), value=None)
 
     # use external library to actually draw the plot
     # silence FutureWarnings (already fixed upstream, not yet in PyPI)

@@ -11,6 +11,7 @@ from survey_framework.data_analysis.scoring import (
     Scale,
     rate_burnout,
     rate_mental_health,
+    rate_satisfaction,
     rate_somatic,
 )
 from survey_framework.data_import.data_import import LimeSurveyData
@@ -69,6 +70,19 @@ def test_burnout(survey: LimeSurveyData, output_path: Path) -> None:
     print(res_df)
 
 
+def test_burnout_invalid(survey: LimeSurveyData, output_path: Path) -> None:
+    # conversion should fail when using the wrong questions as input
+    with pytest.raises(ValueError):
+        rate_burnout(survey.get_responses("D1"))
+    with pytest.raises(ValueError):
+        rate_burnout(survey.get_responses("D2"))
+    with pytest.raises(ValueError):
+        rate_burnout(survey.get_responses("D3"))
+
+    with pytest.raises(TypeError):
+        rate_burnout(survey.get_responses("D4"))
+
+
 def test_burnout_plot(survey: LimeSurveyData, output_path: Path) -> None:
     SECTION = "D"
 
@@ -103,3 +117,8 @@ def test_burnout_plot(survey: LimeSurveyData, output_path: Path) -> None:
     ax.yaxis.set_major_formatter(PercentFormatter(1))
 
     fig.savefig(output_path / SECTION / "D3d_scores.pdf")
+
+
+def test_satisfaction(survey: LimeSurveyData, output_path: Path) -> None:
+    res_df = rate_satisfaction(survey.get_responses("C1"), calc_average=False)
+    print(res_df)

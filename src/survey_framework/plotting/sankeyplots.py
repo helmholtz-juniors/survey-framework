@@ -42,7 +42,7 @@ def plot_sankey(
         color_dict[row] = colors[i]
 
     # Plot
-    figure = plt.figure(dpi=300, figsize=(width, height))
+    figure = plt.figure(dpi=300, figsize=(width, height), layout="constrained")
 
     sky.sankey(
         data_df,
