@@ -209,6 +209,7 @@ ORDER = {
     ### SECTION C: Satisfaction
     "C1": ["A5", "A4", "A3", "A6", "A2", "A1"],  # Likert
     "C4": ["A5", "A4", "A3", "A6", "A2", "A1"],  # Likert
+    "C5": ["A2", "A3", "A6", "A4", "A5"],  # Likert
     ### SECTION D: Mental Health
     "D4": ["A4", "A3", "A5", "A2"],  # Likert
     "D9": ["A1", "A2", "-oth-", "A3"],
