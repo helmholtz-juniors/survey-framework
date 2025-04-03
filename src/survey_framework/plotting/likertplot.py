@@ -4,6 +4,7 @@ from typing import cast
 
 import matplotlib.pyplot as plt
 import pandas as pd
+import seaborn as sns
 from matplotlib.axes import Axes
 from matplotlib.container import BarContainer
 from matplotlib.figure import Figure
@@ -20,9 +21,10 @@ def plot_likertplot(
     question: str,
     order: list[str],
     bar_labels: BarLabels = BarLabels.PERCENT,
-    width: int = 16,
-    height: int = 10,
+    width: int = 6,
+    height: int = 4,
     text_wrap: int = 30,
+    percent_cutoff: int = 8,
 ) -> tuple[Figure, Axes]:
     """
     plot the given data as a Likert plot
@@ -54,7 +56,6 @@ def plot_likertplot(
     # silence FutureWarnings (already fixed upstream, not yet in PyPI)
     with warnings.catch_warnings():
         warnings.simplefilter(action="ignore", category=FutureWarning)
-        # TODO: support percentages?
         ax = _likert(dropped_df, order, colors=colors, ax=ax)
 
     # set the title (overarching question)
@@ -62,17 +63,14 @@ def plot_likertplot(
         "question_label"
     ].unique()
     assert len(title) == 1, "Multiple question_labels found, check data correctness."
-    ax.set_title(title[0])
+    # ax.set_title(title[0])
 
     # set subquestion labels (y ticks)
     new_labels = []
     for old_label in ax.get_yticklabels():
         label = cast(str, survey.questions.loc[old_label.get_text()]["label"])
         new_labels.append("\n".join(wrap(label, text_wrap)))
-    ax.set_yticklabels(new_labels)
-    # TODO: use plot_helpers instead?
-    # add_tick_labels(survey=survey, ax=ax, data_df=data_df,
-    # question=question, orientation=Orientation.HORIZONTAL, fontsize=10, text_wrap=30)
+    ax.set_yticklabels(new_labels, linespacing=0.75)
 
     # set the legend labels
     choices = survey.questions.loc[survey.questions["question_group"] == question][
@@ -82,7 +80,7 @@ def plot_likertplot(
         text.set_text(choices[text.get_text()])
 
     # reposition legend
-    ax.get_legend().set_bbox_to_anchor((1, 0.97))
+    sns.move_legend(ax, "upper center", ncol=3, bbox_to_anchor=(0.25, 1.1))
 
     # add number of participants
     n_question = data_df.count().iloc[1]  # don't count NaNs, but count dropped answers
@@ -95,11 +93,11 @@ def plot_likertplot(
         formatter for bar labels, with a 5% cutoff (no label for small bars)
         """
         percentage = x * 100 / n_question
-        if percentage < 5:
+        if percentage < percent_cutoff:
             return ""
         match bar_labels:
             case BarLabels.PERCENT:
-                return f"{percentage:.2f}%"
+                return f"{percentage:.1f}%"
             case BarLabels.COUNT:
                 return f"{x:g}"
             case BarLabels.NONE:
@@ -111,7 +109,9 @@ def plot_likertplot(
             container=cast(BarContainer, bc),
             label_type="center",
             weight="bold",
+            fontsize="7",
             color="white",
+            # path_effects=[PathEffects.withStroke(linewidth=1, foreground='black')],
             fmt=cutoff_fmt,
         )
 

@@ -15,7 +15,7 @@ def simple_histplot(
     survey: LimeSurveyData,
     data_df: DataFrame,
     question_code: str,
-    hue_series: Series[str] | None,
+    hue_series: "Series[str] | None",
     order_dict: dict[str, list[str]],
     hue_order: list[str] | None,
     width: int = 10,

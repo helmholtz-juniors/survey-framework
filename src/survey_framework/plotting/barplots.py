@@ -8,11 +8,12 @@ from matplotlib.ticker import PercentFormatter
 
 from ..data_import.data_import import LimeSurveyData
 from ..plotting.helper_barplots import (
+    adapt_legend,
     add_axes_labels,
     add_tick_labels,
     plot_barplot,
 )
-from ..plotting.helper_plotenums import BarLabels, Orientation, PercentCount
+from ..plotting.helper_plotenums import BarLabels, Orientation, PercentCount, PlotType
 
 
 def plot_bar(
@@ -125,14 +126,15 @@ def plot_bar_comparison(
     data_df: pd.DataFrame,
     question: str,
     question_comparison: str,
+    n_question: int | None = None,
     label_q_data: str = "",
     orientation: Orientation = Orientation.HORIZONTAL,
     percentcount: PercentCount = PercentCount.COUNT,
-    fig_size_x: int = 16,
-    fig_size_y: int = 10,
-    fontsize: int = 10,
+    width: int = 6,
+    height: int = 4,
+    # fontsize: int = 10,
     show_axes_labels: BarLabels = BarLabels.NONE,
-    fontsize_axes_labels: int = 10,
+    # fontsize_axes_labels: int = 10,
     text_wrap: int = 25,
 ) -> tuple[Figure, Axes]:
     """
@@ -143,7 +145,7 @@ def plot_bar_comparison(
         data_df: DataFrame with responses to be plotted
         question: Question code for the first question
         question_comparison: Question code for the second question
-        n_question: Number of participants
+        n_question: Number of participants, or None if multi-center comparison
         label_q_data: Label for axis with data from question. Defaults to "".
         orientation: Plot orientation. Defaults to HORIZONTAL.
         percentcount: Plot absolute values or percentages? Defaults to COUNT.
@@ -164,30 +166,40 @@ def plot_bar_comparison(
         question=question,
         orientation=orientation,
         percentcount=percentcount,
-        fig_size_x=fig_size_x,
-        fig_size_y=fig_size_y,
-        comparison=True,
+        fig_size_x=width,
+        fig_size_y=height,
+        comparison=PlotType.SINGLE_Q_COMPARISON
+        if n_question is None
+        else PlotType.MULTI_Q,
         hue=question_comparison,
     )
 
-    # add number of participants to top right corner
-    # plt.text(
-    #     0.99,
-    #     0.99,
-    #     f"N = {n_question}",
-    #     ha="right",
-    #     va="top",
-    #     transform=ax.transAxes,
-    #     fontsize=fontsize,
-    # )
+    # do not tamper with legend and don't add n_question if we compare centers
+    if n_question is not None:
+        # add number of participants to top right corner
+        plt.text(
+            0.99,
+            0.99,
+            f"N = {n_question}",
+            ha="right",
+            va="top",
+            transform=ax.transAxes,
+            # fontsize=fontsize,
+        )
+
+        # adapt legend
+        ax = adapt_legend(
+            survey=survey, ax=ax, question=question_comparison, text_wrap=text_wrap
+        )
 
     # add bar labels (the ones on top or next to bars within the plot)
     ax = add_axes_labels(
         ax=ax,
         show_axes_labels=show_axes_labels,
         percentcount=percentcount,
-        n_question=0,  # will crash if used for division
-        fontsize=fontsize_axes_labels,
+        n_question=n_question,
+        # rotation=45 if orientation == Orientation.VERTICAL else None,
+        # fontsize=5,
     )
 
     # add tick labels (the ones below or next to the bars outside of the plot)
@@ -196,14 +208,9 @@ def plot_bar_comparison(
         ax=ax,
         question=question,
         orientation=orientation,
-        fontsize=fontsize,
+        # fontsize=fontsize,
         text_wrap=text_wrap,
     )
-
-    # adapt legend
-    # ax = adapt_legend(
-    #     survey=survey, ax=ax, question=question_comparison, text_wrap=text_wrap
-    # )
 
     # add general labels to axes
     pct_fmt = PercentFormatter(1.0, decimals=0, symbol=None)
@@ -216,8 +223,5 @@ def plot_bar_comparison(
             ax.set(xlabel=label_q_data)
             if percentcount == PercentCount.PERCENT:
                 ax.yaxis.set_major_formatter(pct_fmt)
-
-    ax.autoscale()
-    ax.set_autoscale_on(True)
 
     return fig, ax
