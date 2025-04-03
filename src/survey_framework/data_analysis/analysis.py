@@ -1,9 +1,14 @@
+from collections.abc import Sequence
 from typing import cast
 
 import pandas as pd
 
+from survey_framework.data_analysis.helpers import shorten_center_name
 from survey_framework.data_import.data_import import LimeSurveyData
 from survey_framework.order.order2024 import ORDER
+
+# A2 is the "center" question
+CENTER = "A2"
 
 
 def get_data_for_q(survey: LimeSurveyData, question_number: str) -> pd.DataFrame:
@@ -42,12 +47,9 @@ def filter_by_center(
     Returns:
         Filtered DataFrame
     """
-    # A2 is the "center" question
-    CQ = "A2"
-
     # get IDs for the given center, then filter by the IDs
-    centers = survey.get_responses(CQ)
-    center_students = centers[centers[CQ] == center_code]
+    centers = survey.get_responses(CENTER)
+    center_students = centers[centers[CENTER] == center_code]
     if "id" in responses.columns:
         filtered = responses.loc[
             responses["id"].astype(int).isin(center_students.index)
@@ -59,11 +61,44 @@ def filter_by_center(
     return filtered
 
 
+def get_center_series(
+    survey: LimeSurveyData, center_code: str
+) -> tuple["pd.Series[str]", Sequence[str]]:
+    """Get a series that contains the center name for every participant, with
+    all centers other than the target `center_code` replaced by "Other Centers".
+    The output of this function can be nicely used with the histogram plot.
+
+    Args:
+        survey: The survey object
+        center_code: ID of the center to filter by (like 'A01')
+
+    Returns:
+        Tuple of the Series and a 2-element list for center ordering.
+    """
+    center_name = shorten_center_name(survey.get_choices(CENTER)[center_code])
+    assert center_name is not None
+
+    # get the center question data, replace all "other" centers
+    centers = survey.get_responses(CENTER)[CENTER].astype(str).rename("Center")
+    centers.loc[~centers.isin([center_code])] = "Other Centers"
+    centers.loc[centers.isin([center_code])] = center_name
+
+    return centers, [center_name, "Other Centers"]
+
+
 def get_as_numeric(
     survey: LimeSurveyData, q_code: str, blocklist: list[str]
 ) -> "pd.Series[float]":
-    """
-    Helper to filter out non-numeric answers and then map answer codes to integers.
+    """Get numeric answers for the requested question code.
+    Raises if non-numeric answer codes are not in the given blocklist.
+
+    Args:
+        survey: The survey object
+        center_code: ID of the center to filter by (like 'A01')
+        blocklist: Answer codes to be excluded from the result
+
+    Returns:
+        Numeric Series
     """
     answers = survey.get_responses(q_code)
     filtered = answers.loc[~answers[q_code].isin(blocklist)]

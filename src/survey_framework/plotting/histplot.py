@@ -1,3 +1,5 @@
+from collections.abc import Sequence
+
 import pandas as pd
 import seaborn as sns
 from matplotlib import pyplot as plt
@@ -6,18 +8,16 @@ from matplotlib.figure import Figure
 from pandas import DataFrame, Series
 
 import survey_framework.plotting.helmholtzcolors as hc
-from survey_framework.data_import.data_import import LimeSurveyData
-from survey_framework.plotting.helper_barplots import add_tick_labels
-from survey_framework.plotting.helper_plotenums import Orientation
 
 
 def simple_histplot(
-    survey: LimeSurveyData,
     data_df: DataFrame,
     question_code: str,
-    hue_series: "Series[str] | None",
     order_dict: dict[str, list[str]],
-    hue_order: list[str] | None,
+    hue_series: "Series[str] | None" = None,
+    hue_order: Sequence[str] | None = None,
+    kde: bool = False,
+    binwidth: int | None = None,
     width: int = 10,
     height: int = 6,
 ) -> tuple[Figure, Axes]:
@@ -25,17 +25,18 @@ def simple_histplot(
         for stacked barplots and KDE plots.
 
     Args:
-        survey (LimeSurveyData): _description_
-        data_df (DataFrame): _description_
-        question_code (str): _description_
-        hue_series (Series | None): _description_
-        order_dict (dict[str, list[str]]): _description_
-        hue_order (list[str] | None): _description_
-        width (int, optional): _description_. Defaults to 10.
-        height (int, optional): _description_. Defaults to 6.
+        data_df: DataFrame to be plotted
+        question_code: Column in `data_df` to be plotted
+        order_dict: answer ordering, can be empty (ORDER from order/order2024.py)
+        hue_series (Optional): Separator for data_df (needs same index).
+        hue_order (Optional): How to sort hues in the legend and plot
+        kde (Optional): Whether to plot a density curve. Defaults to False.
+        binwidth (Optional): Width of bins; automatically inferred if not given.
+        width (Optional): Plot width. Defaults to 10.
+        height (Optional): Plot height. Defaults to 6.
 
     Returns:
-        tuple[Figure, Axes]: _description_
+        tuple: new Figure and Axes of the histogram
     """
 
     orderlist = order_dict.get(question_code)
@@ -43,7 +44,6 @@ def simple_histplot(
         data_df[question_code] = pd.Categorical(
             data_df[question_code], categories=orderlist, ordered=True
         )
-    # todo: descending data ordering?!
 
     hc.set_plotstyle()
     figure, ax = plt.subplots(dpi=300, figsize=(width, height), layout="constrained")
@@ -64,6 +64,8 @@ def simple_histplot(
             common_norm=False,
             multiple="dodge",
             shrink=0.8,
+            binwidth=binwidth,
+            kde=kde,
         )
     else:
         ax = sns.histplot(
@@ -73,8 +75,8 @@ def simple_histplot(
             stat="percent",
             color=hc.helmholtzblue,
             shrink=0.8,
+            binwidth=binwidth,
+            kde=kde,
         )
-
-    add_tick_labels(survey, ax, question_code, Orientation.VERTICAL, 10, 30)
 
     return figure, ax
