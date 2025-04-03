@@ -1,4 +1,4 @@
-from enum import Enum, StrEnum
+from enum import Enum, StrEnum, auto
 
 
 class Orientation(StrEnum):
@@ -12,6 +12,13 @@ class PercentCount(StrEnum):
 
 
 class BarLabels(Enum):
-    NONE = 1
-    COUNT = 2
-    PERCENT = 3
+    NONE = auto()
+    COUNT = auto()
+    PERCENT = auto()
+
+
+class PlotType(Enum):
+    SINGLE_Q = auto()  # use blue
+    MULTI_Q = auto()  # use shades of blue
+    SINGLE_Q_COMPARISON = auto()  # use blue and green
+    MULTI_Q_COMPARISON = auto()  # use shades of blue and green

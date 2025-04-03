@@ -146,7 +146,9 @@ def test_plots_A2_comparison_A6(survey: LimeSurveyData, output_path: Path) -> No
         orientation=Orientation.HORIZONTAL,
         percentcount=PercentCount.COUNT,
         show_axes_labels=BarLabels.COUNT,
-        fontsize_axes_labels=5,
+        n_question=N_question,
+        height=10,
+        width=16,
     )
 
     fig.savefig(output)

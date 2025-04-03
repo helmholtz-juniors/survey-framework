@@ -15,6 +15,7 @@ from .helper_plotenums import (
     BarLabels,
     Orientation,
     PercentCount,
+    PlotType,
 )
 
 
@@ -22,8 +23,9 @@ def add_axes_labels(
     ax: Axes,
     show_axes_labels: BarLabels,
     percentcount: PercentCount,
-    n_question: int,
-    fontsize: int,
+    n_question: int | None,
+    rotation: int = 0,
+    fontsize: int | None = None,
 ) -> Axes:
     """
     add labels to each bar in a bar plot
@@ -49,6 +51,7 @@ def add_axes_labels(
             case BarLabels.PERCENT, PercentCount.PERCENT:
                 return f"{n * 100:.1f}%"
             case BarLabels.PERCENT, PercentCount.COUNT:
+                assert n_question is not None, "cannot calculate percentage"
                 return f"{n * 100 / n_question:.1f}%"
             case BarLabels.COUNT, PercentCount.PERCENT:
                 raise NotImplementedError(
@@ -61,7 +64,7 @@ def add_axes_labels(
 
     # actually label the bars, using matplotlib sugar
     for bc in cast(Iterable[BarContainer], ax.containers):
-        ax.bar_label(bc, padding=1, fontsize=fontsize, fmt=fmt)
+        ax.bar_label(bc, padding=1, fontsize=fontsize, fmt=fmt, rotation=rotation)
 
     return ax
 
@@ -73,7 +76,7 @@ def plot_barplot(
     percentcount: PercentCount,
     fig_size_x: int,
     fig_size_y: int,
-    comparison: bool = False,
+    comparison: PlotType = PlotType.SINGLE_Q,
     hue: str = "",
 ) -> tuple[Figure, Axes]:
     """
@@ -94,16 +97,23 @@ def plot_barplot(
 
     # built input for hue and colors for plotting
     hue_input = list()
-    colors = list()
-    if comparison:
-        # if it's a comparison bar plot, hue needs to be filled
-        # with a list of comparison data
-        hue_input = list(data_df[hue])
-        colors = hc.get_blues(len(data_df[hue].value_counts()))
-    else:
-        # otherwise, hue needs to be equal to the question data
-        hue_input = list(data_df[question])
-        colors = hc.get_blues(len(data_df))
+    colors: list[str] | list[tuple[float, float, float]] = list()
+    match comparison:
+        case PlotType.MULTI_Q:
+            # if it's a comparison bar plot, hue needs to be filled
+            # with a list of comparison data
+            hue_input = list(data_df[hue])
+            colors = hc.get_blues(len(data_df[hue].value_counts()))
+        case PlotType.SINGLE_Q:
+            # otherwise, hue needs to be equal to the question data
+            hue_input = list(data_df[question])
+            colors = hc.get_blues(len(data_df))
+        case PlotType.SINGLE_Q_COMPARISON:
+            hue_input = list(data_df[hue])
+            assert len(data_df[hue].value_counts() == 2)
+            colors = [hc.helmholtzblue, hc.helmholtzgreen]
+        case PlotType.MULTI_Q_COMPARISON:
+            raise NotImplementedError("multi-question comparison not yet supported")
 
     # set seaborn style
     hc.set_plotstyle()
@@ -142,8 +152,8 @@ def add_tick_labels(
     ax: Axes,
     question: str,
     orientation: Orientation,
-    fontsize: int,
     text_wrap: int,
+    fontsize: int | None = None,
 ) -> Axes:
     """
     add axis labels for question
