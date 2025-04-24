@@ -35,7 +35,7 @@ def get_data_for_q(survey: LimeSurveyData, question_number: str) -> pd.DataFrame
 
 def filter_by_center(
     survey: LimeSurveyData, responses: pd.DataFrame, center_code: str
-) -> pd.DataFrame:
+) -> tuple[pd.DataFrame, pd.DataFrame]:
     """
     Filter responses by center.
 
@@ -45,7 +45,7 @@ def filter_by_center(
         center_code: ID of the center to filter by (like 'A01')
 
     Returns:
-        Filtered DataFrame
+        Tuple of filtered DataFrame and remainder DataFrame
     """
     # get IDs for the given center, then filter by the IDs
     centers = survey.get_responses(CENTER)
@@ -54,11 +54,16 @@ def filter_by_center(
         filtered = responses.loc[
             responses["id"].astype(int).isin(center_students.index)
         ]
+        remainder = responses.loc[
+            ~responses["id"].astype(int).isin(center_students.index)
+        ]
     else:
         filtered = responses[responses.index.isin(center_students.index)]
+        remainder = responses[~responses.index.isin(center_students.index)]
 
     assert len(filtered) == len(center_students)
-    return filtered
+    assert len(responses) == len(filtered) + len(remainder)
+    return filtered, remainder
 
 
 def get_center_series(
@@ -179,7 +184,7 @@ def get_data_for_single_barplot_comparison(
     responses_df_counts = (
         responses_df_all_concat[[base_q, comp_q]]
         .value_counts()
-        .reset_index(name="Count")
+        .reset_index(name="count")
     )
 
     responses_df_counts[base_q] = pd.Categorical(
@@ -191,8 +196,8 @@ def get_data_for_single_barplot_comparison(
     responses_df_counts_sorted = responses_df_counts.sort_values(by=[base_q, comp_q])
 
     responses_df_counts_sorted_precentages = responses_df_counts_sorted
-    responses_df_counts_sorted_precentages["Percent"] = (
-        responses_df_counts_sorted_precentages["Count"] / N_question
+    responses_df_counts_sorted_precentages["percent"] = (
+        responses_df_counts_sorted_precentages["count"] / N_question
     )
 
     return N_question, responses_df_counts_sorted_precentages

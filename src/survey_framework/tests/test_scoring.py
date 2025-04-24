@@ -16,7 +16,7 @@ from survey_framework.data_analysis.scoring import (
 )
 from survey_framework.data_import.data_import import LimeSurveyData
 from survey_framework.plotting.helper_barplots import plot_barplot
-from survey_framework.plotting.helper_plotenums import Orientation, PercentCount
+from survey_framework.plotting.helper_plotenums import Orientation, PlotStat
 
 
 def test_state_anxiety(survey: LimeSurveyData, output_path: Path) -> None:
@@ -99,18 +99,18 @@ def test_burnout_plot(survey: LimeSurveyData, output_path: Path) -> None:
     groups = (
         res_df.groupby("Profile")
         .count()["id"]
-        .to_frame("Count")
+        .to_frame("count")
         .sort_index(key=lambda x: x.map(sorting))
         .reset_index()
     )
-    groups["Percent"] = groups["Count"].div(n)
+    groups["percent"] = groups["count"].div(n)
     print(groups)
 
     fig, ax = plot_barplot(
         data_df=groups,
         question="Profile",
         orientation=Orientation.VERTICAL,
-        percentcount=PercentCount.PERCENT,
+        percentcount=PlotStat.PERCENT,
         fig_size_x=16,
         fig_size_y=10,
     )

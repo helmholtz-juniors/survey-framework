@@ -2,16 +2,32 @@ from enum import Enum, StrEnum, auto
 
 
 class Orientation(StrEnum):
+    """
+    Whether to plot horizontal or vertical bars.
+
+    The string value can be used directly with seaborn functions.
+    """
+
     VERTICAL = "v"
     HORIZONTAL = "h"
 
 
-class PercentCount(StrEnum):
-    PERCENT = "Percent"
-    COUNT = "Count"
+class PlotStat(StrEnum):
+    """
+    Which stat to use in a plot: absolute (COUNT) or relative (PERCENT) numbers.
+
+    The string value can be used directly with seaborn functions.
+    """
+
+    PERCENT = "percent"
+    COUNT = "count"
 
 
 class BarLabels(Enum):
+    """
+    How each bar in a plot should be labeled. Can be different from PlotStat.
+    """
+
     NONE = auto()
     COUNT = auto()
     PERCENT = auto()

@@ -14,18 +14,18 @@ from . import helmholtzcolors as hc
 from .helper_plotenums import (
     BarLabels,
     Orientation,
-    PercentCount,
+    PlotStat,
     PlotType,
 )
 
 
-def add_axes_labels(
+def add_bar_labels(
     ax: Axes,
     show_axes_labels: BarLabels,
-    percentcount: PercentCount,
+    percentcount: PlotStat,
     n_question: int | None,
-    rotation: int = 0,
     fontsize: int | None = None,
+    rotation: int = 0,
 ) -> Axes:
     """
     add labels to each bar in a bar plot
@@ -46,14 +46,14 @@ def add_axes_labels(
     # If not, calculate the value to be displayed using N.
     def fmt(n: float) -> str:
         match show_axes_labels, percentcount:
-            case BarLabels.COUNT, PercentCount.COUNT:
+            case BarLabels.COUNT, PlotStat.COUNT:
                 return f"{n:g}"
-            case BarLabels.PERCENT, PercentCount.PERCENT:
-                return f"{n * 100:.1f}%"
-            case BarLabels.PERCENT, PercentCount.COUNT:
+            case BarLabels.PERCENT, PlotStat.PERCENT:
+                return f"{n:.1f}%"
+            case BarLabels.PERCENT, PlotStat.COUNT:
                 assert n_question is not None, "cannot calculate percentage"
                 return f"{n * 100 / n_question:.1f}%"
-            case BarLabels.COUNT, PercentCount.PERCENT:
+            case BarLabels.COUNT, PlotStat.PERCENT:
                 raise NotImplementedError(
                     "Percentages on axis with absolute counts on bars not implemented."
                 )
@@ -73,7 +73,7 @@ def plot_barplot(
     data_df: pd.DataFrame,
     question: str,
     orientation: Orientation,
-    percentcount: PercentCount,
+    percentcount: PlotStat,
     fig_size_x: int,
     fig_size_y: int,
     comparison: PlotType = PlotType.SINGLE_Q,

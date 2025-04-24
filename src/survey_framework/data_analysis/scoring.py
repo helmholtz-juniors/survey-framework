@@ -44,7 +44,7 @@ def rate_mental_health(
             base_score = 10 / 3
             conversion = ["pos", "neg", "neg", "pos", "pos", "neg"]
             label = "state_anxiety"
-            classification_boundaries = [0, 37, 44, 80]
+            classification_boundaries = [0, 40, 60, 80]
             classes = ["no or low anxiety", "moderate anxiety", "high anxiety"]
 
         case Condition.TRAIT_ANXIETY:
@@ -61,13 +61,13 @@ def rate_mental_health(
                 "neg",
             ]
             label = "trait_anxiety"
-            classification_boundaries = [0, 37, 44, 80]
+            classification_boundaries = [0, 40, 60, 80]
             classes = ["no or low anxiety", "moderate anxiety", "high anxiety"]
 
         case Condition.DEPRESSION:
             num_subquestions = 8
             base_score = 1
-            conversion = ["freq" for i in range(8)]
+            conversion = ["freq" for _ in range(8)]
             label = "depression"
             classification_boundaries = [0, 4, 9, 14, 19, 24]
             classes = [

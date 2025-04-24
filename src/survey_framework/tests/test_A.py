@@ -9,7 +9,7 @@ from survey_framework.plotting.barplots import plot_bar, plot_bar_comparison
 from survey_framework.plotting.helper_plotenums import (
     BarLabels,
     Orientation,
-    PercentCount,
+    PlotStat,
 )
 
 sectionA = "A"
@@ -40,7 +40,7 @@ def test_plots_A2_single(survey: LimeSurveyData, output_path: Path) -> None:
     N_question = survey.responses[a2].count()
     data_q_all = get_data_for_q(survey, a2)
     # data_q_all_dropna = data_q_all.dropna()
-    data_q_counts = data_q_all.groupby([a2]).count().rename(columns={"id": "Count"})
+    data_q_counts = data_q_all.groupby([a2]).count().rename(columns={"id": "count"})
 
     # TODO: ordering helper
     data_q_counts_sorted = data_q_counts.reset_index()
@@ -50,8 +50,8 @@ def test_plots_A2_single(survey: LimeSurveyData, output_path: Path) -> None:
     data_q_counts_sorted = data_q_counts_sorted.sort_values(by=a2)
 
     data_q_counts_sorted_percentages = data_q_counts_sorted
-    data_q_counts_sorted_percentages["Percent"] = (
-        data_q_counts_sorted_percentages["Count"] / N_question * 100
+    data_q_counts_sorted_percentages["percent"] = (
+        data_q_counts_sorted_percentages["count"] / N_question * 100
     )
 
     fig, _ = plot_bar(
@@ -87,10 +87,10 @@ def test_plots_A10_multiple(survey: LimeSurveyData, output_path: Path) -> None:
     # )
     responses_df_counts_sorted = responses_df_counts_sorted.sort_values(
         by="value", ascending=False
-    ).rename(columns={"value": "Count", "name": a10})
+    ).rename(columns={"value": "count", "name": a10})
     responses_df_counts_sorted_percentages = responses_df_counts_sorted
-    responses_df_counts_sorted_percentages["Percent"] = (
-        responses_df_counts_sorted_percentages["Count"] / N_question * 100
+    responses_df_counts_sorted_percentages["percent"] = (
+        responses_df_counts_sorted_percentages["count"] / N_question * 100
     )
 
     fig, _ = plot_bar(
@@ -99,7 +99,7 @@ def test_plots_A10_multiple(survey: LimeSurveyData, output_path: Path) -> None:
         question=a10,
         n_question=N_question,
         label_q_data="Ethnicity",
-        percentcount=PercentCount.COUNT,
+        percentcount=PlotStat.COUNT,
         orientation=Orientation.VERTICAL,
         show_axes_labels=BarLabels.PERCENT,
     )
@@ -121,7 +121,7 @@ def test_plots_A2_comparison_A6(survey: LimeSurveyData, output_path: Path) -> No
     ).transpose()
 
     responses_df_counts = (
-        responses_df_all_concat[[a2, a6]].value_counts().reset_index(name="Count")
+        responses_df_all_concat[[a2, a6]].value_counts().reset_index(name="count")
     )
 
     responses_df_counts[a2] = pd.Categorical(
@@ -133,8 +133,8 @@ def test_plots_A2_comparison_A6(survey: LimeSurveyData, output_path: Path) -> No
     responses_df_counts_sorted = responses_df_counts.sort_values(by=[a2, a6])
 
     responses_df_counts_sorted_precentages = responses_df_counts_sorted
-    responses_df_counts_sorted_precentages["Percent"] = (
-        responses_df_counts_sorted_precentages["Count"] / N_question * 100
+    responses_df_counts_sorted_precentages["percent"] = (
+        responses_df_counts_sorted_precentages["count"] / N_question * 100
     )
 
     fig, _ = plot_bar_comparison(
@@ -144,7 +144,7 @@ def test_plots_A2_comparison_A6(survey: LimeSurveyData, output_path: Path) -> No
         question_comparison=a6,
         label_q_data="Centers",
         orientation=Orientation.HORIZONTAL,
-        percentcount=PercentCount.COUNT,
+        percentcount=PlotStat.COUNT,
         show_axes_labels=BarLabels.COUNT,
         n_question=N_question,
         height=10,

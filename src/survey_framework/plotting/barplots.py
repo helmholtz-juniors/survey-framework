@@ -9,11 +9,11 @@ from matplotlib.ticker import PercentFormatter
 from ..data_import.data_import import LimeSurveyData
 from ..plotting.helper_barplots import (
     adapt_legend,
-    add_axes_labels,
+    add_bar_labels,
     add_tick_labels,
     plot_barplot,
 )
-from ..plotting.helper_plotenums import BarLabels, Orientation, PercentCount, PlotType
+from ..plotting.helper_plotenums import BarLabels, Orientation, PlotStat, PlotType
 
 
 def plot_bar(
@@ -23,7 +23,7 @@ def plot_bar(
     n_question: int,
     label_q_data: str = "",
     orientation: Orientation = Orientation.HORIZONTAL,
-    percentcount: PercentCount = PercentCount.COUNT,
+    percentcount: PlotStat = PlotStat.COUNT,
     fig_size_x: int = 16,
     fig_size_y: int = 10,
     fontsize: int = 10,
@@ -75,7 +75,7 @@ def plot_bar(
     )
 
     # add bar labels (the ones on top or next to bars within the plot)
-    ax = add_axes_labels(
+    ax = add_bar_labels(
         ax=ax,
         show_axes_labels=show_axes_labels,
         percentcount=percentcount,
@@ -129,7 +129,7 @@ def plot_bar_comparison(
     n_question: int | None = None,
     label_q_data: str = "",
     orientation: Orientation = Orientation.HORIZONTAL,
-    percentcount: PercentCount = PercentCount.COUNT,
+    percentcount: PlotStat = PlotStat.COUNT,
     width: int = 6,
     height: int = 4,
     # fontsize: int = 10,
@@ -193,7 +193,7 @@ def plot_bar_comparison(
         )
 
     # add bar labels (the ones on top or next to bars within the plot)
-    ax = add_axes_labels(
+    ax = add_bar_labels(
         ax=ax,
         show_axes_labels=show_axes_labels,
         percentcount=percentcount,
@@ -217,11 +217,11 @@ def plot_bar_comparison(
     match orientation:
         case Orientation.HORIZONTAL:
             ax.set(ylabel=label_q_data)
-            if percentcount == PercentCount.PERCENT:
+            if percentcount == PlotStat.PERCENT:
                 ax.xaxis.set_major_formatter(pct_fmt)
         case Orientation.VERTICAL:
             ax.set(xlabel=label_q_data)
-            if percentcount == PercentCount.PERCENT:
+            if percentcount == PlotStat.PERCENT:
                 ax.yaxis.set_major_formatter(pct_fmt)
 
     return fig, ax
