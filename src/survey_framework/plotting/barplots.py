@@ -1,3 +1,4 @@
+from collections.abc import Sequence
 from textwrap import wrap
 
 import matplotlib.pyplot as plt
@@ -57,10 +58,10 @@ def plot_bar(
     fig, ax = plot_barplot(
         data_df=data_df,
         question=question,
-        orientation=orientation,
-        percentcount=percentcount,
-        fig_size_x=fig_size_x,
-        fig_size_y=fig_size_y,
+        orient=orientation,
+        stat=percentcount,
+        width=fig_size_x,
+        height=fig_size_y,
     )
 
     # add number of participants to top right corner
@@ -125,11 +126,12 @@ def plot_bar_comparison(
     survey: LimeSurveyData,
     data_df: pd.DataFrame,
     question: str,
-    question_comparison: str,
+    hue: str,
+    hue_order: Sequence[str] | None = None,
     n_question: int | None = None,
     label_q_data: str = "",
-    orientation: Orientation = Orientation.HORIZONTAL,
-    percentcount: PlotStat = PlotStat.COUNT,
+    orient: Orientation = Orientation.HORIZONTAL,
+    stat: PlotStat = PlotStat.COUNT,
     width: int = 6,
     height: int = 4,
     # fontsize: int = 10,
@@ -164,14 +166,15 @@ def plot_bar_comparison(
     fig, ax = plot_barplot(
         data_df=data_df,
         question=question,
-        orientation=orientation,
-        percentcount=percentcount,
-        fig_size_x=width,
-        fig_size_y=height,
+        orient=orient,
+        stat=stat,
+        width=width,
+        height=height,
         comparison=PlotType.SINGLE_Q_COMPARISON
         if n_question is None
         else PlotType.MULTI_Q,
-        hue=question_comparison,
+        hue=hue,
+        hue_order=hue_order,
     )
 
     # do not tamper with legend and don't add n_question if we compare centers
@@ -188,15 +191,13 @@ def plot_bar_comparison(
         )
 
         # adapt legend
-        ax = adapt_legend(
-            survey=survey, ax=ax, question=question_comparison, text_wrap=text_wrap
-        )
+        ax = adapt_legend(survey=survey, ax=ax, question=hue, text_wrap=text_wrap)
 
     # add bar labels (the ones on top or next to bars within the plot)
     ax = add_bar_labels(
         ax=ax,
         show_axes_labels=show_axes_labels,
-        percentcount=percentcount,
+        percentcount=stat,
         n_question=n_question,
         # rotation=45 if orientation == Orientation.VERTICAL else None,
         # fontsize=5,
@@ -207,21 +208,27 @@ def plot_bar_comparison(
         survey=survey,
         ax=ax,
         question=question,
-        orientation=orientation,
+        orientation=orient,
         # fontsize=fontsize,
         text_wrap=text_wrap,
     )
 
     # add general labels to axes
     pct_fmt = PercentFormatter(1.0, decimals=0, symbol=None)
-    match orientation:
+    match orient:
         case Orientation.HORIZONTAL:
             ax.set(ylabel=label_q_data)
-            if percentcount == PlotStat.PERCENT:
+            if stat == PlotStat.PROPORTION:
                 ax.xaxis.set_major_formatter(pct_fmt)
+                ax.xaxis.set_label_text("Percent")
+            else:
+                ax.xaxis.set_label_text(stat.capitalize())
         case Orientation.VERTICAL:
             ax.set(xlabel=label_q_data)
-            if percentcount == PlotStat.PERCENT:
+            if stat == PlotStat.PROPORTION:
                 ax.yaxis.set_major_formatter(pct_fmt)
+                ax.yaxis.set_label_text("Percent")
+            else:
+                ax.yaxis.set_label_text(stat.capitalize())
 
     return fig, ax

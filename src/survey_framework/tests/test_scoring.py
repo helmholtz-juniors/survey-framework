@@ -109,10 +109,10 @@ def test_burnout_plot(survey: LimeSurveyData, output_path: Path) -> None:
     fig, ax = plot_barplot(
         data_df=groups,
         question="Profile",
-        orientation=Orientation.VERTICAL,
-        percentcount=PlotStat.PERCENT,
-        fig_size_x=16,
-        fig_size_y=10,
+        orient=Orientation.VERTICAL,
+        stat=PlotStat.PERCENT,
+        width=16,
+        height=10,
     )
     ax.yaxis.set_major_formatter(PercentFormatter(1))
 

@@ -1,4 +1,4 @@
-from collections.abc import Iterable
+from collections.abc import Iterable, Sequence
 from textwrap import wrap
 from typing import cast
 
@@ -50,10 +50,12 @@ def add_bar_labels(
                 return f"{n:g}"
             case BarLabels.PERCENT, PlotStat.PERCENT:
                 return f"{n:.1f}%"
+            case BarLabels.PERCENT, PlotStat.PROPORTION:
+                return f"{n * 100:.1f}%"
             case BarLabels.PERCENT, PlotStat.COUNT:
                 assert n_question is not None, "cannot calculate percentage"
                 return f"{n * 100 / n_question:.1f}%"
-            case BarLabels.COUNT, PlotStat.PERCENT:
+            case BarLabels.COUNT, _:
                 raise NotImplementedError(
                     "Percentages on axis with absolute counts on bars not implemented."
                 )
@@ -72,24 +74,26 @@ def add_bar_labels(
 def plot_barplot(
     data_df: pd.DataFrame,
     question: str,
-    orientation: Orientation,
-    percentcount: PlotStat,
-    fig_size_x: int,
-    fig_size_y: int,
+    orient: Orientation,
+    stat: PlotStat,
+    width: int,
+    height: int,
     comparison: PlotType = PlotType.SINGLE_Q,
-    hue: str = "",
+    hue: str | None = None,
+    hue_order: Sequence[str] | None = None,
 ) -> tuple[Figure, Axes]:
     """
     plot bar plot with processed data
 
     Args:
-        data_df (pd.DataFrame): dataframe with processed data
-        question (str): str of question
-        orientation (Orientation): orientation of plot
-        percentcount (PercentCount): whether plot shows counts or percent
-        fig_size_x (int): x-axis size of figure
-        fig_size_y (int): y-axis size of figure
-        hue (str): hue for plot. Defaults to "".
+        data_df: dataframe with processed data
+        question: question codename
+        orient: orientation of the plot (horizontal / vertical)
+        stat: whether the plot shows counts or percentages
+        width: x-axis size of figure
+        height: y-axis size of figure
+        hue: DF column to use for hue. If None (default), use answer choices for hue.
+        hue_order: order within hue to enforce consistent coloring. Defaults to None.
 
     Returns:
         tuple[Figure, Axes]: modified figure and axes
@@ -119,27 +123,27 @@ def plot_barplot(
     hc.set_plotstyle()
 
     # initialize plot and set colors
-    fig, ax = plt.subplots(
-        dpi=300, figsize=(fig_size_x, fig_size_y), layout="constrained"
-    )
+    fig, ax = plt.subplots(dpi=300, figsize=(width, height), layout="constrained")
 
     # plot graphs
-    match orientation:
+    match orient:
         case Orientation.HORIZONTAL:
             # x = data, y = labels
             ax = sns.barplot(
-                x=data_df[percentcount.value],
+                x=data_df[stat.value],
                 y=list(data_df[question]),
                 hue=hue_input,
+                hue_order=hue_order,
                 palette=colors,
                 orient="h",
             )
         case Orientation.VERTICAL:
             # x = labels, y = data
             ax = sns.barplot(
-                y=data_df[percentcount.value],
+                y=data_df[stat.value],
                 x=list(data_df[question]),
                 hue=hue_input,
+                hue_order=hue_order,
                 palette=colors,
                 orient="v",
             )

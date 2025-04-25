@@ -67,7 +67,7 @@ def plot_heatmap(
     )
 
     correlations.sort_values(by="State Anxiety", inplace=True)
-    print(correlations)
+    # print(correlations)
 
     hc.set_plotstyle()
     figure, ax = plt.subplots(dpi=300, figsize=(width, height), layout="constrained")

@@ -15,12 +15,14 @@ class Orientation(StrEnum):
 class PlotStat(StrEnum):
     """
     Which stat to use in a plot: absolute (COUNT) or relative (PERCENT) numbers.
+    PROPORTION indicates that values a normalized to [0..1].
 
     The string value can be used directly with seaborn functions.
     """
 
     PERCENT = "percent"
     COUNT = "count"
+    PROPORTION = "proportion"
 
 
 class BarLabels(Enum):
