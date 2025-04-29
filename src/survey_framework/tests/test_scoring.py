@@ -15,8 +15,8 @@ from survey_framework.data_analysis.scoring import (
     rate_somatic,
 )
 from survey_framework.data_import.data_import import LimeSurveyData
-from survey_framework.plotting.helper_barplots import plot_barplot
-from survey_framework.plotting.helper_plotenums import Orientation, PlotStat
+from survey_framework.plotting.helper_barplots import add_bar_labels, plot_barplot
+from survey_framework.plotting.helper_plotenums import BarLabels, Orientation, PlotStat
 
 
 def test_state_anxiety(survey: LimeSurveyData, output_path: Path) -> None:
@@ -89,7 +89,7 @@ def test_burnout_plot(survey: LimeSurveyData, output_path: Path) -> None:
     res_df = rate_burnout(survey.get_responses("D3d"))
     raw_df = res_df[[Scale.EX, Scale.CY, Scale.PE]]
 
-    fig, ax = plt.subplots(layout="constrained")
+    fig, ax = plt.subplots(figsize=(6, 4), dpi=300, layout="constrained")
     _ = sns.kdeplot(data=raw_df, ax=ax)
     fig.savefig(output_path / SECTION / "D3d_raw.pdf")
 
@@ -103,18 +103,27 @@ def test_burnout_plot(survey: LimeSurveyData, output_path: Path) -> None:
         .sort_index(key=lambda x: x.map(sorting))
         .reset_index()
     )
-    groups["percent"] = groups["count"].div(n)
+    groups["proportion"] = groups["count"].div(n)
     print(groups)
 
     fig, ax = plot_barplot(
         data_df=groups,
         question="Profile",
         orient=Orientation.VERTICAL,
-        stat=PlotStat.PERCENT,
-        width=16,
-        height=10,
+        stat=PlotStat.PROPORTION,
+        width=6,
+        height=4,
     )
+
     ax.yaxis.set_major_formatter(PercentFormatter(1))
+    ax.yaxis.set_label_text("Percent")
+
+    add_bar_labels(
+        ax=ax,
+        show_axes_labels=BarLabels.PERCENT,
+        percentcount=PlotStat.PROPORTION,
+        n_question=n,
+    )
 
     fig.savefig(output_path / SECTION / "D3d_scores.pdf")
 
