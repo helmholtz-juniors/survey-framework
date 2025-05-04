@@ -57,7 +57,7 @@ def plot_sankey(
 
     plt.title(
         "\n".join(wrap(title, 60)),
-        fontsize=20,
+        fontsize=fontsize + 3,
     )
 
     return figure

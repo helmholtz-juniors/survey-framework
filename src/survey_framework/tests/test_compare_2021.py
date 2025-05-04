@@ -1,8 +1,11 @@
+import csv
 from collections.abc import Callable, Mapping
 from pathlib import Path
 
 import matplotlib.pyplot as plt
+import pandas as pd
 
+from survey_framework.data_analysis.analysis import filter_by_center
 from survey_framework.data_analysis.helpers import shorten_center_name
 from survey_framework.data_import.data_import import LimeSurveyData
 from survey_framework.plotting.helmholtzcolors import (
@@ -119,6 +122,68 @@ def plot_comparison_2021(
     ax = combined.plot.bar(ax=ax, color=[helmholtzblue, helmholtzgreen])
     ax.set_xlabel(label)
     fig.savefig(output_plot)
+
+
+# TODO: This isn't really a test, it's actually data extraction for the 2024 survey (E)
+def test_supervisor_gender_2021(survey: LimeSurveyData, output_path: Path) -> None:
+    CENTER_Q = "A2"
+    Q = "E4"
+    DIRECT = "E4_SQ001"
+    FORMAL = "E4_SQ002"
+
+    survey_2021 = open_survey_2021()
+
+    def calc_fmr(answers: "pd.Series[str]", center: str) -> tuple[float, float]:
+        """Calculate the FMR (female-to-male ratio) for a given center.
+
+        Args:
+            answers: Answer column ("Male", "Female", etc.)
+            center: Center code
+
+        Returns:
+            Center FMR, all other centers FMR
+        """
+        center_df, other_df = filter_by_center(survey_2021, answers.to_frame(), center)
+
+        center_counts = center_df[answers.name].value_counts()
+        other_counts = other_df[answers.name].value_counts()
+
+        fmr_center = center_counts.loc["Female"] / center_counts.loc["Male"]
+        fmr_other = other_counts.loc["Female"] / other_counts.loc["Male"]
+        return round(fmr_center, ndigits=2), round(fmr_other, ndigits=2)
+
+    answers = survey_2021.get_responses(Q)
+    direct = answers[DIRECT].cat.rename_categories(survey_2021.get_choices(Q))
+    formal = answers[FORMAL].cat.rename_categories(survey_2021.get_choices(Q))
+    print(direct, formal)
+
+    out = output_path / "supervisor_gender.csv"
+    with open(out, "w") as file:
+        writer = csv.writer(file)
+        writer.writerow(
+            [
+                "center",
+                "fmr_direct_center",
+                "fmr_direct_other",
+                "fmr_formal_center",
+                "fmr_formal_other",
+            ]
+        )
+        for center, center_name in survey_2021.get_choices(CENTER_Q).items():
+            fmr_direct_ctr, fmr_direct_oth = calc_fmr(direct, center)
+            fmr_formal_ctr, fmr_formal_oth = calc_fmr(formal, center)
+            center_short = shorten_center_name(center_name)
+
+            writer.writerow(
+                [
+                    center_short,
+                    fmr_direct_ctr,
+                    fmr_direct_oth,
+                    fmr_formal_ctr,
+                    fmr_formal_oth,
+                ]
+            )
+    pass
 
 
 def open_survey_2021() -> LimeSurveyData:
