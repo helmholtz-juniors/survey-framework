@@ -129,5 +129,5 @@ def test_burnout_plot(survey: LimeSurveyData, output_path: Path) -> None:
 
 
 def test_satisfaction(survey: LimeSurveyData, output_path: Path) -> None:
-    res_df = rate_satisfaction(survey.get_responses("C1"), calc_average=False)
+    res_df = rate_satisfaction(survey.get_responses("C1"), calc_average=True)
     print(res_df)

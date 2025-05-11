@@ -364,5 +364,8 @@ def rate_satisfaction(
     # Calculate mean rating and round (ignoring NaN)
     if calc_average:
         df[f"{q_code}_score"] = df.mean(axis=1, skipna=True).round()
+        df[f"{q_code}_class"] = df[f"{q_code}_score"].map(
+            {v: k for k, v in satisfaction_question_scores.items()}
+        )
 
     return df
