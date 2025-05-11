@@ -17,6 +17,7 @@ from survey_framework.data_analysis.scoring import (
 from survey_framework.data_import.data_import import LimeSurveyData
 from survey_framework.plotting.helper_barplots import add_bar_labels, plot_barplot
 from survey_framework.plotting.helper_plotenums import BarLabels, Orientation, PlotStat
+from survey_framework.plotting.likertplot import plot_likertplot
 
 
 def test_state_anxiety(survey: LimeSurveyData, output_path: Path) -> None:
@@ -131,3 +132,21 @@ def test_burnout_plot(survey: LimeSurveyData, output_path: Path) -> None:
 def test_satisfaction(survey: LimeSurveyData, output_path: Path) -> None:
     res_df = rate_satisfaction(survey.get_responses("C1"), calc_average=True)
     print(res_df)
+
+    plotting_df = res_df[["C1_class"]]
+    plotting_df = plotting_df.reset_index()
+
+    result_fig, _ = plot_likertplot(
+        survey,
+        plotting_df,
+        question="C1",
+        order=[
+            "A5",
+            "A4",
+            "A3",
+            "A2",
+            "A1",
+        ],
+        relabel_subquestions=False,
+    )
+    result_fig.savefig(output_path / "C" / "sat_likert.pdf", dpi=300)

@@ -23,8 +23,9 @@ def plot_likertplot(
     bar_labels: BarLabels = BarLabels.PERCENT,
     width: int = 6,
     height: int = 4,
-    text_wrap: int = 30,
     percent_cutoff: int = 8,
+    text_wrap: int = 30,
+    relabel_subquestions: bool = True,
 ) -> tuple[Figure, Axes]:
     """
     plot the given data as a Likert plot
@@ -67,10 +68,11 @@ def plot_likertplot(
 
     # set subquestion labels (y ticks)
     new_labels = []
-    for old_label in ax.get_yticklabels():
-        label = cast(str, survey.questions.loc[old_label.get_text()]["label"])
-        new_labels.append("\n".join(wrap(label, text_wrap)))
-    ax.set_yticklabels(new_labels, linespacing=0.75)
+    if relabel_subquestions:
+        for old_label in ax.get_yticklabels():
+            label = cast(str, survey.questions.loc[old_label.get_text()]["label"])
+            new_labels.append("\n".join(wrap(label, text_wrap)))
+        ax.set_yticklabels(new_labels, linespacing=0.75)
 
     # set the legend labels
     choices = survey.questions.loc[survey.questions["question_group"] == question][
