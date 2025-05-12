@@ -30,8 +30,8 @@ def plot_bar_side_by_side(
     color_right: str = hc.helmholtzgreen,
     title_left: str | None = None,
     title_right: str | None = None,
-    width: int = 12,
-    height: int = 10,
+    width: float = 12,
+    height: float = 10,
 ) -> tuple[Figure, tuple[Axes, Axes]]:
     """_summary_
 
