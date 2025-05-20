@@ -3,7 +3,7 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "survey_framework"
+name = "survey-framework"
 version = "0.0.1"
 authors = [{ name = "Helmholtz Juniors", email = "hejus@example.com" }]
 description = "Framework code to analyze and visualize LimeSurvey data."
@@ -16,22 +16,25 @@ classifiers = [
 ]
 
 dependencies = [
-    "seaborn~=0.13.2",
-    "matplotlib~=3.9.2",
-    "beautifulsoup4~=4.13.3",
-    "lxml~=5.3.0",
-    "plot-likert~=0.5.0",
-    "pytest~=8.3.3",
-    "ausankey~=1.4",
-    "pandas~=2.2.3",
+    "seaborn>=0.13.2",
+    "matplotlib>=3.9.2",
+    "beautifulsoup4>=4.13.3",
+    "lxml>=5.3.0",
+    "plot-likert>=0.5.0",
+    "pytest>=8.3.3",
+    "ausankey>=1.4",
+    "pandas>=2.2.3",
+    "scipy>=1.15.3",
 ]
 
-[project.optional-dependencies]
-lint = [
-    "ruff~=0.9.5",
-    "mypy~=1.15.0",
-    "pandas-stubs~=2.2.3",
-    "types-seaborn~=0.13.2",
+[dependency-groups]
+dev = [
+    "ruff>=0.9.5",
+    "mypy>=1.15.0",
+    "pandas-stubs>=2.2.3",
+    "types-seaborn>=0.13.2",
+    "ty>=0.0.1a5",
+    "pre-commit>=4.2.0",
 ]
 
 [tool.ruff.lint]
