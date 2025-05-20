@@ -7,7 +7,7 @@ import seaborn as sns
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 
-from . import helmholtzcolors as hc
+from .helmholtzcolors import get_blues, set_plotstyle
 
 
 def plot_survival_plot(
@@ -40,13 +40,13 @@ def plot_survival_plot(
     """
     if legend_replace is None:
         legend_replace = dict()
-    hc.set_plotstyle()
+    set_plotstyle()
 
     figure, ax = plt.subplots(dpi=300, figsize=(width, height), layout="constrained")
 
     if not colors and category:
         n_colors = len(pd.unique(df[category]))
-        colors = hc.get_blues(n_colors)
+        colors = get_blues(n_colors)
 
     sns.ecdfplot(
         data=df,

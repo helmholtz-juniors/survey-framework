@@ -10,7 +10,13 @@ from matplotlib.container import BarContainer
 from matplotlib.figure import Figure
 
 from ..data_import.data_import import LimeSurveyData, QuestionType
-from . import helmholtzcolors as hc
+from .helmholtzcolors import (
+    get_blues,
+    get_greens,
+    helmholtzblue,
+    helmholtzgreen,
+    set_plotstyle,
+)
 from .helper_plotenums import (
     BarLabels,
     Orientation,
@@ -107,20 +113,20 @@ def plot_barplot(
             # if it's a comparison bar plot, hue needs to be filled
             # with a list of comparison data
             hue_input = list(data_df[hue])
-            colors = hc.get_blues(len(data_df[hue].value_counts()))
+            colors = get_blues(len(data_df[hue].value_counts()))
         case PlotType.SINGLE_Q:
             # otherwise, hue needs to be equal to the question data
             hue_input = list(data_df[question])
-            colors = hc.get_blues(len(data_df))
+            colors = get_blues(len(data_df))
         case PlotType.SINGLE_Q_COMPARISON:
             hue_input = list(data_df[hue])
             assert len(data_df[hue].value_counts() == 2)
-            colors = [hc.helmholtzblue, hc.helmholtzgreen]
+            colors = [helmholtzblue, helmholtzgreen]
         case PlotType.MULTI_Q_COMPARISON:
             raise NotImplementedError("multi-question comparison not yet supported")
 
     # set seaborn style
-    hc.set_plotstyle()
+    set_plotstyle()
 
     # initialize plot and set colors
     fig, ax = plt.subplots(dpi=300, figsize=(width, height), layout="constrained")
@@ -253,7 +259,7 @@ def get_hue_left(
     hue_input = list()
     colors = list()
     hue_input = list(data_df[hue])
-    colors = hc.get_blues(len(data_df[hue].value_counts()))
+    colors = get_blues(len(data_df[hue].value_counts()))
 
     return hue_input, colors
 
@@ -264,6 +270,6 @@ def get_hue_right(
     hue_input = list()
     colors = list()
     hue_input = list(data_df[hue])
-    colors = hc.get_greens(len(data_df[hue].value_counts()))
+    colors = get_greens(len(data_df[hue].value_counts()))
 
     return hue_input, colors

@@ -8,7 +8,7 @@ from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 
 from ..data_import.data_import import LimeSurveyData
-from . import helmholtzcolors as hc
+from .helmholtzcolors import helmholtzblue, helmholtzgreen, set_plotstyle
 from .helper_barplots import (
     adapt_legend,
     add_bar_labels,
@@ -26,8 +26,8 @@ def plot_bar_side_by_side(
     y_left: str,
     y_right: str,
     stat: PlotStat = PlotStat.PERCENT,
-    color_left: str = hc.helmholtzblue,
-    color_right: str = hc.helmholtzgreen,
+    color_left: str = helmholtzblue,
+    color_right: str = helmholtzgreen,
     title_left: str | None = None,
     title_right: str | None = None,
     width: float = 12,
@@ -54,7 +54,7 @@ def plot_bar_side_by_side(
     """
 
     # set seaborn theme
-    hc.set_plotstyle()
+    set_plotstyle()
 
     # define figure and axis
     # nrows, ncols = number of rows, columns of the subplot grid
@@ -186,7 +186,7 @@ def plot_sidebyside_comparison_singleQ(
     text_wrap: int = 25,
 ) -> tuple[Figure, tuple[Axes, Axes]]:
     # set seaborn theme
-    hc.set_plotstyle()
+    set_plotstyle()
 
     figure, axs = plt.subplots(
         nrows=1,

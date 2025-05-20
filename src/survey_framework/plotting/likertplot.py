@@ -11,7 +11,7 @@ from matplotlib.figure import Figure
 from plot_likert import plot_likert as _likert  # type: ignore [import-untyped]
 
 from ..data_import.data_import import LimeSurveyData
-from . import helmholtzcolors as hc
+from .helmholtzcolors import palette, set_plotstyle
 from .helper_plotenums import BarLabels
 
 
@@ -44,8 +44,8 @@ def plot_likertplot(
         The matplotlib figure and axis
     """
 
-    hc.set_plotstyle()
-    colors = hc.palette[len(order)]
+    set_plotstyle()
+    colors = palette[len(order)]
 
     fig, ax = plt.subplots(dpi=300, figsize=(width, height), layout="constrained")
 

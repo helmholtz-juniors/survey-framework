@@ -6,7 +6,7 @@ import pandas as pd
 import seaborn as sns
 from matplotlib.figure import Figure
 
-from . import helmholtzcolors as hc
+from .helmholtzcolors import set_plotstyle
 
 
 def plot_sankey(
@@ -30,7 +30,7 @@ def plot_sankey(
         tuple[plt.figure, plt.axes]: New Figure and Axes
     """
 
-    hc.set_plotstyle()
+    set_plotstyle()
 
     # Colors
     color_dict = {}
