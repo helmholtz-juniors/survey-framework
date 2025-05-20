@@ -1,14 +1,16 @@
-name: Lint and Typing
+name: Python Linting / Typing
 on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-python@v5
-      with:
-        python-version: "3.11"
-    - run: pip install .[lint]
-    - run: ruff check src
-    - run: ruff format --check src
-    - run: mypy --strict src
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v4
+        with:
+          enable-cache: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: uv run ruff check src
+      - run: uv run ruff format --check src
+      - run: uv run mypy --strict src
