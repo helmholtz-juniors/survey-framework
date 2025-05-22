@@ -164,14 +164,14 @@ def _parse_single_question_response(
             * contingent_of_choice - <value> of the parent <choice> element
     """
     # Common response structure
-    parsed_response: ResponseData = {
+    parsed_response = ResponseData(
         # fixup empty response tag in 2024 survey
-        "name": name_response(response),
-        "format": None,
-        "length": None,
-        "label": None,
-        "choices": None,
-    }
+        name=name_response(response),
+        format=None,
+        length=None,
+        label=None,
+        choices=None,
+    )
     contingent_response = None
 
     # Get first child node of <response> section
@@ -478,14 +478,14 @@ def _parse_section(section: Tag) -> SectionInfo:
     section_info = ""
     section_title = None
     for info in section.find_all("sectionInfo"):
-        info = cast(Tag, info)
-        assert info.position is not None
-        position = _get_clean_string(info.position)
+        assert type(info) is Tag
+        pos = info.position
+        assert pos is not None
+        position = _get_clean_string(pos)
         if position == "title":
-            assert section.sectionInfo is not None
-            section_title = _get_clean_string(
-                cast(Tag, section.sectionInfo.find("text"))
-            )
+            s_info = section.sectionInfo
+            assert s_info is not None
+            section_title = _get_clean_string(cast(Tag, s_info.find("text")))
         elif position in ("before", "after"):
             current_text = " ".join(
                 [
@@ -505,11 +505,7 @@ def _parse_section(section: Tag) -> SectionInfo:
             f"Unexpected section structure. No title found for section {section}"
         )
 
-    return {
-        "id": section_id,
-        "title": section_title,
-        "info": section_info,
-    }
+    return SectionInfo(id=section_id, title=section_title, info=section_info)
 
 
 def read_lime_questionnaire_structure(filepath: Path) -> SurveyStructure:
@@ -551,4 +547,4 @@ def read_lime_questionnaire_structure(filepath: Path) -> SurveyStructure:
             # Append to the resulting list of columns
             result_questions += question_columns_list
 
-    return {"sections": result_sections, "questions": result_questions}
+    return SurveyStructure(sections=result_sections, questions=result_questions)

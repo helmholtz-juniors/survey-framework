@@ -104,6 +104,8 @@ def plot_likertplot(
                 return f"{x:g}"
             case BarLabels.NONE:
                 return ""
+            case _:
+                raise AssertionError("unreachable")
 
     # set bar labels
     for bc in ax.containers[1:]:

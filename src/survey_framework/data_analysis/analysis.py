@@ -63,6 +63,7 @@ def filter_by_center(
 
     assert len(filtered) == len(center_students)
     assert len(responses) == len(filtered) + len(remainder)
+    assert type(filtered) is pd.DataFrame and type(remainder) is pd.DataFrame
     return filtered, remainder
 
 
