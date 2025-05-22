@@ -46,7 +46,7 @@ def plot_sankey(
 
     sky.sankey(
         data_df,
-        sort="top",
+        sort="none",  # keep dataframe ordering
         titles=titles,
         valign="center",
         color_dict=color_dict,
