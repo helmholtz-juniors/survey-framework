@@ -106,8 +106,8 @@ ORDER = {
         "A3",  # Man
         "A4",  # Gender-diverse
         "A5",  # Non-binary
-        "A6",  # IDK
         "-oth-",
+        "A6",  # IDK
         "A2",  # IDWA
     ],
     "A7": [  # sexual orientation
