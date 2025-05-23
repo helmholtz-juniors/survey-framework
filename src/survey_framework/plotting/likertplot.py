@@ -72,7 +72,7 @@ def plot_likertplot(
         for old_label in ax.get_yticklabels():
             label = cast(str, survey.questions.loc[old_label.get_text()]["label"])
             new_labels.append("\n".join(wrap(label, text_wrap)))
-        ax.set_yticklabels(new_labels, linespacing=0.75)
+        ax.set_yticklabels(new_labels, linespacing=0.8)
 
     # set the legend labels
     choices = survey.questions.loc[survey.questions["question_group"] == question][
@@ -82,7 +82,7 @@ def plot_likertplot(
         text.set_text(choices[text.get_text()])
 
     # reposition legend
-    sns.move_legend(ax, "upper center", ncol=3, bbox_to_anchor=(0.25, 1.1))
+    sns.move_legend(ax, "upper center", ncol=3, bbox_to_anchor=(0.3, 1.12))
 
     # add number of participants
     n_question = data_df.count().iloc[1]  # don't count NaNs, but count dropped answers
