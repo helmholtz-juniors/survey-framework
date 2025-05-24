@@ -276,14 +276,14 @@ def plot_sidebyside_comparison_singleQ(
         fontsize=fontsize,
     )
 
-    return figure, (ax_left, ax_right)
+    # return figure, (ax_left, ax_right)
 
     # add bar labels (the ones on top or next to bars within the plot)
     plot_left = add_bar_labels(
         ax=ax_left,
         show_axes_labels=show_axes_labels,
         percentcount=percentcount,
-        n_question=base_q_left,
+        n_question=N_left,
         fontsize=fontsize_axes_labels,
     )
 
@@ -321,3 +321,5 @@ def plot_sidebyside_comparison_singleQ(
     ax_right.text(
         0.99, 0.99, f"N = {N_right}", ha="right", va="top", transform=ax_right.transAxes
     )
+
+    return figure, (ax_left, ax_right)

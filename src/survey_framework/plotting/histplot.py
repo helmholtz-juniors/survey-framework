@@ -17,6 +17,7 @@ def simple_histplot(
     hue_series: "Series[str] | None" = None,
     hue_order: Sequence[str] | None = None,
     kde: bool = False,
+    log_scale: bool = False,
     binwidth: int | None = None,
     width: int = 10,
     height: int = 6,
@@ -66,6 +67,7 @@ def simple_histplot(
             shrink=0.8,
             binwidth=binwidth,
             kde=kde,
+            log_scale=log_scale,
         )
     else:
         ax = sns.histplot(
@@ -77,6 +79,7 @@ def simple_histplot(
             shrink=0.8,
             binwidth=binwidth,
             kde=kde,
+            log_scale=log_scale,
         )
 
     return figure, ax
