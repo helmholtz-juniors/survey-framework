@@ -33,7 +33,7 @@ def plot_bar_side_by_side(
     width: float = 12,
     height: float = 10,
 ) -> tuple[Figure, tuple[Axes, Axes]]:
-    """_summary_
+    """Plot two horizontal bar plots side-by-side, sharing a common y axis.
 
     Args:
         survey: The survey object.
@@ -166,6 +166,7 @@ def plot_bar_side_by_side(
     return figure, (ax_left, ax_right)
 
 
+# TODO: can we merge this into `plot_bar_side_by_side` with an optional hue parameter?
 def plot_sidebyside_comparison_singleQ(
     survey: LimeSurveyData,
     data_left: pd.DataFrame,
@@ -177,14 +178,38 @@ def plot_sidebyside_comparison_singleQ(
     N_right: int,
     title_left: str = "",
     title_right: str = "",
-    fig_size_x: int = 12,
-    fig_size_y: int = 10,
+    width: float = 12,
+    height: float = 10,
     fontsize: int = 10,
-    percentcount: PlotStat = PlotStat.COUNT,
-    show_axes_labels: BarLabels = BarLabels.NONE,
-    fontsize_axes_labels: int = 10,
+    plot_stat: PlotStat = PlotStat.COUNT,
+    bar_labels: BarLabels = BarLabels.NONE,
+    fontsize_bar_labels: int = 10,
     text_wrap: int = 25,
 ) -> tuple[Figure, tuple[Axes, Axes]]:
+    """Plot two barplots side by side, with an additional grouping given by `comp_q`.
+
+    Args:
+        survey (LimeSurveyData): _description_
+        data_left (pd.DataFrame): _description_
+        data_right (pd.DataFrame): _description_
+        base_q_left (str): _description_
+        base_q_right (str): _description_
+        comp_q (str): _description_
+        N_left (int): _description_
+        N_right (int): _description_
+        title_left (str, optional): _description_. Defaults to "".
+        title_right (str, optional): _description_. Defaults to "".
+        width (float, optional): _description_. Defaults to 12.
+        height (float, optional): _description_. Defaults to 10.
+        fontsize (int, optional): _description_. Defaults to 10.
+        plot_stat (PlotStat, optional): _description_. Defaults to PlotStat.COUNT.
+        bar_labels (BarLabels, optional): _description_. Defaults to BarLabels.NONE.
+        fontsize_bar_labels (int, optional): _description_. Defaults to 10.
+        text_wrap (int, optional): _description_. Defaults to 25.
+
+    Returns:
+        tuple[Figure, tuple[Axes, Axes]]: _description_
+    """
     # set seaborn theme
     set_plotstyle()
 
@@ -192,9 +217,9 @@ def plot_sidebyside_comparison_singleQ(
         nrows=1,
         ncols=2,
         dpi=300,
-        figsize=(fig_size_x, fig_size_y),
+        figsize=(width, height),
         sharey=True,
-        layout="constrained",
+        layout="tight",
     )
     ax_left, ax_right = cast(tuple[Axes, Axes], axs)
 
@@ -204,7 +229,7 @@ def plot_sidebyside_comparison_singleQ(
     # left
     plot_left = sns.barplot(
         ax=ax_left,
-        x=data_left[percentcount.value],
+        x=data_left[plot_stat.value],
         y=list(data_left[base_q_left]),
         hue=hue_input_left,
         palette=colors_left,
@@ -213,7 +238,7 @@ def plot_sidebyside_comparison_singleQ(
     # right
     plot_right = sns.barplot(
         ax=ax_right,
-        x=data_right[percentcount.value],
+        x=data_right[plot_stat.value],
         y=list(data_right[base_q_right]),
         hue=hue_input_right,
         palette=colors_right,
@@ -238,7 +263,7 @@ def plot_sidebyside_comparison_singleQ(
     ax_left.invert_xaxis()
     ax_left.yaxis.tick_right()
 
-    # add tick labels (the ones below or next to the bars outside of the plot)
+    # add answer options as y tick labels between the two bar plots
     ax_left = add_tick_labels(
         survey=survey,
         ax=ax_left,
@@ -281,10 +306,10 @@ def plot_sidebyside_comparison_singleQ(
     # add bar labels (the ones on top or next to bars within the plot)
     plot_left = add_bar_labels(
         ax=ax_left,
-        show_axes_labels=show_axes_labels,
-        percentcount=percentcount,
+        show_axes_labels=bar_labels,
+        percentcount=plot_stat,
         n_question=N_left,
-        fontsize=fontsize_axes_labels,
+        fontsize=fontsize_bar_labels,
     )
 
     # adapt legend
@@ -306,20 +331,21 @@ def plot_sidebyside_comparison_singleQ(
         anchor_y=0.18,
     )
 
-    # set titles
-    # plot_left.set_title("\n".join(wrap(title_left, 40)), fontsize=fontsize)
-    # plot_right.set_title("\n".join(wrap(title_right, 40)), fontsize=fontsize)
-
     # set y axis big label to ""
     ax_left.set_ylabel("")
     ax_right.set_ylabel("")
 
     # add number of participants to top right corner
     ax_left.text(
-        0, 0.99, f"N = {N_left}", ha="left", va="top", transform=ax_left.transAxes
+        0, 0.01, f"N = {N_left}", ha="left", va="bottom", transform=ax_left.transAxes
     )
     ax_right.text(
-        0.99, 0.99, f"N = {N_right}", ha="right", va="top", transform=ax_right.transAxes
+        0.99,
+        0.01,
+        f"N = {N_right}",
+        ha="right",
+        va="bottom",
+        transform=ax_right.transAxes,
     )
 
     return figure, (ax_left, ax_right)
