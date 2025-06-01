@@ -106,11 +106,11 @@ def plot_comparison_2021(
 
     # map answer codes to actual answers, convert them into a common format, count
     answers_2021 = (
-        survey_2021.get_responses(q_code)[q_code].map(choices_2021).map(answer_map)  # type:ignore[arg-type]
+        survey_2021.get_responses(q_code)[q_code].map(choices_2021).map(answer_map)
     )
     counts_2021 = answers_2021.value_counts()
     answers_2024 = (
-        survey_2024.get_responses(q_code)[q_code].map(choices_2024).map(answer_map)  # type:ignore[arg-type]
+        survey_2024.get_responses(q_code)[q_code].map(choices_2024).map(answer_map)
     )
     counts_2024 = answers_2024.value_counts()
 

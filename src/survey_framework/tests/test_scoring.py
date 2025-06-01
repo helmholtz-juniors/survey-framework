@@ -26,7 +26,7 @@ def test_state_anxiety(survey: LimeSurveyData, output_path: Path) -> None:
         Condition.STATE_ANXIETY,
         keep_subscores=True,
     )
-    print(res_df)
+    print(res_df["state_anxiety_class"].value_counts())
 
 
 def test_trait_anxiety(survey: LimeSurveyData, output_path: Path) -> None:
@@ -35,7 +35,7 @@ def test_trait_anxiety(survey: LimeSurveyData, output_path: Path) -> None:
         Condition.TRAIT_ANXIETY,
         keep_subscores=True,
     )
-    print(res_df)
+    print(res_df["trait_anxiety_class"].value_counts())
 
 
 def test_depression(survey: LimeSurveyData, output_path: Path) -> None:
@@ -44,12 +44,12 @@ def test_depression(survey: LimeSurveyData, output_path: Path) -> None:
         Condition.DEPRESSION,
         keep_subscores=True,
     )
-    print(res_df)
+    print(res_df["depression_class"].value_counts())
 
 
 def test_somatic(survey: LimeSurveyData, output_path: Path) -> None:
     res_df = rate_somatic(survey.get_responses("D4"))
-    print(res_df)
+    print(res_df["somatic_class"].value_counts())
 
 
 def test_invalid_length(survey: LimeSurveyData, output_path: Path) -> None:

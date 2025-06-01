@@ -1,11 +1,12 @@
 import re
 import warnings
-from collections.abc import Iterable
+from collections.abc import Hashable, Iterable
 from enum import StrEnum, auto
 from pathlib import Path
 from typing import cast
 
 import pandas as pd
+from pandas._typing import Dtype
 
 from .survey_structure import read_lime_questionnaire_structure
 
@@ -120,10 +121,10 @@ class LimeSurveyData:
             # Identify columns for survey questions
             first_question = cast(int, columns.get_loc("datestamp")) + 1
             last_question = cast(int, columns.get_loc("interviewtime")) - 1
-            question_columns = renamed_columns[first_question : last_question + 1]
+            question_columns = list(renamed_columns[first_question : last_question + 1])
 
             # Split df into question responses and timing info
-            question_responses = responses.loc[:, question_columns]  # type: ignore [index] # the indexing works perfectly with the given slice, I think mypy got confused here?
+            question_responses = responses.loc[:, question_columns]
             system_info = responses.iloc[:, ~renamed_columns.isin(question_columns)]
 
         else:
@@ -205,9 +206,7 @@ class LimeSurveyData:
 
     def _get_dtype_info(
         self, columns: Iterable[str], renamed_columns: Iterable[str]
-    ) -> tuple[
-        dict[str, str | pd.Int32Dtype | pd.UInt32Dtype | pd.Int16Dtype], list[str]
-    ]:
+    ) -> tuple[dict[Hashable, Dtype], list[str]]:
         """Get dtypes for columns in data csv
 
         Args:
@@ -220,7 +219,7 @@ class LimeSurveyData:
         """
 
         # Compile dict with dtype for each column
-        dtype_dict: dict[str, str | pd.Int32Dtype | pd.UInt32Dtype | pd.Int16Dtype] = {}
+        dtype_dict: dict[Hashable, Dtype] = {}
         # Compile list of datetime columns
         # (because pd.read_csv takes this as separate arg)
         datetime_columns = []
@@ -362,7 +361,7 @@ class LimeSurveyData:
         question_group = self.get_question(question, drop_other=drop_other)
         question_type = self.get_question_type(question)
 
-        responses = self.responses.loc[:, question_group.index]  # type:ignore [index] # see similar issue in read_responses; unclear if mypy is wrong or we actually misuse pandas here
+        responses = self.responses.loc[:, list(question_group.index)]
 
         # convert multiple-choice responses
         if question_type == QuestionType.MULTIPLE_CHOICE:

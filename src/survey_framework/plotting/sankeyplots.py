@@ -1,6 +1,6 @@
 from textwrap import wrap
 
-import ausankey as sky  # type: ignore
+import ausankey as sky  # type: ignore[import-untyped]
 import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
