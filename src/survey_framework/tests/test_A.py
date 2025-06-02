@@ -79,15 +79,15 @@ def test_plots_A10_multiple(survey: LimeSurveyData, output_path: Path) -> None:
     responses_df_melted = pd.melt(responses_df_all)
     responses_df_melted_cleaned = responses_df_melted[responses_df_melted.value]
     responses_df_melted_cleaned_counts = responses_df_melted_cleaned.groupby(
-        "name"
+        "variable"
     ).count()
     responses_df_counts_sorted = responses_df_melted_cleaned_counts.reset_index()
-    # responses_df_counts_sorted["name"] = pd.Categorical(
-    #     responses_df_counts_sorted["name"], categories=order_a10, ordered=True
+    # responses_df_counts_sorted["variable"] = pd.Categorical(
+    #     responses_df_counts_sorted["variable"], categories=order_a10, ordered=True
     # )
     responses_df_counts_sorted = responses_df_counts_sorted.sort_values(
         by="value", ascending=False
-    ).rename(columns={"value": "count", "name": a10})
+    ).rename(columns={"value": "count", "variable": a10})
     responses_df_counts_sorted_percentages = responses_df_counts_sorted
     responses_df_counts_sorted_percentages["percent"] = (
         responses_df_counts_sorted_percentages["count"] / N_question * 100
