@@ -134,10 +134,10 @@ def plot_bar_comparison(
     stat: PlotStat = PlotStat.COUNT,
     width: float = 6,
     height: float = 4,
-    # fontsize: int = 10,
-    show_axes_labels: BarLabels = BarLabels.NONE,
-    # fontsize_axes_labels: int = 10,
-    text_wrap: int = 25,
+    bar_labels: BarLabels = BarLabels.NONE,
+    bar_label_size: int | None = None,
+    tick_label_size: int | None = None,
+    tick_label_wrap: int = 25,
 ) -> tuple[Figure, Axes]:
     """
     plot comparison bar plots (single and multiple)
@@ -153,10 +153,10 @@ def plot_bar_comparison(
         percentcount: Plot absolute values or percentages? Defaults to COUNT.
         fig_size_x: Width of figure. Defaults to 16.
         fig_size_y: Height of figure. Defaults to 10.
-        fontsize: Font size for tick labels. Defaults to 10.
-        show_axes_labels: How to format bar labels. Defaults to NONE (no labels).
-        fontsize_axes_labels: Font size for bar labels. Defaults to 10.
-        text_wrap: Number of letters after which text labels wrap. Defaults to 25.
+        bar_labels: How to format bar labels. Defaults to NONE (no labels).
+        bar_label_size: Font size for bar labels. Defaults to None (automatic).
+        tick_label_size: Font size for tick labels. Defaults to None (automatic).
+        tick_label_wrap: Number of letters after which tick labels wrap. Defaults to 25.
 
     Returns:
         tuple[plt.figure, plt.axes, plt.axes]: _description_
@@ -191,16 +191,16 @@ def plot_bar_comparison(
         )
 
         # adapt legend
-        ax = adapt_legend(survey=survey, ax=ax, question=hue, text_wrap=text_wrap)
+        ax = adapt_legend(survey=survey, ax=ax, question=hue, text_wrap=40)
 
     # add bar labels (the ones on top or next to bars within the plot)
     ax = add_bar_labels(
         ax=ax,
-        show_axes_labels=show_axes_labels,
+        show_axes_labels=bar_labels,
         percentcount=stat,
         n_question=n_question,
         # rotation=45 if orientation == Orientation.VERTICAL else None,
-        # fontsize=5,
+        fontsize=bar_label_size,
     )
 
     # add tick labels (the ones below or next to the bars outside of the plot)
@@ -209,8 +209,8 @@ def plot_bar_comparison(
         ax=ax,
         question=question,
         orientation=orient,
-        # fontsize=fontsize,
-        text_wrap=text_wrap,
+        fontsize=tick_label_size,
+        text_wrap=tick_label_wrap,
     )
 
     # add general labels to axes

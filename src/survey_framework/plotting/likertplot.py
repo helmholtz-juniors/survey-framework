@@ -71,8 +71,9 @@ def plot_likertplot(
     if relabel_subquestions:
         for old_label in ax.get_yticklabels():
             label = cast(str, survey.questions.loc[old_label.get_text()]["label"])
-            new_labels.append("\n".join(wrap(label, text_wrap)))
-        ax.set_yticklabels(new_labels, linespacing=0.8)
+            clean_str = label.replace("/", " / ")
+            new_labels.append("\n".join(wrap(clean_str, text_wrap, max_lines=3)))
+        ax.set_yticklabels(new_labels, linespacing=0.9)
 
     # set the legend labels
     choices = survey.questions.loc[survey.questions["question_group"] == question][

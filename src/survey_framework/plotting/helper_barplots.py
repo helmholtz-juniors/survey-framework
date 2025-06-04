@@ -194,7 +194,8 @@ def add_tick_labels(
             case other:
                 raise NotImplementedError(f"Labels for {other} not implemented.")
         # wrap labels
-        return "\n".join(wrap(new_label, text_wrap))
+        clean_str = new_label.replace("/", " / ")
+        return "\n".join(wrap(clean_str, text_wrap, max_lines=2))
 
     # match on orientation of plot
     match orientation:
@@ -218,6 +219,7 @@ def add_tick_labels(
                 rotation=45,
                 ha="right",
                 rotation_mode="anchor",
+                linespacing=0.9,
             )
 
     return ax

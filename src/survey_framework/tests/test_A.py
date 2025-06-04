@@ -145,7 +145,7 @@ def test_plots_A2_comparison_A6(survey: LimeSurveyData, output_path: Path) -> No
         label_q_data="Centers",
         orient=Orientation.HORIZONTAL,
         stat=PlotStat.COUNT,
-        show_axes_labels=BarLabels.COUNT,
+        bar_labels=BarLabels.COUNT,
         n_question=N_question,
         height=10,
         width=16,
