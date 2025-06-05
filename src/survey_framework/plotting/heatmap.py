@@ -1,3 +1,5 @@
+from enum import StrEnum
+
 import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
@@ -14,11 +16,20 @@ from survey_framework.data_analysis.scoring import (
 from survey_framework.data_import.data_import import LimeSurveyData
 
 
+class CorrMethod(StrEnum):
+    """Correlation Method used by Pandas"""
+
+    KENDALL = "kendall"  # Kendall's tau
+    PEARSON = "pearson"  # Pearson's rho
+    SPEARMAN = "spearman"  # Spearman's rho
+
+
 def plot_heatmap(
     df: pd.DataFrame,
     survey: LimeSurveyData,
-    width: int = 10,
-    height: int = 6,
+    width: float = 6.5,
+    height: float = 6,
+    method: CorrMethod = CorrMethod.SPEARMAN,
 ) -> tuple[Figure, Axes]:
     """Correlation heatmap of the input dataframe vs. all (mental) health scores.
     This is currently hard-coded to use Spearman's rho.
@@ -26,9 +37,9 @@ def plot_heatmap(
     Args:
         df: Dataframe with numeric columns that should be correlated against health
         survey: main survey object
-        fig_size_x: Horizontal figure size. Defaults to 10.
-        fig_size_y: Vertical figure size. Defaults to 6.
-
+        width: Horizontal figure size. Defaults to 6.5.
+        height: Vertical figure size. Defaults to 6.
+        method: Statistical correlation method. Defaults to `CorrMethod.SPEARMAN`.
     Returns:
         tuple: matplotlib figure and axes for the heatmap
     """
@@ -48,21 +59,25 @@ def plot_heatmap(
         survey.get_responses(Condition.DEPRESSION), Condition.DEPRESSION
     )
     somatic = rate_somatic(survey.get_responses(SOMATIC))
-    bout = rate_burnout(survey.get_responses(BURNOUT)).set_index("id")
+    _bout = rate_burnout(survey.get_responses(BURNOUT)).set_index("id")
 
     correlations = pd.DataFrame(
         {
-            "State Anxiety": df.corrwith(sta["state_anxiety_score"], method="spearman"),
-            "Trait Anxiety": df.corrwith(tra["trait_anxiety_score"], method="spearman"),
-            "Depression": df.corrwith(depr["depression_score"], method="spearman"),
+            "State Anxiety": df.corrwith(
+                sta["state_anxiety_score"], method=method.value
+            ),
+            "Trait Anxiety": df.corrwith(
+                tra["trait_anxiety_score"], method=method.value
+            ),
+            "Depression": df.corrwith(depr["depression_score"], method=method.value),
             "Somatic Symptoms": df.corrwith(
-                somatic["somatic_score"], method="spearman"
+                somatic["somatic_score"], method=method.value
             ),
-            "Exhaustion": df.corrwith(bout["Exhaustion"], method="spearman"),
-            "Cynicism": df.corrwith(bout["Cynicism"], method="spearman"),
-            "Professional Efficacy": df.corrwith(
-                bout["Professional Efficacy"], method="spearman"
-            ),
+            # "Exhaustion": df.corrwith(bout["Exhaustion"], method=method.value),
+            # "Cynicism": df.corrwith(bout["Cynicism"], method=method.value),
+            # "Professional Efficacy": df.corrwith(
+            #     bout["Professional Efficacy"], method=method.value
+            # ),
         }
     )
 

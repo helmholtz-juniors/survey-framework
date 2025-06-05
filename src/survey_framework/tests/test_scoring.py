@@ -15,6 +15,7 @@ from survey_framework.data_analysis.scoring import (
     rate_somatic,
 )
 from survey_framework.data_import.data_import import LimeSurveyData
+from survey_framework.plotting import helmholtzcolors
 from survey_framework.plotting.helper_barplots import add_bar_labels, plot_barplot
 from survey_framework.plotting.helper_plotenums import BarLabels, Orientation, PlotStat
 from survey_framework.plotting.likertplot import plot_likertplot
@@ -68,6 +69,7 @@ def test_invalid_question(survey: LimeSurveyData, output_path: Path) -> None:
 
 def test_burnout(survey: LimeSurveyData, output_path: Path) -> None:
     res_df = rate_burnout(survey.get_responses("D3d"))
+    # print(res_df.dropna())
     print(res_df)
 
 
@@ -90,8 +92,9 @@ def test_burnout_plot(survey: LimeSurveyData, output_path: Path) -> None:
     res_df = rate_burnout(survey.get_responses("D3d"))
     raw_df = res_df[[Scale.EX, Scale.CY, Scale.PE]]
 
+    helmholtzcolors.set_plotstyle()
     fig, ax = plt.subplots(figsize=(6, 4), dpi=300, layout="constrained")
-    _ = sns.kdeplot(data=raw_df, ax=ax)
+    _ = sns.histplot(data=raw_df, ax=ax, kde=True, multiple="dodge")
     fig.savefig(output_path / SECTION / "D3d_raw.pdf")
 
     # shake this into the right data form to use our plot_barplot helper
