@@ -230,8 +230,8 @@ def adapt_legend(
     ax: Axes,
     question: str,
     text_wrap: int,
-    anchor_x: float = 1,
-    anchor_y: float = 0.97,
+    group_n: dict[str, int] | None = None,
+    anchor: tuple[float, float] | None = None,
 ) -> Axes:
     """
     rename legend and move below N
@@ -247,10 +247,15 @@ def adapt_legend(
     """
 
     handles, labels = ax.get_legend_handles_labels()
-    for i in range(0, len(labels)):
-        label = survey.questions.choices[question][labels[i]]
+    for i, old_label in enumerate(labels):
+        if group_n is not None:
+            # This legend is for a comparison plot. Keep the label, just add the given N
+            label = f"{old_label} ({group_n[old_label]})"
+        else:
+            # Just rename the label, assuming it is a valid question ID
+            label = survey.get_choices(question)[old_label]
         labels[i] = "\n".join(wrap(label, text_wrap))
-    ax.legend(handles=handles, labels=labels, bbox_to_anchor=(anchor_x, anchor_y))
+    ax.legend(handles=handles, labels=labels, bbox_to_anchor=anchor)
 
     return ax
 

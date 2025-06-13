@@ -19,8 +19,8 @@ def simple_histplot(
     kde: bool = False,
     log_scale: bool = False,
     binwidth: int | None = None,
-    width: int = 10,
-    height: int = 6,
+    width: float = 10,
+    height: float = 6,
 ) -> tuple[Figure, Axes]:
     """Very simple histplot. Currently in experimental state, to be expanded
         for stacked barplots and KDE plots.

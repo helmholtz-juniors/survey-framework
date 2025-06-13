@@ -318,8 +318,7 @@ def plot_sidebyside_comparison_singleQ(
         ax=ax_left,
         question=comp_q,
         text_wrap=text_wrap,
-        anchor_x=0.4,
-        anchor_y=0.18,
+        anchor=(0.4, 0.18),
     )
 
     ax_right = adapt_legend(
@@ -327,8 +326,7 @@ def plot_sidebyside_comparison_singleQ(
         ax=ax_right,
         question=comp_q,
         text_wrap=text_wrap,
-        anchor_x=1,
-        anchor_y=0.18,
+        anchor=(1, 0.18),
     )
 
     # set y axis big label to ""

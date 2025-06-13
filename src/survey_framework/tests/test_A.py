@@ -146,7 +146,7 @@ def test_plots_A2_comparison_A6(survey: LimeSurveyData, output_path: Path) -> No
         orient=Orientation.HORIZONTAL,
         stat=PlotStat.COUNT,
         bar_labels=BarLabels.COUNT,
-        n_question=N_question,
+        n_participants=None,
         height=10,
         width=16,
     )

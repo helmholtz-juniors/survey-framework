@@ -128,7 +128,7 @@ def plot_bar_comparison(
     question: str,
     hue: str,
     hue_order: Sequence[str] | None = None,
-    n_question: int | None = None,
+    n_participants: dict[str, int] | None = None,
     label_q_data: str = "",
     orient: Orientation = Orientation.HORIZONTAL,
     stat: PlotStat = PlotStat.COUNT,
@@ -147,7 +147,8 @@ def plot_bar_comparison(
         data_df: DataFrame with responses to be plotted
         question: Question code for the first question
         question_comparison: Question code for the second question
-        n_question: Number of participants, or None if multi-center comparison
+        n_participants: Number of participants per hue group (usually centers),
+            or None to suppress printing N. Defaults to None.
         label_q_data: Label for axis with data from question. Defaults to "".
         orientation: Plot orientation. Defaults to HORIZONTAL.
         percentcount: Plot absolute values or percentages? Defaults to COUNT.
@@ -171,34 +172,36 @@ def plot_bar_comparison(
         width=width,
         height=height,
         comparison=PlotType.SINGLE_Q_COMPARISON
-        if n_question is None
+        if n_participants is not None
         else PlotType.MULTI_Q,
         hue=hue,
         hue_order=hue_order,
     )
 
     # do not tamper with legend and don't add n_question if we compare centers
-    if n_question is not None:
-        # add number of participants to top right corner
-        plt.text(
-            0.99,
-            0.99,
-            f"N = {n_question}",
-            ha="right",
-            va="top",
-            transform=ax.transAxes,
-            # fontsize=fontsize,
-        )
+    # if n_question is not None:
+    #     # add number of participants to top right corner
+    #     plt.text(
+    #         0.99,
+    #         0.99,
+    #         f"N = {n_question}",
+    #         ha="right",
+    #         va="top",
+    #         transform=ax.transAxes,
+    #         # fontsize=fontsize,
+    #     )
 
-        # adapt legend
-        ax = adapt_legend(survey=survey, ax=ax, question=hue, text_wrap=40)
+    # adapt legend
+    ax = adapt_legend(
+        survey=survey, ax=ax, question=hue, text_wrap=40, group_n=n_participants
+    )
 
     # add bar labels (the ones on top or next to bars within the plot)
     ax = add_bar_labels(
         ax=ax,
         show_axes_labels=bar_labels,
         percentcount=stat,
-        n_question=n_question,
+        n_question=None,
         # rotation=45 if orientation == Orientation.VERTICAL else None,
         fontsize=bar_label_size,
     )
