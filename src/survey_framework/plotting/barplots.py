@@ -217,21 +217,30 @@ def plot_bar_comparison(
     )
 
     # add general labels to axes
-    pct_fmt = PercentFormatter(1.0, decimals=0, symbol=None)
+    prop_fmt = PercentFormatter(1.0, symbol=None)
+    perc_fmt = PercentFormatter(100, symbol=None)
     match orient:
         case Orientation.HORIZONTAL:
             ax.set(ylabel=label_q_data)
-            if stat == PlotStat.PROPORTION:
-                ax.xaxis.set_major_formatter(pct_fmt)
-                ax.xaxis.set_label_text("Percent")
-            else:
-                ax.xaxis.set_label_text(stat.capitalize())
+            match stat:
+                case PlotStat.PROPORTION:
+                    ax.xaxis.set_major_formatter(prop_fmt)
+                    ax.xaxis.set_label_text("Percent")
+                case PlotStat.PERCENT:
+                    ax.xaxis.set_major_formatter(perc_fmt)
+                    ax.xaxis.set_label_text("Percent")
+                case PlotStat.COUNT:
+                    ax.xaxis.set_label_text(stat.capitalize())
         case Orientation.VERTICAL:
             ax.set(xlabel=label_q_data)
-            if stat == PlotStat.PROPORTION:
-                ax.yaxis.set_major_formatter(pct_fmt)
-                ax.yaxis.set_label_text("Percent")
-            else:
-                ax.yaxis.set_label_text(stat.capitalize())
+            match stat:
+                case PlotStat.PROPORTION:
+                    ax.yaxis.set_major_formatter(prop_fmt)
+                    ax.yaxis.set_label_text("Percent")
+                case PlotStat.PERCENT:
+                    ax.yaxis.set_major_formatter(perc_fmt)
+                    ax.yaxis.set_label_text("Percent")
+                case PlotStat.COUNT:
+                    ax.yaxis.set_label_text(stat.capitalize())
 
     return fig, ax
