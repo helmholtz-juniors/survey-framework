@@ -61,7 +61,7 @@ def test_plots_A2_single(survey: LimeSurveyData, output_path: Path) -> None:
         n_question=N_question,
         label_q_data="Centers",
         orientation=Orientation.VERTICAL,
-        show_axes_labels=BarLabels.NONE,
+        bar_labels=BarLabels.NONE,
     )
 
     fig.savefig(output)
@@ -99,9 +99,9 @@ def test_plots_A10_multiple(survey: LimeSurveyData, output_path: Path) -> None:
         question=a10,
         n_question=N_question,
         label_q_data="Ethnicity",
-        percentcount=PlotStat.COUNT,
+        stat=PlotStat.COUNT,
         orientation=Orientation.VERTICAL,
-        show_axes_labels=BarLabels.PERCENT,
+        bar_labels=BarLabels.PERCENT,
     )
 
     fig.savefig(output)

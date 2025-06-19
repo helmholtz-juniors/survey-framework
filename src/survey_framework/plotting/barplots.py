@@ -24,13 +24,13 @@ def plot_bar(
     n_question: int,
     label_q_data: str = "",
     orientation: Orientation = Orientation.HORIZONTAL,
-    percentcount: PlotStat = PlotStat.COUNT,
-    fig_size_x: int = 16,
-    fig_size_y: int = 10,
-    fontsize: int = 10,
-    show_axes_labels: BarLabels = BarLabels.NONE,
-    fontsize_axes_labels: int = 10,
-    text_wrap: int = 25,
+    stat: PlotStat = PlotStat.COUNT,
+    width: float = 6,
+    height: float = 4,
+    bar_labels: BarLabels = BarLabels.NONE,
+    bar_label_size: int | None = None,
+    tick_label_size: int | None = None,
+    tick_label_wrap: int = 25,
 ) -> tuple[Figure, Axes]:
     """
     plot bar plots (single and multiple)
@@ -59,9 +59,9 @@ def plot_bar(
         data_df=data_df,
         question=question,
         orient=orientation,
-        stat=percentcount,
-        width=fig_size_x,
-        height=fig_size_y,
+        stat=stat,
+        width=width,
+        height=height,
     )
 
     # add number of participants to top right corner
@@ -72,16 +72,16 @@ def plot_bar(
         ha="right",
         va="top",
         transform=ax.transAxes,
-        fontsize=fontsize,
+        # fontsize=fontsize,
     )
 
     # add bar labels (the ones on top or next to bars within the plot)
     ax = add_bar_labels(
         ax=ax,
-        show_axes_labels=show_axes_labels,
-        percentcount=percentcount,
+        show_axes_labels=bar_labels,
+        percentcount=stat,
         n_question=n_question,
-        fontsize=fontsize_axes_labels,
+        fontsize=bar_label_size,
     )
 
     # add tick labels (the ones below or next to the bars outside of the plot)
@@ -90,16 +90,16 @@ def plot_bar(
         ax=ax,
         question=question,
         orientation=orientation,
-        fontsize=fontsize,
-        text_wrap=text_wrap,
+        fontsize=tick_label_size,
+        text_wrap=tick_label_wrap,
     )
 
     # add general labels to axes
     match orientation:
         case Orientation.HORIZONTAL:
-            ax.set(xlabel=percentcount.value.capitalize(), ylabel=label_q_data)
+            ax.set(xlabel=stat.value.capitalize(), ylabel=label_q_data)
         case Orientation.VERTICAL:
-            ax.set(xlabel=label_q_data, ylabel=percentcount.value.capitalize())
+            ax.set(xlabel=label_q_data, ylabel=stat.value.capitalize())
 
     # set title
     ax.set_title(
@@ -113,7 +113,7 @@ def plot_bar(
                 60,
             )
         ),
-        fontsize=14,
+        # fontsize=14,
     )
 
     ax.autoscale()
