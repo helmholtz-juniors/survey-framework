@@ -99,7 +99,12 @@ def plot_bar_side_by_side(
     # ax_right.spines["left"].set_visible(False)
 
     # set xlim equal on both sides
-    ax_left.set_xlim(ax_right.get_xlim())
+    if stat == PlotStat.PERCENT:
+        ax_left.set_xlim((0, 100))
+        ax_right.set_xlim((0, 100))
+    elif stat == PlotStat.PROPORTION:
+        ax_left.set_xlim((0, 1))
+        ax_right.set_xlim((0, 1))
 
     # flip left side
     # https://stackoverflow.com/questions/68858330/right-align-horizontal-seaborn-barplot
@@ -256,7 +261,12 @@ def plot_sidebyside_comparison_singleQ(
     # ax_right.spines["left"].set_visible(False)
 
     # set xlim equal on both sides
-    ax_left.set_xlim(ax_right.get_xlim())
+    if plot_stat == PlotStat.PERCENT:
+        ax_left.set_xlim((0, 100))
+        ax_right.set_xlim((0, 100))
+    elif plot_stat == PlotStat.PROPORTION:
+        ax_left.set_xlim((0, 1))
+        ax_right.set_xlim((0, 1))
 
     # flip left side
     # https://stackoverflow.com/questions/68858330/right-align-horizontal-seaborn-barplot
