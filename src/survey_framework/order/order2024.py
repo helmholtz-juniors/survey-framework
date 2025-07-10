@@ -332,11 +332,11 @@ ORDER = {
     ],
     "B17": ["A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8", "A9", "A10"],
     ### SECTION C: Satisfaction
-    "C1": ["A5", "A4", "A3", "A6", "A2", "A1"],  # Likert
-    "C4": ["A5", "A4", "A3", "A6", "A2", "A1"],  # Likert
-    "C5": ["A2", "A3", "A6", "A4", "A5"],  # Likert
+    "C1": ["A5", "A4", "A3", "A2", "A1"],  # Likert
+    "C4": ["A5", "A4", "A3", "A2", "A1"],  # Likert
+    "C5": ["A2", "A3", "A4", "A5"],  # Likert
     ### SECTION D: Mental Health
-    "D4": ["A4", "A3", "A5", "A2"],  # Likert
+    "D4": ["A4", "A3", "A2"],  # Likert
     "D9": ["A1", "A2", "-oth-", "A3"],
     ### SECTION E: Supervision
     "E2": ["A1", "A2", "A3", "A4", "A7", "A5", "A6"],
@@ -344,8 +344,8 @@ ORDER = {
     "E9": ["A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8", "A9", "A10", "A11"],
     "E10": ["A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8", "A9", "A10", "A11"],
     "E11": ["A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8", "A9", "A10", "A11"],
-    "E12": ["A5", "A4", "A3", "A6", "A2", "A1"],  # Likert
-    "E13": ["A5", "A4", "A3", "A6", "A2", "A1"],  # Likert
+    "E12": ["A5", "A4", "A3", "A2", "A1"],  # Likert
+    "E13": ["A5", "A4", "A3", "A2", "A1"],  # Likert
     ### SECTION F: Power Abuse
     "F1": [
         "F1_SQ001",
@@ -488,8 +488,8 @@ ORDER = {
     "F10": ["A2", "A3", "A7", "A4", "A5", "A6"],
     ### SECTION H: Integration
     ### SECTION I: Career Development
-    "I2": ["A1", "A2", "A3", "A6", "A4", "A5"],  # Likert
-    "I4": ["A3", "A4", "A5", "A2", "A1"],  # Likert
+    "I2": ["A1", "A2", "A3", "A4", "A5"],  # Likert
+    "I4": ["A3", "A4", "A2", "A1"],  # Likert
     ### SECTION J: Family
 }
 """
