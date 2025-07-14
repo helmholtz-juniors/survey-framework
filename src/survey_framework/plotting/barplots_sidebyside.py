@@ -163,9 +163,16 @@ def plot_bar_side_by_side(
     # https://www.geeksforgeeks.org/how-to-set-the-spacing-between-subplots-in-matplotlib-in-python/
     figure.tight_layout(pad=0.5)
 
-    plt.text(0, 0.99, f"N = {N_left}", ha="left", va="top", transform=ax_left.transAxes)
     plt.text(
-        0.99, 0.99, f"N = {N_right}", ha="right", va="top", transform=ax_right.transAxes
+        0, 0.01, f"N = {N_left}", ha="left", va="bottom", transform=ax_left.transAxes
+    )
+    plt.text(
+        0.99,
+        0.01,
+        f"N = {N_right}",
+        ha="right",
+        va="bottom",
+        transform=ax_right.transAxes,
     )
 
     return figure, (ax_left, ax_right)
@@ -219,12 +226,7 @@ def plot_sidebyside_comparison_singleQ(
     set_plotstyle()
 
     figure, axs = plt.subplots(
-        nrows=1,
-        ncols=2,
-        dpi=300,
-        figsize=(width, height),
-        sharey=True,
-        layout="tight",
+        nrows=1, ncols=2, dpi=300, figsize=(width, height), sharey=True, layout="tight"
     )
     ax_left, ax_right = cast(tuple[Axes, Axes], axs)
 
