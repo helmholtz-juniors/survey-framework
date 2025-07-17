@@ -182,9 +182,11 @@ def add_tick_labels(
     Returns:
         Axes: _description_
     """
+    # maximum allowed lines of text for each tick label.
+    max_lines = 3
 
     # function to rename a single label using the survey data
-    def renamed(label: str) -> str:
+    def renamed(label: str, max_lines: str) -> str:
         match survey.get_question_type(question=question):
             case QuestionType.SINGLE_CHOICE:
                 lookup_name = survey.questions.choices[question].get(label)
@@ -195,22 +197,23 @@ def add_tick_labels(
                 raise NotImplementedError(f"Labels for {other} not implemented.")
         # wrap labels
         clean_str = new_label.replace("/", " / ")
-        return "\n".join(wrap(clean_str, text_wrap, max_lines=2))
+        return "\n".join(wrap(clean_str, text_wrap, max_lines=max_lines))
 
     # match on orientation of plot
     match orientation:
         case Orientation.HORIZONTAL:
             # get all current y-ticklabels
-            y_ticklabels = [renamed(item.get_text()) for item in ax.get_yticklabels()]
-
+            y_ticklabels = [renamed(item.get_text(), max_lines) for item in ax.get_yticklabels()]
             # update labels
             ax.set_yticks(ax.get_yticks())
             ax.set_yticklabels(y_ticklabels, fontsize=fontsize)
 
         case Orientation.VERTICAL:
             # get all current x-ticklabels
-            x_ticklabels = [renamed(item.get_text()) for item in ax.get_xticklabels()]
-
+            # if the number of tick labels is more than 5, reduce the number of allowed lines of text for each tick label to prevent spatial collisions
+            if len(ax.get_xticklabels()) > 5:
+                max_lines = 2
+            x_ticklabels = [renamed(item.get_text(), max_lines) for item in ax.get_xticklabels()]
             # update labels
             ax.set_xticks(ax.get_xticks())
             ax.set_xticklabels(

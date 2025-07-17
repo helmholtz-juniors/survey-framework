@@ -215,7 +215,6 @@ def plot_bar_comparison(
         fontsize=tick_label_size,
         text_wrap=tick_label_wrap,
     )
-
     # add general labels to axes
     prop_fmt = PercentFormatter(1.0, symbol=None)
     perc_fmt = PercentFormatter(100, symbol=None)
