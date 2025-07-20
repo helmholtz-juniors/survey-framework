@@ -185,6 +185,7 @@ def add_tick_labels(
 
     # function to rename a single label using the survey data
     def renamed(label: str) -> str:
+        # get labels from survey data
         match survey.get_question_type(question=question):
             case QuestionType.SINGLE_CHOICE:
                 lookup_name = survey.questions.choices[question].get(label)
@@ -193,9 +194,12 @@ def add_tick_labels(
                 new_label = survey.questions.choices[label]["Y"]
             case other:
                 raise NotImplementedError(f"Labels for {other} not implemented.")
+        # clean up & shorten labels
+        new_label = new_label.replace("/", " / ")
+        new_label = new_label.replace("doctoral researcher", "DR")
+        new_label = new_label.replace("Doctoral researcher", "DR")
         # wrap labels
-        clean_str = new_label.replace("/", " / ")
-        return "\n".join(wrap(clean_str, text_wrap, max_lines=2))
+        return "\n".join(wrap(new_label, text_wrap, max_lines=2))
 
     # match on orientation of plot
     match orientation:
