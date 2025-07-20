@@ -44,7 +44,7 @@ def rate_mental_health(
             base_score = 10 / 3
             conversion = ["pos", "neg", "neg", "pos", "pos", "neg"]
             label = "state_anxiety"
-            classification_boundaries = [0, 40, 60, 80]
+            classification_boundaries = [20, 40, 60, 80]
             classes = ["no or low anxiety", "moderate anxiety", "high anxiety"]
 
         case Condition.TRAIT_ANXIETY:
@@ -61,7 +61,7 @@ def rate_mental_health(
                 "neg",
             ]
             label = "trait_anxiety"
-            classification_boundaries = [0, 40, 60, 80]
+            classification_boundaries = [20, 40, 60, 80]
             classes = ["no or low anxiety", "moderate anxiety", "high anxiety"]
 
         case Condition.DEPRESSION:
@@ -134,6 +134,7 @@ def rate_mental_health(
     df[f"{label}_class"] = pd.cut(
         df[f"{label}_score"],
         bins=classification_boundaries,
+        include_lowest=True,
         labels=classes,
     )
 
@@ -173,7 +174,7 @@ def rate_somatic(
 
     num_subquestions = 14
     base_score = 15 / 14
-    classification_boundaries = [-1, 5, 10, 15, 30]
+    classification_boundaries = [0, 4, 9, 14, 30]
     classes = [
         "No somatic symptoms",
         "Mild somatic symptoms",
@@ -208,6 +209,7 @@ def rate_somatic(
     df[f"{label}_class"] = pd.cut(
         df[f"{label}_score"],
         bins=classification_boundaries,
+        include_lowest=True,
         labels=classes,
     )
 
