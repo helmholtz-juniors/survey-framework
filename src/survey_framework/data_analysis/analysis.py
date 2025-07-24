@@ -1,5 +1,6 @@
 from collections.abc import Sequence
 from typing import cast
+from warnings import warn
 
 import pandas as pd
 
@@ -23,6 +24,12 @@ def get_data_for_q(survey: LimeSurveyData, question_number: str) -> pd.DataFrame
     Returns:
         A DataFrame with all answers to the specified question
     """
+    warn(
+        "get_data_for_q is deprecated, use survey.get_responses instead",
+        DeprecationWarning,
+        stacklevel=2,
+    )
+
     responses = survey.get_responses(question_number, drop_other=True)
     # change types of all columns to object
     responses = responses.astype("object")
