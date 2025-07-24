@@ -4,10 +4,25 @@ import pandas as pd
 # and output a cleaned, sorted, counted dataframe ready for plotting.
 
 
-# TODO: why does this need N? it should output N, that makes more sense
 def prepare_df_single(
-    data: pd.DataFrame, q: str, N_question: int, ordering: dict[str, list[str]]
-) -> pd.DataFrame:
+    data: pd.DataFrame, q: str, ordering: dict[str, list[str]]
+) -> tuple[pd.DataFrame, int]:
+    """Count participants in the data. This function is for single-choice questions.
+
+    The output dataframe contains the following columns:
+    - q: The answer options
+    - "count": number of participants (in this group) that gave this answer
+    - "proportion": share of participants (relative to "total") that gave this answer
+
+    Args:
+        data: The main DataFrame of answers
+        q (str): name of the output column for answer options
+        ordering: Answer re-ordering dict, e.g. ORDER from `order/order2024.py`
+
+    Returns:
+        Tuple of [DataFrame, participant number]. The latter is used as N in plots.
+    """
+    N_question = len(data.index)
     data_q_counts = data.groupby([q]).count().rename(columns={"id": "count"})
 
     # sort the dataframe
@@ -26,13 +41,28 @@ def prepare_df_single(
         data_q_counts_sorted_percentages["count"] / N_question
     )
 
-    return data_q_counts_sorted_percentages
+    return data_q_counts_sorted_percentages, N_question
 
 
-# TODO: why does this need N? it should output N, that makes more sense
 def prepare_df_multiple(
-    data: pd.DataFrame, q: str, N_question: int, ordering: dict[str, list[str]]
-) -> pd.DataFrame:
+    data: pd.DataFrame, q: str, ordering: dict[str, list[str]]
+) -> tuple[pd.DataFrame, int]:
+    """Count participants in the data. This function is for multiple-choice questions.
+
+    The output dataframe contains the following columns:
+    - q: The answer options
+    - "count": number of participants (in this group) that gave this answer
+    - "proportion": share of participants (relative to "total") that gave this answer
+
+    Args:
+        data: The main DataFrame of answers
+        q (str): name of the output column for answer options
+        ordering: Answer re-ordering dict, e.g. ORDER from `order/order2024.py`
+
+    Returns:
+        Tuple of [DataFrame, participant number]. The latter is used as N in plots.
+    """
+    N_question = len(data.index)
     responses_df_melted = pd.melt(data)
     responses_df_melted_cleaned = responses_df_melted[responses_df_melted.value]
     responses_df_melted_cleaned_counts = responses_df_melted_cleaned.groupby(
@@ -69,7 +99,7 @@ def prepare_df_multiple(
         responses_df_counts_sorted_percentages["count"] / N_question
     )
 
-    return responses_df_counts_sorted_percentages
+    return responses_df_counts_sorted_percentages, N_question
 
 
 def prepare_df_comparison(
