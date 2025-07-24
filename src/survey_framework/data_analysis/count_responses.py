@@ -23,7 +23,11 @@ def prepare_df_single(
         Tuple of [DataFrame, participant number]. The latter is used as N in plots.
     """
     N_question = len(data.index)
-    data_q_counts = data.groupby([q]).count().rename(columns={"id": "count"})
+    if "id" not in data.columns:
+        data.reset_index(inplace=True)
+    data_q_counts = (
+        data.groupby([q], observed=False).count().rename(columns={"id": "count"})
+    )
 
     # sort the dataframe
     data_q_counts_sorted = data_q_counts.reset_index()
@@ -63,35 +67,26 @@ def prepare_df_multiple(
         Tuple of [DataFrame, participant number]. The latter is used as N in plots.
     """
     N_question = len(data.index)
-    responses_df_melted = pd.melt(data)
-    responses_df_melted_cleaned = responses_df_melted[responses_df_melted.value]
-    responses_df_melted_cleaned_counts = responses_df_melted_cleaned.groupby(
-        "variable"
-    ).count()
+    responses_df_melted = pd.melt(data, value_name="count", var_name=q)
+    responses_df_counts = responses_df_melted.groupby(q).sum()
 
     # sort the dataframe
-    responses_df_counts_sorted = responses_df_melted_cleaned_counts.reset_index()
+    responses_df_counts_sorted = responses_df_counts.reset_index()
     orderlist = ordering.get(q)
     if orderlist:
         # sort with given order
-        responses_df_counts_sorted["variable"] = pd.Categorical(
-            responses_df_counts_sorted["variable"], categories=orderlist, ordered=True
+        responses_df_counts_sorted[q] = pd.Categorical(
+            responses_df_counts_sorted[q], categories=orderlist, ordered=True
         )
-        responses_df_counts_sorted = responses_df_counts_sorted.sort_values(
-            by="variable"
-        )
+        responses_df_counts_sorted = responses_df_counts_sorted.sort_values(by=q)
     else:
         # no order given, sort by descending values
         responses_df_counts_sorted = responses_df_counts_sorted.sort_values(
-            by="value", ascending=False
+            by="count", ascending=False
         )
         # TODO: sorting by value is unstable between centers. We probably want
         #       to define a fixed order for all questions.
         # print(q, responses_df_counts_sorted["variable"].to_list())
-
-    responses_df_counts_sorted = responses_df_counts_sorted.rename(
-        columns={"value": "count", "variable": q}
-    )
 
     # add percentages column
     responses_df_counts_sorted_percentages = responses_df_counts_sorted

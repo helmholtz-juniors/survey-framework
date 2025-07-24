@@ -8,6 +8,7 @@ from matplotlib import pyplot as plt
 from matplotlib.axes import Axes
 from matplotlib.container import BarContainer
 from matplotlib.figure import Figure
+from matplotlib.ticker import PercentFormatter
 
 from ..data_import.data_import import LimeSurveyData, QuestionType
 from .helmholtzcolors import (
@@ -284,3 +285,33 @@ def get_hue_right(
     colors = get_greens(len(data_df[hue].value_counts()))
 
     return hue_input, colors
+
+
+def label_axes(
+    ax: Axes, orientation: Orientation, label_q_data: str, stat: PlotStat
+) -> None:
+    prop_fmt = PercentFormatter(1.0, symbol=None)
+    perc_fmt = PercentFormatter(100, symbol=None)
+    match orientation:
+        case Orientation.HORIZONTAL:
+            ax.set(ylabel=label_q_data)
+            match stat:
+                case PlotStat.PROPORTION:
+                    ax.xaxis.set_major_formatter(prop_fmt)
+                    ax.xaxis.set_label_text("Percent")
+                case PlotStat.PERCENT:
+                    ax.xaxis.set_major_formatter(perc_fmt)
+                    ax.xaxis.set_label_text("Percent")
+                case PlotStat.COUNT:
+                    ax.xaxis.set_label_text(stat.capitalize())
+        case Orientation.VERTICAL:
+            ax.set(xlabel=label_q_data)
+            match stat:
+                case PlotStat.PROPORTION:
+                    ax.yaxis.set_major_formatter(prop_fmt)
+                    ax.yaxis.set_label_text("Percent")
+                case PlotStat.PERCENT:
+                    ax.yaxis.set_major_formatter(perc_fmt)
+                    ax.yaxis.set_label_text("Percent")
+                case PlotStat.COUNT:
+                    ax.yaxis.set_label_text(stat.capitalize())
