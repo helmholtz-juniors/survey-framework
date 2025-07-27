@@ -10,6 +10,8 @@ from matplotlib.container import BarContainer
 from matplotlib.figure import Figure
 from matplotlib.ticker import PercentFormatter
 
+from survey_framework.order.shortening import SHORTENED
+
 from ..data_import.data_import import LimeSurveyData, QuestionType
 from .helmholtzcolors import (
     get_blues,
@@ -200,6 +202,8 @@ def add_tick_labels(
         new_label = new_label.replace("doctoral researcher", "DR")
         new_label = new_label.replace("Doctoral researcher", "DR")
         # wrap labels
+        if new_label in SHORTENED and SHORTENED[new_label] != "":
+            new_label = SHORTENED[new_label]
         return "\n".join(wrap(new_label, text_wrap, max_lines=2))
 
     # match on orientation of plot
