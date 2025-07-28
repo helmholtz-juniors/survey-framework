@@ -24,15 +24,17 @@ SHORTENED = {
     "No, because I am saving up time for a longer period of vacation": "",
     "I don’t like the social environment at my workplace.": "",
     "My academic life is not compatible with my family responsibilities.": "",
-    "A supervision agreement with your formal supervisor": "",
     "I have had a negative experience in academia so far.": "",
     "I have problems getting by financially / issues with finding funding.": "",
     "No, because my working conditions are not family-friendly": "",
     "No, because I don't have the money to support children": "",
     "There is a daycare, but there are not enough available space": "",
+    # supervision tools
+    "A supervision agreement with your formal supervisor": "A Supervision agreement",
+    "A thesis advisory committee (TAC) or similar": "A thesis advisory committee (TAC)",
     # supervision problems
     "Disagreement over time management / micromanagement": "Disagreement over time management",
-    "Supervisors not experienced enough in your field": "Supervisors not experienced enough in field",
+    "Supervisors not experienced enough in your field": "Supervisors not experienced in field",
     # center support
     "Registering at the local Resident Registration Office": "Registering at the registration office",
     "Translation of working contract and relevant documents": "Translation of contract and relevant documents",
