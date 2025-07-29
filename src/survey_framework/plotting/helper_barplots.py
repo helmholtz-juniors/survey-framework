@@ -195,6 +195,14 @@ def add_tick_labels(
                 new_label = survey.questions.choices[label]["Y"]
             case other:
                 raise NotImplementedError(f"Labels for {other} not implemented.")
+<<<<<<< Updated upstream
+=======
+        # clean up & shorten labels
+        new_label = new_label.replace("/", " / ")
+        new_label = new_label.replace("doctoral researcher", "DR")
+        new_label = new_label.replace("Doctoral researcher", "DR")
+        new_label = new_label.replace(", please specify", "")
+>>>>>>> Stashed changes
         # wrap labels
         clean_str = new_label.replace("/", " / ")
         return "\n".join(wrap(clean_str, text_wrap, max_lines=max_lines))
