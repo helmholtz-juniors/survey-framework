@@ -183,10 +183,10 @@ def add_tick_labels(
         Axes: _description_
     """
     # maximum allowed lines of text for each tick label.
-    max_lines = 3
+    MAX_LINES = 3
 
     # function to rename a single label using the survey data
-    def renamed(label: str, max_lines: str) -> str:
+    def renamed(label: str, max_lines: int) -> str:
         match survey.get_question_type(question=question):
             case QuestionType.SINGLE_CHOICE:
                 lookup_name = survey.questions.choices[question].get(label)
@@ -195,14 +195,11 @@ def add_tick_labels(
                 new_label = survey.questions.choices[label]["Y"]
             case other:
                 raise NotImplementedError(f"Labels for {other} not implemented.")
-<<<<<<< Updated upstream
-=======
         # clean up & shorten labels
         new_label = new_label.replace("/", " / ")
         new_label = new_label.replace("doctoral researcher", "DR")
         new_label = new_label.replace("Doctoral researcher", "DR")
         new_label = new_label.replace(", please specify", "")
->>>>>>> Stashed changes
         # wrap labels
         clean_str = new_label.replace("/", " / ")
         return "\n".join(wrap(clean_str, text_wrap, max_lines=max_lines))
@@ -211,17 +208,22 @@ def add_tick_labels(
     match orientation:
         case Orientation.HORIZONTAL:
             # get all current y-ticklabels
-            y_ticklabels = [renamed(item.get_text(), max_lines) for item in ax.get_yticklabels()]
+            y_ticklabels = [
+                renamed(item.get_text(), MAX_LINES) for item in ax.get_yticklabels()
+            ]
             # update labels
             ax.set_yticks(ax.get_yticks())
             ax.set_yticklabels(y_ticklabels, fontsize=fontsize)
 
         case Orientation.VERTICAL:
             # get all current x-ticklabels
-            # if the number of tick labels is more than 5, reduce the number of allowed lines of text for each tick label to prevent spatial collisions
+            # if the number of tick labels is more than 5, reduce the number of
+            # allowed lines of text for each tick label to prevent spatial collisions
             if len(ax.get_xticklabels()) > 5:
-                max_lines = 2
-            x_ticklabels = [renamed(item.get_text(), max_lines) for item in ax.get_xticklabels()]
+                MAX_LINES = 2
+            x_ticklabels = [
+                renamed(item.get_text(), MAX_LINES) for item in ax.get_xticklabels()
+            ]
             # update labels
             ax.set_xticks(ax.get_xticks())
             ax.set_xticklabels(
