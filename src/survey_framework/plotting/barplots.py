@@ -1,17 +1,16 @@
 from collections.abc import Sequence
-from textwrap import wrap
 
 import matplotlib.pyplot as plt
 import pandas as pd
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure
-from matplotlib.ticker import PercentFormatter
 
 from ..data_import.data_import import LimeSurveyData
 from ..plotting.helper_barplots import (
     adapt_legend,
     add_bar_labels,
     add_tick_labels,
+    label_axes,
     plot_barplot,
 )
 from ..plotting.helper_plotenums import BarLabels, Orientation, PlotStat, PlotType
@@ -95,29 +94,7 @@ def plot_bar(
     )
 
     # add general labels to axes
-    match orientation:
-        case Orientation.HORIZONTAL:
-            ax.set(xlabel=stat.value.capitalize(), ylabel=label_q_data)
-        case Orientation.VERTICAL:
-            ax.set(xlabel=label_q_data, ylabel=stat.value.capitalize())
-
-    # set title
-    ax.set_title(
-        "\n".join(
-            wrap(
-                question
-                + ": "
-                + survey.questions.loc[
-                    survey.questions["question_group"] == question
-                ].question_label.iloc[0],
-                60,
-            )
-        ),
-        # fontsize=14,
-    )
-
-    ax.autoscale()
-    ax.set_autoscale_on(True)
+    label_axes(ax=ax, orientation=orientation, label_q_data=label_q_data, stat=stat)
 
     return fig, ax
 
@@ -178,19 +155,6 @@ def plot_bar_comparison(
         hue_order=hue_order,
     )
 
-    # do not tamper with legend and don't add n_question if we compare centers
-    # if n_question is not None:
-    #     # add number of participants to top right corner
-    #     plt.text(
-    #         0.99,
-    #         0.99,
-    #         f"N = {n_question}",
-    #         ha="right",
-    #         va="top",
-    #         transform=ax.transAxes,
-    #         # fontsize=fontsize,
-    #     )
-
     # adapt legend
     ax = adapt_legend(
         survey=survey, ax=ax, question=hue, text_wrap=40, group_n=n_participants
@@ -216,30 +180,5 @@ def plot_bar_comparison(
         text_wrap=tick_label_wrap,
     )
     # add general labels to axes
-    prop_fmt = PercentFormatter(1.0, symbol=None)
-    perc_fmt = PercentFormatter(100, symbol=None)
-    match orient:
-        case Orientation.HORIZONTAL:
-            ax.set(ylabel=label_q_data)
-            match stat:
-                case PlotStat.PROPORTION:
-                    ax.xaxis.set_major_formatter(prop_fmt)
-                    ax.xaxis.set_label_text("Percent")
-                case PlotStat.PERCENT:
-                    ax.xaxis.set_major_formatter(perc_fmt)
-                    ax.xaxis.set_label_text("Percent")
-                case PlotStat.COUNT:
-                    ax.xaxis.set_label_text(stat.capitalize())
-        case Orientation.VERTICAL:
-            ax.set(xlabel=label_q_data)
-            match stat:
-                case PlotStat.PROPORTION:
-                    ax.yaxis.set_major_formatter(prop_fmt)
-                    ax.yaxis.set_label_text("Percent")
-                case PlotStat.PERCENT:
-                    ax.yaxis.set_major_formatter(perc_fmt)
-                    ax.yaxis.set_label_text("Percent")
-                case PlotStat.COUNT:
-                    ax.yaxis.set_label_text(stat.capitalize())
-
+    label_axes(ax=ax, orientation=orient, label_q_data=label_q_data, stat=stat)
     return fig, ax

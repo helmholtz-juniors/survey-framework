@@ -8,6 +8,9 @@ from matplotlib import pyplot as plt
 from matplotlib.axes import Axes
 from matplotlib.container import BarContainer
 from matplotlib.figure import Figure
+from matplotlib.ticker import PercentFormatter
+
+from survey_framework.order.shortening import SHORTENED
 
 from ..data_import.data_import import LimeSurveyData, QuestionType
 from .helmholtzcolors import (
@@ -187,6 +190,7 @@ def add_tick_labels(
 
     # function to rename a single label using the survey data
     def renamed(label: str, max_lines: int) -> str:
+        # get labels from survey data
         match survey.get_question_type(question=question):
             case QuestionType.SINGLE_CHOICE:
                 lookup_name = survey.questions.choices[question].get(label)
@@ -201,8 +205,9 @@ def add_tick_labels(
         new_label = new_label.replace("Doctoral researcher", "DR")
         new_label = new_label.replace(", please specify", "")
         # wrap labels
-        clean_str = new_label.replace("/", " / ")
-        return "\n".join(wrap(clean_str, text_wrap, max_lines=max_lines))
+        if new_label in SHORTENED and SHORTENED[new_label] != "":
+            new_label = SHORTENED[new_label]
+        return "\n".join(wrap(new_label, text_wrap, max_lines=max_lines))
 
     # match on orientation of plot
     match orientation:
@@ -293,3 +298,33 @@ def get_hue_right(
     colors = get_greens(len(data_df[hue].value_counts()))
 
     return hue_input, colors
+
+
+def label_axes(
+    ax: Axes, orientation: Orientation, label_q_data: str, stat: PlotStat
+) -> None:
+    prop_fmt = PercentFormatter(1.0, symbol=None)
+    perc_fmt = PercentFormatter(100, symbol=None)
+    match orientation:
+        case Orientation.HORIZONTAL:
+            ax.set(ylabel=label_q_data)
+            match stat:
+                case PlotStat.PROPORTION:
+                    ax.xaxis.set_major_formatter(prop_fmt)
+                    ax.xaxis.set_label_text("Percent")
+                case PlotStat.PERCENT:
+                    ax.xaxis.set_major_formatter(perc_fmt)
+                    ax.xaxis.set_label_text("Percent")
+                case PlotStat.COUNT:
+                    ax.xaxis.set_label_text(stat.capitalize())
+        case Orientation.VERTICAL:
+            ax.set(xlabel=label_q_data)
+            match stat:
+                case PlotStat.PROPORTION:
+                    ax.yaxis.set_major_formatter(prop_fmt)
+                    ax.yaxis.set_label_text("Percent")
+                case PlotStat.PERCENT:
+                    ax.yaxis.set_major_formatter(perc_fmt)
+                    ax.yaxis.set_label_text("Percent")
+                case PlotStat.COUNT:
+                    ax.yaxis.set_label_text(stat.capitalize())

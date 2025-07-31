@@ -259,7 +259,7 @@ ORDER = {
         "A23",  # IDK
         "A22",  # IDWA
     ],
-    "B5": ["A1", "A3", "A2"],  # Likert
+    "B5": ["A2", "A3", "A1"],  # Likert
     "B10": ["A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8", "A9", "A10"],
     "B11": [
         "A0",
@@ -375,7 +375,7 @@ ORDER = {
         "F2a_SQ008",  # IDWA
     ],
     "F4": [
-        "F4_SQ009",  # No
+        # "F4_SQ009",  # No
         "F4_SQ001",
         "F4_SQ002",
         "F4_SQ003",
@@ -389,7 +389,7 @@ ORDER = {
         "F4_SQ011",  # IDWA
     ],
     "F6": [
-        "F6_SQ011",  # No
+        # "F6_SQ011",  # No
         "F6_SQ002",
         "F6_SQ003",
         "F6_SQ004",
@@ -421,7 +421,7 @@ ORDER = {
         "F6a_SQ016",  # IDWA
     ],
     "F7": [
-        "F7_SQ014",  # No
+        # "F7_SQ014",  # No
         "F7_SQ002",  # Gender
         "F7_SQ003",  # Nationality
         "F7_SQ004",  # Ethnicity
@@ -439,7 +439,7 @@ ORDER = {
         "F7_SQ016",  # IDWA
     ],
     "F8": [
-        "F8_SQ008",  # No
+        # "F8_SQ008",  # No
         "F8_SQ001",
         "F8_SQ002",
         "F8_SQ003",
