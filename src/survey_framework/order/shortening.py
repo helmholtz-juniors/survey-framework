@@ -13,7 +13,6 @@ SHORTENED = {
     "My institution does not offer any support for learning German": "",
     "My institution does offer German courses but I would not join them": "",
     "No, but I am planning to have child(ren) during my doctorate": "",
-    "No, because those other responsibilities are not officially recognized": "",
     "Yes, I have had such symptoms for a longer time of my life, already before I started my doctorate": "",
     "Computer hardware (cable, mouse, camera, microphone, headset)": "",
     "Peer pressure (other in my group work longer hours, and I feel I have to conform)": "",
@@ -26,9 +25,15 @@ SHORTENED = {
     "My academic life is not compatible with my family responsibilities.": "",
     "I have had a negative experience in academia so far.": "",
     "I have problems getting by financially / issues with finding funding.": "",
-    "No, because my working conditions are not family-friendly": "",
-    "No, because I don't have the money to support children": "",
-    "There is a daycare, but there are not enough available space": "",
+    # reasons not having additional children
+    "No, because my working conditions are not family-friendly": "No, working conditions are not family-friendly",
+    "No, because I don't have the money to support children": "No, lack of money to support children",
+    # daycare support
+    "There is a daycare, but there are not enough available space": "Daycare exists but lacks space",
+    "Child-friendly environment work environment": "Child-friendly work environment",
+    "Reimbursements for daycare during business travel": "Reimbursements for care during business travel",
+    # caring responsibilities
+    "No, because those other responsibilities are not officially recognized": "No, responsibilities not officially recognized",
     # supervision tools
     "A supervision agreement with your formal supervisor": "A Supervision agreement",
     "A thesis advisory committee (TAC) or similar": "A thesis advisory committee (TAC)",
