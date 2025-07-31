@@ -186,7 +186,7 @@ def add_tick_labels(
         Axes: _description_
     """
     # maximum allowed lines of text for each tick label.
-    MAX_LINES = 3
+    max_lines = 3
 
     # function to rename a single label using the survey data
     def renamed(label: str, max_lines: int) -> str:
@@ -214,7 +214,7 @@ def add_tick_labels(
         case Orientation.HORIZONTAL:
             # get all current y-ticklabels
             y_ticklabels = [
-                renamed(item.get_text(), MAX_LINES) for item in ax.get_yticklabels()
+                renamed(item.get_text(), max_lines) for item in ax.get_yticklabels()
             ]
             # update labels
             ax.set_yticks(ax.get_yticks())
@@ -225,9 +225,9 @@ def add_tick_labels(
             # if the number of tick labels is more than 5, reduce the number of
             # allowed lines of text for each tick label to prevent spatial collisions
             if len(ax.get_xticklabels()) > 5:
-                MAX_LINES = 2
+                max_lines = 2
             x_ticklabels = [
-                renamed(item.get_text(), MAX_LINES) for item in ax.get_xticklabels()
+                renamed(item.get_text(), max_lines) for item in ax.get_xticklabels()
             ]
             # update labels
             ax.set_xticks(ax.get_xticks())

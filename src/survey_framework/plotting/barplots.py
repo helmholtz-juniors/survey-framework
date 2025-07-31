@@ -179,6 +179,7 @@ def plot_bar_comparison(
         fontsize=tick_label_size,
         text_wrap=tick_label_wrap,
     )
+
     # add general labels to axes
     label_axes(ax=ax, orientation=orient, label_q_data=label_q_data, stat=stat)
     return fig, ax
