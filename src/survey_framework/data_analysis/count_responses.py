@@ -22,7 +22,7 @@ def prepare_df_single(
     Returns:
         Tuple of [DataFrame, participant number]. The latter is used as N in plots.
     """
-    N_question = len(data.index)
+    N_question = data.count().iloc[0]
     if "id" not in data.columns:
         data.reset_index(inplace=True)
     data_q_counts = (
@@ -66,35 +66,38 @@ def prepare_df_multiple(
     Returns:
         Tuple of [DataFrame, participant number]. The latter is used as N in plots.
     """
-    N_question = len(data.index)
-    responses_df_melted = pd.melt(data, value_name="count", var_name=q)
-    responses_df_counts = responses_df_melted.groupby(q).sum()
+    # boolean value: participants who answered anything (summed up later)
+    data["total"] = data.sum(axis="columns").gt(0)
+    # melt into long form
+    responses_melted = pd.melt(data, id_vars=["total"], value_name="count", var_name=q)
+    responses_counts = responses_melted.groupby(q).sum()
 
-    # sort the dataframe
-    responses_df_counts_sorted = responses_df_counts.reset_index()
+    # add percentages column
+    responses_counts["proportion"] = (
+        responses_counts["count"] / responses_counts["total"]
+    )
+
+    # re-index for sorting
+    responses_clean = responses_counts.reset_index()
+    # get number of participants
+    participants = responses_clean["total"].drop_duplicates().iloc[0]
+
+    # sort the DF
     orderlist = ordering.get(q)
     if orderlist:
         # sort with given order
-        responses_df_counts_sorted[q] = pd.Categorical(
-            responses_df_counts_sorted[q], categories=orderlist, ordered=True
+        responses_clean[q] = pd.Categorical(
+            responses_clean[q], categories=orderlist, ordered=True
         )
-        responses_df_counts_sorted = responses_df_counts_sorted.sort_values(by=q)
+        responses_sorted = responses_clean.sort_values(by=q)
     else:
         # no order given, sort by descending values
-        responses_df_counts_sorted = responses_df_counts_sorted.sort_values(
-            by="count", ascending=False
-        )
+        responses_sorted = responses_clean.sort_values(by="count", ascending=False)
         # TODO: sorting by value is unstable between centers. We probably want
         #       to define a fixed order for all questions.
         # print(q, responses_df_counts_sorted["variable"].to_list())
 
-    # add percentages column
-    responses_df_counts_sorted_percentages = responses_df_counts_sorted
-    responses_df_counts_sorted_percentages["proportion"] = (
-        responses_df_counts_sorted_percentages["count"] / N_question
-    )
-
-    return responses_df_counts_sorted_percentages, N_question
+    return responses_sorted, participants
 
 
 def prepare_df_comparison(
@@ -179,7 +182,7 @@ def prepare_df_comparison_multiple(
     Returns:
         Tuple of [DataFrame, group size dict]. The latter is used as N in plots.
     """
-    # count participants who answered anything
+    # boolean value: participants who answered anything (summed up per group later)
     responses_df["total"] = responses_df.sum(axis="columns").gt(0)
     # melt into long form, merge with comparison
     responses_melt = pd.melt(
