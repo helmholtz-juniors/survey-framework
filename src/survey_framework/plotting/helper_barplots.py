@@ -108,8 +108,7 @@ def plot_barplot(
         tuple[Figure, Axes]: modified figure and axes
     """
 
-    # built input for hue and colors for plotting
-    hue_input = list()
+    # set up input for hue and colors for plotting
     colors: list[str] | list[tuple[float, float, float]] = list()
     match comparison:
         case PlotType.MULTI_Q:
@@ -117,14 +116,18 @@ def plot_barplot(
             # with a list of comparison data
             hue_input = list(data_df[hue])
             colors = get_blues(len(data_df[hue].value_counts()))
+            legend = True
         case PlotType.SINGLE_Q:
             # otherwise, hue needs to be equal to the question data
             hue_input = list(data_df[question])
-            colors = get_blues(len(data_df))
+            assert hue_order is None
+            colors = get_blues(len(data_df.dropna()))
+            legend = False
         case PlotType.SINGLE_Q_COMPARISON:
             hue_input = list(data_df[hue])
             assert len(data_df[hue].value_counts() == 2)
             colors = [helmholtzblue, helmholtzgreen]
+            legend = True
         case PlotType.MULTI_Q_COMPARISON:
             raise NotImplementedError("multi-question comparison not yet supported")
 
@@ -145,6 +148,7 @@ def plot_barplot(
                 hue_order=hue_order,
                 palette=colors,
                 orient="h",
+                legend=legend,
             )
         case Orientation.VERTICAL:
             # x = labels, y = data
@@ -155,6 +159,7 @@ def plot_barplot(
                 hue_order=hue_order,
                 palette=colors,
                 orient="v",
+                legend=legend,
             )
 
     return fig, ax
