@@ -69,10 +69,13 @@ def simple_histplot(
             kde=kde,
             log_scale=log_scale,
         )
-        counts = df.groupby(hue).count()[question_code].to_dict()
 
-        ax.get_legend().set_title("")
-        for text in ax.get_legend().texts:
+        # remove legend title, add group sizes behind labels
+        legend = ax.get_legend()
+        assert legend is not None, "Legend is guaranteed to exist"
+        legend.set_title("")
+        counts = df.groupby(hue).count()[question_code].to_dict()
+        for text in legend.texts:
             name = text.get_text()
             text.set_text(f"{name} ({counts[name]})")
     else:
