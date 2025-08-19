@@ -196,7 +196,8 @@ def plot_stacked_bar_single(
     """
     Create a vertical stacked bar plot of mental health classes for one group.
 
-    NOTE: This is a quick-fix. It might make sense to merge it with histplot.py/simple_histplot() where stacking should be implemented anyway
+    NOTE: This is a quick-fix. It might make sense to merge it with 
+    histplot.py/simple_histplot() where stacking should be implemented anyway
 
     Args:
         df1: DataFrame for group 1 (left bar).
