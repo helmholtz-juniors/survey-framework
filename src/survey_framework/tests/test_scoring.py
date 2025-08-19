@@ -16,7 +16,7 @@ from survey_framework.data_analysis.scoring import (
 )
 from survey_framework.data_import.data_import import LimeSurveyData
 from survey_framework.plotting import helmholtzcolors
-from survey_framework.plotting.helper_barplots import add_bar_labels, plot_barplot
+from survey_framework.plotting.helper_barplots import add_bar_labels, barplot_internal
 from survey_framework.plotting.helper_plotenums import BarLabels, Orientation, PlotStat
 from survey_framework.plotting.likertplot import plot_likertplot
 
@@ -110,7 +110,7 @@ def test_burnout_plot(survey: LimeSurveyData, output_path: Path) -> None:
     groups["proportion"] = groups["count"].div(n)
     print(groups)
 
-    fig, ax = plot_barplot(
+    fig, ax = barplot_internal(
         data_df=groups,
         question="Profile",
         orient=Orientation.VERTICAL,

@@ -80,7 +80,7 @@ def add_bar_labels(
     return ax
 
 
-def plot_barplot(
+def barplot_internal(
     data_df: pd.DataFrame,
     question: str,
     orient: Orientation,

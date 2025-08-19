@@ -10,8 +10,8 @@ from ..plotting.helper_barplots import (
     adapt_legend,
     add_bar_labels,
     add_tick_labels,
+    barplot_internal,
     label_axes,
-    plot_barplot,
 )
 from ..plotting.helper_plotenums import BarLabels, Orientation, PlotStat, PlotType
 
@@ -54,7 +54,7 @@ def plot_bar(
     """
 
     # plot barplot
-    fig, ax = plot_barplot(
+    fig, ax = barplot_internal(
         data_df=data_df,
         question=question,
         orient=orientation,
@@ -141,7 +141,7 @@ def plot_bar_comparison(
     """
 
     # plot barplot
-    fig, ax = plot_barplot(
+    fig, ax = barplot_internal(
         data_df=data_df,
         question=question,
         orient=orient,
