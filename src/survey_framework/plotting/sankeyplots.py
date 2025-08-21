@@ -16,6 +16,7 @@ def plot_sankey(
     width: int = 16,
     height: int = 30,
     fontsize: int = 15,
+    plot_fractions: bool = True,
 ) -> Figure:
     """Plots a two staged sankey diagram
 
@@ -52,6 +53,7 @@ def plot_sankey(
         color_dict=color_dict,
         # value_loc=["right", "left"],
         node_gap=0.04,
+        value_loc="both" if plot_fractions else "none",
         fontsize=fontsize,
     )
 
