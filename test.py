@@ -58,9 +58,9 @@ def years_of_phd(survey_data):
 
 start_year = years_of_phd(survey_data)
 
-########### Involves Scoring
+########## Involves Scoring
 
-# # ##################################### SA 
+# ##################################### SA 
 scoring_df = rate_mental_health(responses=survey_data.get_responses("D1"),  condition=Condition.STATE_ANXIETY)
 
 SA_classes = scoring_df.iloc[:,1]
@@ -164,8 +164,24 @@ fig,ax = plot_stacked_bar(classes=somatic_classes,n_question = len(somatic_class
                           legend_title='Somatic Symptoms')
 fig.savefig("Somatic_plot.png", dpi=300)
 
+##################################### Somatic Strat
+scoring_df = rate_somatic(survey_data.get_responses("D4"))
+scoring_df["Year"] = start_year["Year"]
+scoring_df["somatic_class"] = scoring_df["somatic_class"].cat.add_categories(['NA']).fillna('NA')
+# print(scoring_df)
 
-# # ###################################### Burnout (Might need to be investigated)
+fig, ax = plot_stacked_bar_by_year_side_by_side(
+    df=scoring_df,
+    classes_column="somatic_class",
+    year_column='Year',
+    category_order=["NA","No somatic symptoms","Mild somatic symptoms", "Moderate somatic symptoms","Severe somatic symptoms",],
+    label_q_data="Fraction",
+    NA_Values=True,
+    legend_title='Somatic class category'
+)
+fig.savefig("Somatic_plot_PhDYears_stratified.png", dpi=300)
+
+# ###################################### Burnout (Might need to be investigated)
 # scoring_df =rate_burnout(survey_data.get_responses("D3d"))
 # burnout_classes = scoring_df.iloc[:,-1]
 # fig,ax = plot_stacked_bar(classes=burnout_classes,n_question = len(burnout_classes.notna()),
@@ -175,10 +191,10 @@ fig.savefig("Somatic_plot.png", dpi=300)
 # fig.savefig("Burnout_plot.png", dpi=300)
 
 
-######################################################################
+#####################################################################
 
 
-########### Involves Fetching and Plotting 
+########## Involves Fetching and Plotting 
 
 #scoring_df= rate_MH_help(survey_data.get_responses("D8"))
 dict_list = survey_data.get_choices("D8")
@@ -198,6 +214,7 @@ fig.savefig("GettingHelp_plot.png", dpi=300)
 
 
 scoring_df=survey_data.get_responses("D9")
+
 getting_help_2_classes = scoring_df.iloc[:,-2]
 getting_help_2_classes = getting_help_2_classes.replace(survey_data.get_choices('D9'))
 fig,ax = plot_bar(classes = getting_help_2_classes,
@@ -209,6 +226,7 @@ fig.savefig("GettingHelp_2_plot.png", dpi=300)
 
 
 dict_list = survey_data.get_choices("D6")
+# print(survey_data.get_question("D6"))
 # print(dict_list)
 scoring_df = survey_data.get_responses("D6")
 impact_classes = (scoring_df.iloc[:,-1]).map(dict_list)
