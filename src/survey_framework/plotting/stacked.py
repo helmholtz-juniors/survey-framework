@@ -4,12 +4,26 @@ import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
 from matplotlib.axes import Axes
+from matplotlib.colors import to_rgb
 from matplotlib.figure import Figure
 from matplotlib.legend_handler import HandlerTuple
 from matplotlib.patches import Patch
 from matplotlib.ticker import PercentFormatter
 
 import survey_framework.plotting.helmholtzcolors as hc
+
+
+def rgb2gray(rgb: tuple[float, float, float]) -> float:
+    """Helper that converts a colour to a greyscale value.
+
+    Args:
+        rgb: tuple of red, green, and blue floats
+
+    Returns:
+        greyscale float
+    """
+    # magic numbers: https://stackoverflow.com/questions/12201577/how-can-i-convert-an-rgb-image-into-grayscale-in-python
+    return float(np.dot(rgb, [0.2989, 0.5870, 0.1140]))
 
 
 def plot_stacked_bar_comparison(
@@ -46,6 +60,7 @@ def plot_stacked_bar_comparison(
     Returns:
         Matplotlib figure and axis.
     """
+    hc.set_plotstyle()
     # Use Helmholtz color palette if not provided
     if colors is None:
         # Create group-specific color palettes
@@ -71,18 +86,6 @@ def plot_stacked_bar_comparison(
     else:
         fig = cast(Figure, ax.figure)
     x_positions = [0, 1]
-
-    def rgb2gray(rgb: tuple[float, float, float]) -> float:
-        """Helper that converts a colour to a greyscale value.
-
-        Args:
-            rgb: tuple of red, green, and blue floats
-
-        Returns:
-            greyscale float
-        """
-        # magic numbers: https://stackoverflow.com/questions/12201577/how-can-i-convert-an-rgb-image-into-grayscale-in-python
-        return float(np.dot(rgb, [0.2989, 0.5870, 0.1140]))
 
     for i, dist in enumerate(distributions):
         # Count valid responses (non-NaN) for each group
@@ -216,6 +219,7 @@ def plot_stacked_bar_single(
     Returns:
         Matplotlib figure and axis.
     """
+    hc.set_plotstyle()
     # Use Helmholtz color palette if not provided
     if colors is None:
         # Create group-specific color palettes
@@ -239,18 +243,6 @@ def plot_stacked_bar_single(
     else:
         fig = cast(Figure, ax.figure)
     x_positions = [0]
-
-    def rgb2gray(rgb: tuple[float, float, float]) -> float:
-        """Helper that converts a colour to a greyscale value.
-
-        Args:
-            rgb: tuple of red, green, and blue floats
-
-        Returns:
-            greyscale float
-        """
-        # magic numbers: https://stackoverflow.com/questions/12201577/how-can-i-convert-an-rgb-image-into-grayscale-in-python
-        return float(np.dot(rgb, [0.2989, 0.5870, 0.1140]))
 
     for i, dist in enumerate(distributions):
         # Count valid responses (non-NaN) for each group
@@ -337,5 +329,133 @@ def plot_stacked_bar_single(
                     bbox_to_anchor=(0.5, 1.03),  # legend above the plot
                     ncol=1,  # Spread legend entries in one row
                 )
+
+    return fig, ax
+
+
+def plot_stacked_bar_categorical(
+    df: pd.DataFrame,
+    classes_column: str,
+    category_column: str,
+    na_values: bool = False,
+    label_q_data: str = "",
+    width: int = 6,
+    height: int = 4,
+    fontsize: int | None = None,
+    fontsize_axes_labels: int | None = None,
+    legend_title: str = "",
+    category_order: list[str] | None = None,
+) -> tuple[Figure, Axes]:
+    """This might be what we want instead of the above --
+    arbitrary number of bars supported. Code needs a cleanup though.
+
+    Args:
+        df: _description_
+        classes_column: _description_
+        category_column: _description_
+        na_values: _description_. Defaults to False.
+        label_q_data: _description_. Defaults to "".
+        width: _description_. Defaults to 6.
+        height: _description_. Defaults to 4.
+        fontsize: _description_. Defaults to None.
+        fontsize_axes_labels: _description_. Defaults to None.
+        legend_title: _description_. Defaults to "".
+        category_order: _description_. Defaults to None.
+
+    Returns:
+        tuple[Figure, Axes]: _description_
+    """
+    hc.set_plotstyle()
+
+    year_categories = (
+        list(df[category_column].cat.categories)
+        if isinstance(df[category_column].dtype, pd.CategoricalDtype)
+        else sorted(df[category_column].unique())
+    )
+    n_years = len(year_categories)
+    bar_width, bar_gap = 0.8, 0.1
+    x_positions = np.arange(n_years) * (bar_width + bar_gap)
+    fig, ax = plt.subplots(figsize=(width, height), layout="constrained")
+
+    if category_order:
+        category_order_mod = category_order.copy()
+        if "NA" not in category_order_mod:
+            category_order_mod.append("NA")
+    else:
+        all_classes = df[classes_column]
+        if isinstance(all_classes.dtype, pd.CategoricalDtype):
+            category_order_mod = list(all_classes.cat.categories)
+            if "NA" not in category_order_mod:
+                category_order_mod.append("NA")
+        else:
+            category_order_mod = ["NA"] + sorted(all_classes.dropna().unique())
+
+    n_resp = len(category_order_mod)
+    colors_list = (
+        [to_rgb(hc.grey), *hc.get_blues(n_resp - 1)[::-1]]
+        if na_values
+        else list(hc.get_blues(n_resp)[::-1])
+    )
+    color_mapping = {
+        cat: color for cat, color in zip(category_order_mod, colors_list, strict=True)
+    }
+
+    for i, yr in enumerate(year_categories):
+        subset = df[df[category_column] == yr]
+        n_question = len(subset)
+        classes = subset[classes_column].fillna("NA")
+        class_counts = classes.value_counts().reindex(category_order_mod, fill_value=0)
+        class_percentages = class_counts / class_counts.sum() * 100
+
+        bottom = 0
+        for cat in category_order_mod:
+            perc = class_percentages[cat]
+            if perc == 0:
+                continue
+            ax.bar(
+                x_positions[i],
+                perc,
+                bottom=bottom,
+                width=bar_width,
+                color=color_mapping[cat],
+                label=cat if i == 0 else None,
+            )
+
+            # always percentage label, centered in segment
+            ax.text(
+                x_positions[i],
+                bottom + perc / 2,
+                f"{perc:.1f}%",
+                ha="center",
+                va="center",
+                fontsize=fontsize_axes_labels,
+                color="black" if rgb2gray(color_mapping[cat]) > 0.5 else "white",
+            )
+            bottom += perc
+
+        ax.text(
+            x_positions[i],
+            bottom + 1,
+            f"N = {n_question}",
+            ha="center",
+            va="bottom",
+            fontsize=fontsize,
+        )
+
+    ax.set_xticks(x_positions)
+    ax.set_xticklabels(year_categories, fontsize=fontsize)
+    ax.set_ylabel("Percentage", fontsize=fontsize)
+    ax.set_xlabel(label_q_data, fontsize=fontsize)
+
+    handles, labels_leg = ax.get_legend_handles_labels()
+    ax.legend(
+        handles,
+        labels_leg,
+        title=legend_title,
+        loc="upper left",
+        bbox_to_anchor=(1.02, 1),
+        fontsize=fontsize,
+        title_fontsize=fontsize_axes_labels,
+    )
 
     return fig, ax
