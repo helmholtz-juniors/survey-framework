@@ -1,10 +1,9 @@
 from pathlib import Path
 
-from survey_framework.data_analysis.analysis import (
-    get_data_for_q,
-    get_data_for_single_barplot_comparison,
-)
+from survey_framework.data_analysis.analysis import get_data_for_q
+from survey_framework.data_analysis.count_responses import prepare_df_comparison
 from survey_framework.data_import.data_import import LimeSurveyData
+from survey_framework.order.order2024 import ORDER
 from survey_framework.plotting.barplots_sidebyside import (
     plot_bar_side_by_side,
     plot_sidebyside_comparison_singleQ,
@@ -44,20 +43,25 @@ def test_plots_E(survey: LimeSurveyData, output_path: Path) -> None:
 # (i.e., side-by-side with hue for a different question)
 def test_plots_E8_E9_comparison_A6(survey: LimeSurveyData, output_path: Path) -> None:
     section = "E"
-    e8 = "E8"
-    e9 = "E9"
-    a6 = "A6"
+    e8 = survey.get_responses("E8")
+    e9 = survey.get_responses("E9")
+    a6 = survey.get_responses("A6")["A6"]
 
-    output = (
-        output_path / Path(section) / Path(e8 + "_" + e9 + "_comparison_" + a6 + ".pdf")
-    )
+    output = output_path / section / "E8_E9_comparison_A6.pdf"
     output.parent.mkdir(parents=True, exist_ok=True)
 
-    N_left, df_left = get_data_for_single_barplot_comparison(survey, e8, a6)
-    N_right, df_right = get_data_for_single_barplot_comparison(survey, e9, a6)
+    df_left, N_left = prepare_df_comparison(e8, a6, "E8", "A6", ORDER)
+    df_right, N_right = prepare_df_comparison(e9, a6, "E9", "A6", ORDER)
 
     fig, _ = plot_sidebyside_comparison_singleQ(
-        survey, df_left, df_right, e8, e9, a6, N_left, N_right
+        survey=survey,
+        data_left=df_left,
+        data_right=df_right,
+        base_q_left="E8",
+        base_q_right="E9",
+        comp_q="A6",
+        N_left=sum(N_left.values()),
+        N_right=sum(N_right.values()),
     )
 
     fig.savefig(output)
