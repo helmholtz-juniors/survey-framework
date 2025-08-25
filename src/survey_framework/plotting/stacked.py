@@ -181,6 +181,7 @@ def plot_stacked_bar_comparison(
 
     return fig, ax
 
+
 def plot_stacked_bar_single(
     df1: pd.DataFrame,
     col_of_interest: str,
@@ -196,7 +197,7 @@ def plot_stacked_bar_single(
     """
     Create a vertical stacked bar plot of mental health classes for one group.
 
-    NOTE: This is a quick-fix. It might make sense to merge it with 
+    NOTE: This is a quick-fix. It might make sense to merge it with
     histplot.py/simple_histplot() where stacking should be implemented anyway
 
     Args:
@@ -254,7 +255,7 @@ def plot_stacked_bar_single(
     for i, dist in enumerate(distributions):
         # Count valid responses (non-NaN) for each group
         n_group1 = df1[col_of_interest].notna().sum()
-    
+
         # Add N labels inside each bar
         ax.text(
             x_positions[0],
@@ -303,8 +304,8 @@ def plot_stacked_bar_single(
         legend_handles = []
         for i, label in enumerate(order):
             patch1 = Patch(color=colors[0][i])
-            #patch2 = Patch(color=colors[1][i])
-            #legend_handles.append(((patch1, patch2), label))
+            # patch2 = Patch(color=colors[1][i])
+            # legend_handles.append(((patch1, patch2), label))
             legend_handles.append(((patch1), label))
 
         # Now create the legend with a custom handler
