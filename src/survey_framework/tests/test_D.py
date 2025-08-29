@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from survey_framework.data_analysis.analysis import get_data_for_q, get_phd_duration
+from survey_framework.data_analysis.analysis import get_phd_duration
 from survey_framework.data_analysis.scoring import Condition, rate_mental_health
 from survey_framework.data_import.data_import import LimeSurveyData
 from survey_framework.plotting.likertplot import plot_likertplot
@@ -17,7 +17,7 @@ def test_likert(survey: LimeSurveyData, output_path: Path) -> None:
     output = output_path / Path(section) / Path(d4 + ".pdf")
     output.parent.mkdir(parents=True, exist_ok=True)
 
-    data_d4_all = get_data_for_q(survey, d4)
+    data_d4_all = survey.get_responses(d4)
     # every column in this DF should be a grouped bar in the Likert plot
 
     fig, _ = plot_likertplot(

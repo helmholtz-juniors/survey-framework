@@ -43,7 +43,7 @@ def plot_likertplot(
     Returns:
         The matplotlib figure and axis
     """
-
+    assert "id" not in data_df.columns
     set_plotstyle()
     colors = palette[len(order)]
 
@@ -51,7 +51,7 @@ def plot_likertplot(
 
     # remove values not present in order
     drop = set(survey.get_choices(question).keys()).difference(order)
-    dropped_df = data_df.drop(columns="id").replace(list(drop), value=None)
+    dropped_df = data_df.map(lambda d: d if d not in drop else None)
 
     # use external library to actually draw the plot
     # silence FutureWarnings (already fixed upstream, not yet in PyPI)
@@ -86,7 +86,7 @@ def plot_likertplot(
     sns.move_legend(ax, "upper center", ncol=3, bbox_to_anchor=(0.3, 1.12))
 
     # add number of participants
-    n_question = data_df.count().iloc[1]  # don't count NaNs, but count dropped answers
+    n_question = data_df.count().iloc[0]  # don't count NaNs, but count dropped answers
     plt.text(
         0.99, 0.99, f"N = {n_question}", ha="right", va="top", transform=ax.transAxes
     )

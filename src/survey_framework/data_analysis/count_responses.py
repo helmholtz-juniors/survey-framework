@@ -22,11 +22,15 @@ def prepare_df_single(
     Returns:
         Tuple of [DataFrame, participant number]. The latter is used as N in plots.
     """
+    assert "id" not in data.columns
     N_question = data.count().iloc[0]
-    if "id" not in data.columns:
-        data.reset_index(inplace=True)
+
+    # need to reset the index, otherwise count returns an empty DF.
     data_q_counts = (
-        data.groupby([q], observed=False).count().rename(columns={"id": "count"})
+        data.reset_index()
+        .groupby(q, observed=False)
+        .count()
+        .rename(columns={"id": "count"})
     )
 
     # sort the dataframe
@@ -130,7 +134,7 @@ def prepare_df_comparison(
     assert "id" not in responses_df_all.columns
     responses_joined = responses_df_all.join(responses_df_comparison)
 
-    grouped_by_center = responses_joined.groupby(q_comparison)[q]
+    grouped_by_center = responses_joined.groupby(q_comparison, observed=False)[q]
     responses_df_counts = pd.concat(
         [
             grouped_by_center.value_counts(normalize=True).rename("proportion"),

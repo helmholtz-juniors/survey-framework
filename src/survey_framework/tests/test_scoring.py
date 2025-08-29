@@ -137,7 +137,6 @@ def test_satisfaction(survey: LimeSurveyData, output_path: Path) -> None:
     print(res_df)
 
     plotting_df = res_df[["C1_class"]]
-    plotting_df = plotting_df.reset_index()
 
     result_fig, _ = plot_likertplot(
         survey,
