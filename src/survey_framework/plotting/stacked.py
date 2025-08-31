@@ -422,15 +422,16 @@ def plot_stacked_bar_categorical(
             )
 
             # always percentage label, centered in segment
-            ax.text(
-                x_positions[i],
-                bottom + perc / 2,
-                f"{perc:.1f}%",
-                ha="center",
-                va="center",
-                fontsize=fontsize_axes_labels,
-                color="black" if rgb2gray(color_mapping[cat]) > 0.5 else "white",
-            )
+            if perc > 5:
+                ax.text(
+                    x_positions[i],
+                    bottom + perc / 2,
+                    f"{perc:.1f}%",
+                    ha="center",
+                    va="center",
+                    fontsize=fontsize_axes_labels,
+                    color="black" if rgb2gray(color_mapping[cat]) > 0.5 else "white",
+                )
             bottom += perc
 
         ax.text(
@@ -448,12 +449,11 @@ def plot_stacked_bar_categorical(
     ax.set_xlabel(label_q_data, fontsize=fontsize)
 
     handles, labels_leg = ax.get_legend_handles_labels()
-    ax.legend(
+    fig.legend(
         handles,
         labels_leg,
         title=legend_title,
-        loc="upper left",
-        bbox_to_anchor=(1.02, 1),
+        loc="outside lower center",
         fontsize=fontsize,
         title_fontsize=fontsize_axes_labels,
     )
