@@ -1,5 +1,3 @@
-from textwrap import wrap
-
 import ausankey as sky  # type: ignore[import-untyped]
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -12,10 +10,10 @@ from .helmholtzcolors import set_plotstyle
 def plot_sankey(
     data_df: pd.DataFrame,
     titles: list[str] | None = None,
-    title: str = "Two staged sanke diagram",
-    width: int = 16,
-    height: int = 30,
-    fontsize: int = 15,
+    title: str = "",
+    width: float = 6,
+    height: float = 8,
+    fontsize: int | None = None,
     plot_fractions: bool = True,
 ) -> Figure:
     """Plots a two staged sankey diagram
@@ -30,12 +28,10 @@ def plot_sankey(
     Returns:
         tuple[plt.figure, plt.axes]: New Figure and Axes
     """
-
     set_plotstyle()
 
     # Colors
     color_dict = {}
-    # colors = hc.get_blues(len(xxx["E9"].unique()))
     colors = sns.color_palette("Paired").as_hex()
 
     # Take one color for each label on the left side
@@ -43,23 +39,20 @@ def plot_sankey(
         color_dict[row] = colors[i]
 
     # Plot
-    figure = plt.figure(dpi=300, figsize=(width, height), layout="constrained")
+    fig, ax = plt.subplots(dpi=300, figsize=(width, height), layout="constrained")
 
     sky.sankey(
         data_df,
+        ax=ax,
         sort="none",  # keep dataframe ordering
         titles=titles,
         valign="center",
         color_dict=color_dict,
-        # value_loc=["right", "left"],
-        node_gap=0.04,
+        node_gap=0.02,
+        frame_gap=0,  # remove whitespace above/below
         value_loc="both" if plot_fractions else "none",
+        value_thresh_ofmax=0.01,  # prevent label clashes
         fontsize=fontsize,
     )
 
-    plt.title(
-        "\n".join(wrap(title, 60)),
-        fontsize=fontsize + 3,
-    )
-
-    return figure
+    return fig
