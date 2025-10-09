@@ -170,6 +170,8 @@ def get_phd_duration(
         .add(
             endmonth.sub(startmonth, fill_value=12),
         )
+        .dropna()
+        .astype(int)
     )
 
     return (phd_current_year, phd_estimation_months)

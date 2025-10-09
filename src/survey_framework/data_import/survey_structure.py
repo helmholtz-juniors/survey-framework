@@ -13,7 +13,7 @@ from pathlib import Path
 from typing import TypedDict, cast
 from warnings import warn
 
-from bs4 import BeautifulSoup, MarkupResemblesLocatorWarning, ResultSet
+from bs4 import BeautifulSoup, MarkupResemblesLocatorWarning
 from bs4.element import Tag
 
 from .fixup_2024 import count_responses, name_response, rename_question
@@ -78,7 +78,7 @@ def _parse_question_title(question: Tag) -> str:
     Returns:
         str: Parsed question title cleaned from HTML tags and extra spaces
     """
-    text_sections = cast(ResultSet[Tag], question.find_all("text", recursive=False))
+    text_sections = question.find_all("text", recursive=False)
     if len(text_sections) >= 1:
         question_label = " ".join(map(_get_clean_string, text_sections)).strip()
     else:
@@ -101,12 +101,9 @@ def _parse_question_description(question: Tag) -> str:
     description = ""
     directive_sections = question.find_all("directive", recursive=False)
     if len(directive_sections) >= 1:
-        directive: Tag = cast(Tag, directive_sections[0])
+        directive: Tag = directive_sections[0]
         description = " ".join(
-            [
-                _get_clean_string(text)
-                for text in cast(ResultSet[Tag], directive.find_all("text"))
-            ]
+            [_get_clean_string(text) for text in directive.find_all("text")]
         )
         if len(directive_sections) > 1:
             warn(
@@ -136,9 +133,7 @@ def _parse_question_sub_questions(question: Tag) -> list[tuple[str, str]]:
             cast(str, subquestion["varName"]),
             _get_clean_string(cast(Tag, subquestion.find("text"))),
         )
-        for subquestion in cast(
-            ResultSet[Tag], question.find_all("subQuestion", recursive=False)
-        )
+        for subquestion in question.find_all("subQuestion", recursive=False)
     ]
 
 
@@ -193,16 +188,14 @@ def _parse_single_question_response(
             _get_clean_string(cast(Tag, category.value)): _get_clean_string(
                 cast(Tag, category.label)
             )
-            for category in cast(
-                ResultSet[Tag], response_data.find_all("category", recursive=False)
-            )
+            for category in response_data.find_all("category", recursive=False)
         }
         parsed_response.update({"choices": choices})
 
         # Parse contingent question
         contingent_question = response_data.find("contingentQuestion")
         if contingent_question is not None:
-            contingent_question = cast(Tag, contingent_question)
+            contingent_question = contingent_question
             assert len(response_data.find_all("contingentQuestion")) == 1, (
                 f"Too many 'contingentQuestion's for response {response}"
             )
@@ -253,8 +246,7 @@ def _parse_question_responses(
         )
 
     parsed_responses = [
-        _parse_single_question_response(cast(Tag, response))
-        for response in response_sections
+        _parse_single_question_response(response) for response in response_sections
     ]
 
     return parsed_responses
@@ -489,7 +481,7 @@ def _parse_section(section: Tag) -> SectionInfo:
         elif position in ("before", "after"):
             current_text = " ".join(
                 [
-                    _get_clean_string(cast(Tag, description))
+                    _get_clean_string(description)
                     for description in info.find_all("text")
                 ]
             )
@@ -531,14 +523,14 @@ def read_lime_questionnaire_structure(filepath: Path) -> SurveyStructure:
     result_sections = list()
     result_questions = list()
     for section in soup.find_all("section"):
-        section = cast(Tag, section)
+        section = section
         section_dict = _parse_section(section)
         result_sections.append(section_dict)
 
         # Parse question
         for question in section.find_all("question"):
             # Get columns description for the question
-            question_columns_list = _parse_question(cast(Tag, question))
+            question_columns_list = _parse_question(question)
             # Add section_id to the columns descriptions
             question_columns_list = [
                 {**column, "section_id": str(section_dict["id"])}

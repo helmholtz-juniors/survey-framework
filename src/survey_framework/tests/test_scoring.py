@@ -1,6 +1,7 @@
 from pathlib import Path
 
 import matplotlib.pyplot as plt
+import pandas as pd
 import pytest
 import seaborn as sns
 from matplotlib.ticker import PercentFormatter
@@ -137,6 +138,7 @@ def test_satisfaction(survey: LimeSurveyData, output_path: Path) -> None:
     print(res_df)
 
     plotting_df = res_df[["C1_class"]]
+    assert isinstance(plotting_df, pd.DataFrame)
 
     result_fig, _ = plot_likertplot(
         survey,
