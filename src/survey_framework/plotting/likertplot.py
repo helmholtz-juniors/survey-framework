@@ -76,7 +76,9 @@ def plot_likertplot(
 
     # reposition legend (draw new legend and remove the old one)
     (handles, labels) = ax.get_legend_handles_labels()
-    legend = fig.legend(handles, labels, loc="outside upper center", ncol=3)
+    legend = fig.legend(
+        handles, labels, loc="outside upper center", ncol=3 if len(handles) > 4 else 2
+    )
     old_legend = ax.get_legend()
     if old_legend is not None:
         old_legend.remove()
