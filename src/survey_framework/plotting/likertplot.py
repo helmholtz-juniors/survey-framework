@@ -4,7 +4,6 @@ from typing import cast
 
 import matplotlib.pyplot as plt
 import pandas as pd
-import seaborn as sns
 from matplotlib.axes import Axes
 from matplotlib.container import BarContainer
 from matplotlib.figure import Figure
@@ -75,15 +74,17 @@ def plot_likertplot(
             new_labels.append("\n".join(wrap(clean_str, text_wrap, max_lines=3)))
         ax.set_yticklabels(new_labels, linespacing=0.9)
 
+    # reposition legend (draw new legend and remove the old one)
+    (handles, labels) = ax.get_legend_handles_labels()
+    legend = fig.legend(handles, labels, loc="outside upper center", ncol=3)
+    ax.get_legend().remove()
+
     # set the legend labels
     choices = survey.questions.loc[survey.questions["question_group"] == question][
         "choices"
     ].iloc[0]  # underlying assumption: all subquestions use the same scale
-    for text in ax.get_legend().get_texts():
+    for text in legend.get_texts():
         text.set_text(choices[text.get_text()])
-
-    # reposition legend
-    sns.move_legend(ax, "upper center", ncol=3, bbox_to_anchor=(0.3, 1.12))
 
     # add number of participants
     n_question = data_df.count().iloc[0]  # don't count NaNs, but count dropped answers
