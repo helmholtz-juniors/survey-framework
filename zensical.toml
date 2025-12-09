@@ -33,9 +33,12 @@ site_author = "Helmholtz Juniors | Survey Group"
 # fragment.
 #
 # Read more: https://zensical.org/docs/setup/basics/#copyright
-# copyright = """
-# Copyright &copy; 2025 The authors
-# """
+copyright = """
+Copyright &copy; 2025 Helmholtz Juniors | Survey Group
+"""
+
+repo_url = "https://github.com/helmholtz-juniors/survey-framework"
+repo_name = "survey-framework"
 
 # Zensical supports both implicit navigation and explicitly defined navigation.
 # If you decide not to define a navigation here then Zensical will simply
@@ -258,12 +261,15 @@ features = [
 # - https://zensical.org/docs/setup/colors/
 # ----------------------------------------------------------------------------
 [[project.theme.palette]]
+media = "(prefers-color-scheme: light)"
 scheme = "default"
 toggle.icon = "lucide/sun"
 toggle.name = "Switch to dark mode"
 
 [[project.theme.palette]]
+media = "(prefers-color-scheme: dark)"
 scheme = "slate"
+accent = "orange"
 toggle.icon = "lucide/moon"
 toggle.name = "Switch to light mode"
 
@@ -299,9 +305,9 @@ toggle.name = "Switch to light mode"
 # ----------------------------------------------------------------------------
 # The "extra" section contains miscellaneous settings.
 # ----------------------------------------------------------------------------
-[[project.extra.social]]
-icon = "fontawesome/brands/github"
-link = "https://github.com/helmholtz-juniors/survey-framework"
+# [[project.extra.social]]
+# icon = "fontawesome/brands/github"
+# link = "https://github.com/helmholtz-juniors/survey-framework"
 
 [project.plugins.mkdocstrings.handlers.python]
 inventories = ["https://docs.python.org/3/objects.inv"]
@@ -316,6 +322,10 @@ show_source = true
 # show_if_no_docstring = true
 heading_level = 3
 # show_root_heading = true
+# show_root_full_path = false
+show_root_toc_entry = false
+show_symbol_type_heading = true
+signature_crossrefs = true
 
 [project.plugins.mkdocstrings.handlers.python.options.docstring_options]
 ignore_init_summary = true

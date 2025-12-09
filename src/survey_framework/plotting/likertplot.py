@@ -34,10 +34,10 @@ def plot_likertplot(
         data_df: dataframe containing answers to be plotted
         question: question code (e.g. 'D4')
         order: ordered list of answer options. **The rest will be dropped!**
-        bar_labels (optional): which kind of bar labels to use. Defaults to PERCENT.
-        width (optional): width of the figure. Defaults to 16.
-        height (optional): height of the figure. Defaults to 10.
-        text_wrap (optional): wrap question labels after x characters. Defaults to 30.
+        bar_labels: which kind of bar labels to use.
+        width: width of the figure.
+        height: height of the figure.
+        text_wrap: wrap question labels after x characters.
 
     Returns:
         The matplotlib figure and axis

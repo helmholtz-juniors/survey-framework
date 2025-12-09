@@ -42,12 +42,12 @@ def plot_bar_side_by_side(
         y_left: Question ID (left)
         y_right: Question ID (right)
         stat: Which metric to plot (percent / count)
-        color_left (optional): Bar color (left). Defaults to helmholtzblue.
-        color_right (optional): Bar color (right). Defaults to helmholtzgreen.
-        title_left (optional): Left plot title. Defaults to question string.
-        title_right (optional): Right plot title. Defaults to question string.
-        width (optional): Total plot width. Defaults to 12.
-        height (optional): Total plot height. Defaults to 10.
+        color_left: Bar color (left).
+        color_right: Bar color (right).
+        title_left: Left plot title.
+        title_right: Right plot title.
+        width: Total plot width.
+        height: Total plot height.
 
     Returns:
         tuple[plt.figure, plt.axes]: New Figure and Axes
@@ -201,26 +201,26 @@ def plot_sidebyside_comparison_singleQ(
     """Plot two barplots side by side, with an additional grouping given by `comp_q`.
 
     Args:
-        survey (LimeSurveyData): _description_
-        data_left (pd.DataFrame): _description_
-        data_right (pd.DataFrame): _description_
-        base_q_left (str): _description_
-        base_q_right (str): _description_
-        comp_q (str): _description_
-        N_left (int): _description_
-        N_right (int): _description_
-        title_left (str, optional): _description_. Defaults to "".
-        title_right (str, optional): _description_. Defaults to "".
-        width (float, optional): _description_. Defaults to 12.
-        height (float, optional): _description_. Defaults to 10.
-        fontsize (int, optional): _description_. Defaults to 10.
-        plot_stat (PlotStat, optional): _description_. Defaults to PlotStat.COUNT.
-        bar_labels (BarLabels, optional): _description_. Defaults to BarLabels.NONE.
-        fontsize_bar_labels (int, optional): _description_. Defaults to 10.
-        text_wrap (int, optional): _description_. Defaults to 25.
+        survey: The main survey object
+        data_left: Data for the left question
+        data_right: Data for the right question
+        base_q_left: Question code for the left question
+        base_q_right: Question code for the right question
+        comp_q: Question code that is used as a grouper (hue) for both questions
+        N_left: Size of the left population
+        N_right: Size of the right population
+        title_left: Title for the left plot
+        title_right: Title for the right plot
+        width: Total width of the plot
+        height: Total height of the plot
+        fontsize: Font size for titles and axis (tick) labels
+        plot_stat: Whether to plot absolute (PERCENT) or relative (COUNT)
+        bar_labels: Whether to label each bar
+        fontsize_bar_labels: Font size for the bar labels, if enabled above
+        text_wrap: After how many characters axis and legend labels should wrap
 
     Returns:
-        tuple[Figure, tuple[Axes, Axes]]: _description_
+        New matplotlib Figure and Axes for this bar plot.
     """
     # set seaborn theme
     set_plotstyle()

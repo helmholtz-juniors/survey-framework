@@ -42,8 +42,8 @@ class LimeSurveyData:
         """
 
         # Store path to structure file
-        self.read_structure(structure_file)
-        self.read_responses(responses_file)
+        self._read_structure(structure_file)
+        self._read_responses(responses_file)
 
     def __str__(self) -> str:
         string = f"QUESTIONS\n{self.questions}\n"
@@ -52,7 +52,7 @@ class LimeSurveyData:
         return string
 
     # partially copied from N2Framework
-    def read_structure(self, structure_file: Path) -> None:
+    def _read_structure(self, structure_file: Path) -> None:
         """
         Read structure XML file
 
@@ -80,7 +80,7 @@ class LimeSurveyData:
         #     self.add_question(question, **info)
 
     # copied from N2Framework
-    def read_responses(
+    def _read_responses(
         self,
         responses_file: Path,
     ) -> None:

@@ -102,7 +102,7 @@ def barplot_internal(
         width: x-axis size of figure
         height: y-axis size of figure
         hue: DF column to use for hue. If None (default), use answer choices for hue.
-        hue_order: order within hue to enforce consistent coloring. Defaults to None.
+        hue_order: order within hue to enforce consistent coloring.
 
     Returns:
         tuple[Figure, Axes]: modified figure and axes
@@ -179,16 +179,15 @@ def add_tick_labels(
     vertical --> add labels to x-axis
 
     Args:
-        survey (LimeSurveyData): survey data
-        plot (Axes): plot
-        data_df (pd.DataFrame): dataframe of processed data
-        question (str): str of question
-        orientation (Orientation): orientation of plot
-        fontsize (int): fontsize
-        text_wrap (int): after how many letters text should be wrapped
+        survey: survey data
+        ax: plot to modify
+        question: str of question
+        orientation: orientation of plot
+        text_wrap: after how many letters text should be wrapped
+        fontsize: fontsize
 
     Returns:
-        Axes: _description_
+        The same matplotlib Axes that was given.
     """
     # maximum allowed lines of text for each tick label.
     max_lines = 3
@@ -260,13 +259,15 @@ def adapt_legend(
     rename legend and move below N
 
     Args:
-        survey (LimeSurveyData): survey data
-        ax (Axes): plot
-        question (str): str of question
-        text_wrap (int): after how many letters text should be wrapped
+        survey: survey data
+        ax: plot
+        question: str of question
+        text_wrap: after how many letters text should be wrapped
+        group_n: dictionary with the sizes of each group in the legend
+        anchor: where to put the legend, by default keep current location
 
     Returns:
-        Axes: _description_
+        The same matplotlib Axes that was given.
     """
 
     handles, labels = ax.get_legend_handles_labels()

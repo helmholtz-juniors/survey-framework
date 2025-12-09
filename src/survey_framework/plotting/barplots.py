@@ -39,18 +39,15 @@ def plot_bar(
         data_df: DataFrame with responses to be plotted
         question: The question code
         n_question: Number of participants
-        label_q_data: Label for axis with data from question. Defaults to "".
-        orientation: Plot orientation. Defaults to HORIZONTAL.
-        percentcount: Plot absolute values or percentages? Defaults to COUNT.
-        fig_size_x: Width of figure. Defaults to 16.
-        fig_size_y: Height of figure. Defaults to 10.
-        fontsize: Font size for tick labels. Defaults to 10.
-        show_axes_labels: How to format bar labels. Defaults to NONE (no labels).
-        fontsize_axes_labels: Font size for bar labels. Defaults to 10.
-        text_wrap: Number of letters after which text labels wrap. Defaults to 25.
+        label_q_data: Label for axis with data from question.
+        orientation: Plot orientation.
+        stat: Plot absolute values or percentages?
+        width: Width of figure.
+        height: Height of figure.
+        bar_labels: How to format bar labels.
 
     Returns:
-        tuple[plt.figure, plt.axes, plt.axes]: _description_
+        New matplotlib Figure and Axes for the bar plot.
     """
 
     # plot barplot
@@ -123,21 +120,22 @@ def plot_bar_comparison(
         survey: The LimeSurvey object
         data_df: DataFrame with responses to be plotted
         question: Question code for the first question
-        question_comparison: Question code for the second question
+        hue: Question code for the second question
+        hue_order: Order of answer options for the second question.
         n_participants: Number of participants per hue group (usually centers),
-            or None to suppress printing N. Defaults to None.
-        label_q_data: Label for axis with data from question. Defaults to "".
-        orientation: Plot orientation. Defaults to HORIZONTAL.
-        percentcount: Plot absolute values or percentages? Defaults to COUNT.
-        fig_size_x: Width of figure. Defaults to 16.
-        fig_size_y: Height of figure. Defaults to 10.
-        bar_labels: How to format bar labels. Defaults to NONE (no labels).
-        bar_label_size: Font size for bar labels. Defaults to None (automatic).
-        tick_label_size: Font size for tick labels. Defaults to None (automatic).
-        tick_label_wrap: Number of letters after which tick labels wrap. Defaults to 25.
+            or None to suppress printing N.
+        label_q_data: Label for axis with data from question.
+        orient: Plot orientation.
+        stat: Plot absolute values or percentages?
+        width: Width of figure.
+        height: Height of figure.
+        bar_labels: How to format bar labels.
+        bar_label_size: Font size for bar labels.
+        tick_label_size: Font size for tick labels.
+        tick_label_wrap: Number of letters after which tick labels wrap.
 
     Returns:
-        tuple[plt.figure, plt.axes, plt.axes]: _description_
+        New matplotlib Figure and Axes for the bar plot.
     """
 
     # plot barplot

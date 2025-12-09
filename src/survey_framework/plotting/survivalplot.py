@@ -26,14 +26,14 @@ def plot_survival_plot(
 
     Args:
         df: DataFrame with a column of numerical data called "data".
-        category (optional): Column in `df` to categorize the data. Defaults to None.
-        ticks (optional): Iterable of x axis ticks. Defaults to None.
-        tick_map (optional): Function to generate strings from ticks. Defaults to str.
-        legend_replace (optional): Replacements for legend entries. Defaults to None.
-        legend_title (optional): Heading for the legend. Defaults to None.
-        colors (optional): Line colors, instead of shades of blue. Defaults to None.
-        width (optional): Horizontal figure size. Defaults to 6.
-        height (optional): Vertical figure size. Defaults to 4.
+        category: Column in `df` to categorize the data.
+        ticks: Iterable of x axis ticks.
+        tick_map: Function to generate strings from ticks.
+        legend_replace: Replacements for legend entries.
+        legend_title: Heading for the legend.
+        colors: Line colors, instead of shades of blue.
+        width: Horizontal figure size.
+        height: Vertical figure size.
 
     Returns:
         tuple[Figure, Axes]: The matplotlib figure and axes.

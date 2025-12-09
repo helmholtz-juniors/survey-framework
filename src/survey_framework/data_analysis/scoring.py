@@ -29,7 +29,7 @@ def rate_mental_health(
     Args:
         responses: DataFrame containing responses data
         condition: Which kind of mental health condition to rate
-        keep_subscores (optional): Whether to include scores from subquestions
+        keep_subscores: Whether to include scores from subquestions
             in the output DataFrame, or only total score and classification.
             Default False.
 
@@ -157,7 +157,7 @@ def rate_somatic(
 
     Args:
         responses: DataFrame containing responses data
-        keep_subscores (optional): Whether to include scores from subquestions
+        keep_subscores: Whether to include scores from subquestions
             in the output DataFrame, or only total score and classification.
             Default False.
 

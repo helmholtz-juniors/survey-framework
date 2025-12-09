@@ -19,14 +19,16 @@ def plot_sankey(
     """Plots a two staged sankey diagram
 
     Args:
-        data_df (pd.DataFrame): Data containing rows like
+        data_df: Data containing rows like
             (label_left, count, label_right, same_count)
-        titles (str, optional): Titles of both stages. Defaults to "".
-        width (int, optional): Total plot width. Defaults to 12.
-        height (int, optional): Total plot height. Defaults to 10.
+        titles: Titles of both stages.
+        width: Total plot width.
+        height: Total plot height.
+        fontsize: Font size for the plot
+        plot_fractions: Whether group sizes should be displayed
 
     Returns:
-        tuple[plt.figure, plt.axes]: New Figure and Axes
+        New Figure and Axes
     """
     set_plotstyle()
 

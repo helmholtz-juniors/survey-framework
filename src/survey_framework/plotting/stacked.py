@@ -13,7 +13,7 @@ from matplotlib.ticker import PercentFormatter
 import survey_framework.plotting.helmholtzcolors as hc
 
 
-def rgb2gray(rgb: tuple[float, float, float]) -> float:
+def _rgb2gray(rgb: tuple[float, float, float]) -> float:
     """Helper that converts a colour to a greyscale value.
 
     Args:
@@ -134,7 +134,7 @@ def plot_stacked_bar_comparison(
                     ha="center",
                     va="center",
                     fontsize=9,
-                    color="black" if rgb2gray(colors[i][j]) > 0.5 else "white",
+                    color="black" if _rgb2gray(colors[i][j]) > 0.5 else "white",
                 )
             bottom += height_pct
 
@@ -209,7 +209,6 @@ def plot_stacked_bar_single(
         plot_title: Heading for this plot
         order: Ordered list of categories for stacked bars and legend.
         legend_loc: Position of the legend, or None for no legend.
-        group_labels: Tuple of group labels.
         colors: Optional list of colors (auto-generated from helmholtzcolors if None).
         width: Width of the plot.
         height: Height of the plot.
@@ -281,7 +280,7 @@ def plot_stacked_bar_single(
                     ha="center",
                     va="center",
                     fontsize=9,
-                    color="black" if rgb2gray(colors[i][j]) > 0.5 else "white",
+                    color="black" if _rgb2gray(colors[i][j]) > 0.5 else "white",
                 )
             bottom += height_pct
 
@@ -353,14 +352,14 @@ def plot_stacked_bar_categorical(
         df: _description_
         classes_column: _description_
         category_column: _description_
-        na_values: _description_. Defaults to False.
-        label_q_data: _description_. Defaults to "".
-        width: _description_. Defaults to 6.
-        height: _description_. Defaults to 4.
-        fontsize: _description_. Defaults to None.
-        fontsize_axes_labels: _description_. Defaults to None.
-        legend_title: _description_. Defaults to "".
-        category_order: _description_. Defaults to None.
+        na_values: _description_
+        label_q_data: _description_
+        width: _description_
+        height: _description_
+        fontsize: _description_
+        fontsize_axes_labels: _description_
+        legend_title: _description_
+        category_order: _description_
 
     Returns:
         tuple[Figure, Axes]: _description_
@@ -430,7 +429,7 @@ def plot_stacked_bar_categorical(
                     ha="center",
                     va="center",
                     fontsize=fontsize_axes_labels,
-                    color="black" if rgb2gray(color_mapping[cat]) > 0.5 else "white",
+                    color="black" if _rgb2gray(color_mapping[cat]) > 0.5 else "white",
                 )
             bottom += perc
 

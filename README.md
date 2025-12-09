@@ -1,3 +1,8 @@
+![GitHub License](https://img.shields.io/github/license/helmholtz-juniors/survey-framework)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/helmholtz-juniors/survey-framework/docs.yml?label=Docs)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/helmholtz-juniors/survey-framework/lint_and_typing.yml?label=Lint)
+![GitHub Tag](https://img.shields.io/github/v/tag/helmholtz-juniors/survey-framework)
+
 # survey_framework
 This repo contains the code for data import, analysis and plotting.
 It is *public*, so it should at no point contain data or text for reports.
@@ -8,7 +13,9 @@ It is *public*, so it should at no point contain data or text for reports.
 > We suggest you follow the folder structure outlined below.
 
 ## Getting started
+Check out the **[:book: documentation](https://blog.helmholtz-juniors.de/survey-framework)**! Feel free to extend it by adding a file to [`docs/`](docs/). (We should perhaps also move some content from this README into it?)
 
+### Folder Organization
 We suggest the following folder structure:
 ```tree
 n2_survey

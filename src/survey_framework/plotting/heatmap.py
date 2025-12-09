@@ -32,16 +32,16 @@ def plot_heatmap(
     method: CorrMethod = CorrMethod.SPEARMAN,
 ) -> tuple[Figure, Axes]:
     """Correlation heatmap of the input dataframe vs. all (mental) health scores.
-    This is currently hard-coded to use Spearman's rho.
 
     Args:
         df: Dataframe with numeric columns that should be correlated against health
         survey: main survey object
-        width: Horizontal figure size. Defaults to 6.5.
-        height: Vertical figure size. Defaults to 6.
-        method: Statistical correlation method. Defaults to `CorrMethod.SPEARMAN`.
+        width: Horizontal figure size.
+        height: Vertical figure size.
+        method: Statistical correlation method.
+
     Returns:
-        tuple: matplotlib figure and axes for the heatmap
+        tuple of matplotlib figure and axes for the heatmap
     """
 
     """"""

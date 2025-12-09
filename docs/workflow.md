@@ -1,4 +1,4 @@
-# Overview
+# Workflow
 
 This document describes the current workflow for working in the helmholtz-juniors organization on github. 
 

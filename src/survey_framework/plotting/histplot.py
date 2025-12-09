@@ -29,12 +29,12 @@ def simple_histplot(
         data_df: DataFrame to be plotted
         question_code: Column in `data_df` to be plotted
         order_dict: answer ordering, can be empty (ORDER from order/order2024.py)
-        hue_series (Optional): Separator for data_df (needs same index).
-        hue_order (Optional): How to sort hues in the legend and plot
-        kde (Optional): Whether to plot a density curve. Defaults to False.
-        binwidth (Optional): Width of bins; automatically inferred if not given.
-        width (Optional): Plot width. Defaults to 10.
-        height (Optional): Plot height. Defaults to 6.
+        hue_series: Separator for data_df (needs same index).
+        hue_order: How to sort hues in the legend and plot
+        kde: Whether to plot a density curve.
+        binwidth: Width of bins; automatically inferred if not given.
+        width: Plot width.
+        height: Plot height.
 
     Returns:
         tuple: new Figure and Axes of the histogram
