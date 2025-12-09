@@ -10,13 +10,13 @@ def prepare_df_single(
     """Count participants in the data. This function is for single-choice questions.
 
     The output dataframe contains the following columns:
-    - q: The answer options
-    - "count": number of participants (in this group) that gave this answer
-    - "proportion": share of participants (relative to "total") that gave this answer
+        - q: The answer options
+        - "count": number of participants (in this group) that gave this answer
+        - "proportion": share of participants (relative to "total") that gave this answ.
 
     Args:
         data: The main DataFrame of answers
-        q (str): name of the output column for answer options
+        q: name of the output column for answer options
         ordering: Answer re-ordering dict, e.g. ORDER from `order/order2024.py`
 
     Returns:
@@ -58,13 +58,13 @@ def prepare_df_multiple(
     """Count participants in the data. This function is for multiple-choice questions.
 
     The output dataframe contains the following columns:
-    - q: The answer options
-    - "count": number of participants (in this group) that gave this answer
-    - "proportion": share of participants (relative to "total") that gave this answer
+        - q: The answer options
+        - "count": number of participants (in this group) that gave this answer
+        - "proportion": share of participants (relative to "total") that gave this answ.
 
     Args:
         data: The main DataFrame of answers
-        q (str): name of the output column for answer options
+        q: name of the output column for answer options
         ordering: Answer re-ordering dict, e.g. ORDER from `order/order2024.py`
 
     Returns:
@@ -115,17 +115,17 @@ def prepare_df_comparison(
     This function is for single-choice questions.
 
     The output dataframe contains the following columns:
-    - q: The answer options
-    - q_comparison: The groups
-    - "total": total number of participants in this group
-    - "count": number of participants (in this group) that gave this answer
-    - "proportion": share of participants (relative to "total") that gave this answer
+        - q: The answer options
+        - q_comparison: The groups
+        - "total": total number of participants in this group
+        - "count": number of participants (in this group) that gave this answer
+        - "proportion": share of participants (relative to "total") that gave this answ.
 
     Args:
-        responses_df: The main DataFrame of answers
-        comparison_series: Participant group (shares index with the main DF)
-        q (str): name of the output column for answer options
-        q_comparison (str): name of the output column for groups
+        responses_df_all: DataFrame with answers for the base question
+        responses_df_comparison: Answers for the intersecting question
+        q: name of the output column for answer options
+        q_comparison: name of the output column for groups
         ordering: Answer re-ordering dict, e.g. ORDER from `order/order2024.py`
 
     Returns:
@@ -170,17 +170,17 @@ def prepare_df_comparison_multiple(
     This function is for multiple-choice questions.
 
     The output dataframe contains the following columns:
-    - q: The answer options
-    - q_comparison: The groups
-    - "total": total number of participants in this group
-    - "count": number of participants (in this group) that gave this answer
-    - "proportion": share of participants (relative to "total") that gave this answer
+        - q: The answer options
+        - q_comparison: The groups
+        - "total": total number of participants in this group
+        - "count": number of participants (in this group) that gave this answer
+        - "proportion": share of participants (relative to "total") that gave this answ.
 
     Args:
         responses_df: The main DataFrame of answers
         comparison_series: Participant group (shares index with the main DF)
-        q (str): name of the output column for answer options
-        q_comparison (str): name of the output column for groups
+        q: name of the output column for answer options
+        q_comparison: name of the output column for groups
         ordering: Answer re-ordering dict, e.g. ORDER from `order/order2024.py`
 
     Returns:
