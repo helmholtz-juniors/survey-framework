@@ -1,4 +1,5 @@
-# Barplots
+# Plot Types
+## Barplots
 
 - vertical / horizontal
 - percentages on bars, counts on axis
@@ -7,7 +8,7 @@
 - percentages on vars and axis
 - everything for both single-choice and multiple-choice 
 
-## Comparison Barplots
+### Comparison Barplots
 
 - horizontal / vertical 
 - single-choice and multiple-choice
@@ -16,7 +17,7 @@
 - counts on bars and axis
 - percentages on bars and axis
 
-## Side-by-Side Barplots
+### Side-by-Side Barplots
 
 - horizontal / vertical 
 - single-choice and multiple-choice
@@ -25,7 +26,7 @@
 - counts on bars and axis
 - percentages on bars and axis
 
-## Side-by-Side Comparison Barplots
+### Side-by-Side Comparison Barplots
 
 - horizontal / vertical 
 - single-choice and multiple-choice
@@ -34,31 +35,27 @@
 - counts on bars and axis
 - percentages on bars and axis
 
-# Histogramm
+## Histogramm
 
 - vertical 
 - percentages on axis
 - counts on axis
 
-# Survival Plots
+## Survival Plots
 
-# Lickert Plots
+## Likert Plots
 
-# Scatter Plots
+## Scatter Plots
 
-# Section Overview
+## Section Overview
 
-A - General
-B - Working Conditions
-C - Satisfaction
-D - Mental Health
-E - Supervision
-F - Power Abuse
-H - Integration
-	H1a support received
-	H1b support needed
-I - Career Development
-J - Family
-K - Covid-19
-
-WARNING: For this to work H1a_SQ008 has to be adapted in the XML file from ` to ' in the "don't" (otherwise H1a_SQ008 and H1b_SQ008 will not map to each other)
+- A - General
+- B - Working Conditions
+- C - Satisfaction
+- D - Mental Health
+- E - Supervision
+- F - Power Abuse
+- H - Integration
+- I - Career Development
+- J - Family
+- K - Covid-19

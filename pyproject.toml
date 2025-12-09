@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "survey-framework"
-version = "0.0.1"
-authors = [{ name = "Helmholtz Juniors", email = "hejus@example.com" }]
+version = "0.1.0"
+authors = [{ name = "Helmholtz Juniors", email = "steering@helmholtz-juniors.de" }]
 description = "Framework code to analyze and visualize LimeSurvey data."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -32,6 +32,10 @@ dev = [
     "ty>=0.0.1a5",
     "pre-commit>=4.2.0",
 ]
+docs = [
+    "mkdocstrings-python>=2.0.1",
+    "zensical>=0.0.11",
+]
 
 [tool.ruff.lint]
 select = [
@@ -50,4 +54,5 @@ select = [
 ]
 
 [tool.ruff.lint.per-file-ignores]
+# supress "line too long" warnings for the lookup dictionary
 "shortening.py" = ["E501"]

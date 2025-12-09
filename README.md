@@ -1,8 +1,9 @@
 # survey_framework
-This repo should contain the code for data import, analysis and plotting.
+This repo contains the code for data import, analysis and plotting.
+It is *public*, so it should at no point contain data or text for reports.
 
 > [!WARNING]  
-> Never commit actual survey data to this repository! Due to internals of git,
+> Never commit raw survey data to this repository! Due to internals of git,
 > it is almost impossible to erase accidentally committed data from history.
 > We suggest you follow the folder structure outlined below.
 
@@ -86,8 +87,11 @@ If you use a decent IDE (recommendations: VS Code or PyCharm), it will display d
 ### Nice to Know
 - contingent questions are the longtext open ended questions added to other questions, e.g. `A2` and `A2other` 
 
+## Attribution
+This project started as a fork of [N2-Survey/SurveyFramework](https://github.com/N2-Survey/SurveyFramework), however, we diverged quite a bit over time.
+Most of the code in data_import is still similar to the original (which is under the [MIT License](LICENSE), as well as our fork).
 
-## Beginner's guide to git
+## Appendix: Beginner's guide to git
 ### How to upload (commit) your work
 
 > [!IMPORTANT]  
