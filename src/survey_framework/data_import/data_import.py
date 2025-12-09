@@ -201,6 +201,7 @@ class LimeSurveyData:
                 stacklevel=2,
             )
 
+        assert isinstance(question_responses, pd.DataFrame)
         self.responses = question_responses
         self.lime_system_info = system_info
 
@@ -373,6 +374,7 @@ class LimeSurveyData:
                 responses.loc[:, ~question_group.is_contingent].notnull()
             )
 
+        assert isinstance(responses, pd.DataFrame)
         return responses
 
     def get_question_type(self, question: str) -> QuestionType:
