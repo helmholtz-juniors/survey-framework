@@ -1,9 +1,10 @@
+# survey_framework
+
 ![GitHub License](https://img.shields.io/github/license/helmholtz-juniors/survey-framework)
 ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/helmholtz-juniors/survey-framework/docs.yml?label=Docs)
 ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/helmholtz-juniors/survey-framework/lint_and_typing.yml?label=Lint)
 ![GitHub Tag](https://img.shields.io/github/v/tag/helmholtz-juniors/survey-framework)
 
-# survey_framework
 This repo contains the code for data import, analysis and plotting.
 It is *public*, so it should at no point contain data or text for reports.
 
