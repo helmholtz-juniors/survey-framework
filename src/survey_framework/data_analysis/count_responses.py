@@ -175,11 +175,11 @@ def prepare_df_comparison_multiple(
     This function is for multiple-choice questions.
 
     The output dataframe contains the following columns:
-    - q: The answer options
-    - q_comparison: The groups
-    - total: total number of participants in this group
-    - count: number of participants (in this group) that gave this answer
-    - proportion: share of participants (relative to "total") that gave this answ.
+        - q: The answer options
+        - q_comparison: The groups
+        - total: total number of participants in this group
+        - count: number of participants (in this group) that gave this answer
+        - proportion: share of participants (relative to "total") that gave this answ.
 
     Args:
         responses_df: The main DataFrame of answers
