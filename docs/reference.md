@@ -21,3 +21,5 @@
 ::: survey_framework.plotting.survivalplot
 ::: survey_framework.plotting.likertplot
 ::: survey_framework.plotting.heatmap
+::: survey_framework.plotting.histplot
+::: survey_framework.plotting.sankeyplot
