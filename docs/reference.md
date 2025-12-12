@@ -1,13 +1,11 @@
 # Technical Reference
 
-## LimeSurveyData
-::: survey_framework.data_import.data_import.LimeSurveyData
-    options:
-      show_root_heading: true
-      show_root_full_path: false
+## Data Import
+::: survey_framework.data_import.data_import
 
 ## Data Aggregation
 ::: survey_framework.data_analysis.count_responses
+::: survey_framework.data_analysis.analysis
 
 ## Scoring
 ::: survey_framework.data_analysis.scoring
@@ -23,4 +21,3 @@
 ::: survey_framework.plotting.survivalplot
 ::: survey_framework.plotting.likertplot
 ::: survey_framework.plotting.heatmap
-

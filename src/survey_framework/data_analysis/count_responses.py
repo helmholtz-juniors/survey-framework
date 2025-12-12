@@ -1,7 +1,10 @@
-import pandas as pd
+"""Convert raw dataframes into cleaned, sorted, counted dataframes ready for plotting.
 
-# This file contains a family of functions that take raw survey dataframes
-# and output a cleaned, sorted, counted dataframe ready for plotting.
+We have specific functions for single-choice and multiple-choice questions,
+as well as "grouped" variants for both (which can be used for comparison barplots).
+"""
+
+import pandas as pd
 
 
 def prepare_df_single(
@@ -11,8 +14,8 @@ def prepare_df_single(
 
     The output dataframe contains the following columns:
         - q: The answer options
-        - "count": number of participants (in this group) that gave this answer
-        - "proportion": share of participants (relative to "total") that gave this answ.
+        - count: number of participants (in this group) that gave this answer
+        - proportion: share of participants (relative to "total") that gave this answ.
 
     Args:
         data: The main DataFrame of answers
@@ -59,8 +62,8 @@ def prepare_df_multiple(
 
     The output dataframe contains the following columns:
         - q: The answer options
-        - "count": number of participants (in this group) that gave this answer
-        - "proportion": share of participants (relative to "total") that gave this answ.
+        - count: number of participants (in this group) that gave this answer
+        - proportion: share of participants (relative to "total") that gave this answ.
 
     Args:
         data: The main DataFrame of answers
@@ -112,14 +115,15 @@ def prepare_df_comparison(
     ordering: dict[str, list[str]],
 ) -> tuple[pd.DataFrame, dict[str, int]]:
     """Compare groups of participants (determined by comparison_series).
+
     This function is for single-choice questions.
 
     The output dataframe contains the following columns:
         - q: The answer options
         - q_comparison: The groups
-        - "total": total number of participants in this group
-        - "count": number of participants (in this group) that gave this answer
-        - "proportion": share of participants (relative to "total") that gave this answ.
+        - total: total number of participants in this group
+        - count: number of participants (in this group) that gave this answer
+        - proportion: share of participants (relative to "total") that gave this answ.
 
     Args:
         responses_df_all: DataFrame with answers for the base question
@@ -167,14 +171,15 @@ def prepare_df_comparison_multiple(
     ordering: dict[str, list[str]],
 ) -> tuple[pd.DataFrame, dict[str, int]]:
     """Compare groups of participants (determined by comparison_series).
+
     This function is for multiple-choice questions.
 
     The output dataframe contains the following columns:
-        - q: The answer options
-        - q_comparison: The groups
-        - "total": total number of participants in this group
-        - "count": number of participants (in this group) that gave this answer
-        - "proportion": share of participants (relative to "total") that gave this answ.
+    - q: The answer options
+    - q_comparison: The groups
+    - total: total number of participants in this group
+    - count: number of participants (in this group) that gave this answer
+    - proportion: share of participants (relative to "total") that gave this answ.
 
     Args:
         responses_df: The main DataFrame of answers

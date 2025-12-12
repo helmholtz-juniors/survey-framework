@@ -1,15 +1,8 @@
-#!/usr/bin/env python3
-"""
-Created on Sun Sep  4 11:50:52 2022
-
-@author: jenpopp
-"""
+"""Color schemes for Helmholtz branding."""
 
 from typing import cast
 
 import seaborn as sns
-
-# helmholtzcolors.py
 
 helmholtz_information = "#a0235a"
 helmholtz_health = "#D23264"
@@ -38,15 +31,32 @@ transparent = "#ffffff00"
 
 
 def set_plotstyle() -> None:
+    """Set the global seaborn plot style to our color scheme."""
     sns.set_style("darkgrid", {"axes.facecolor": "#f2f0f0"})
 
 
 def get_blues(n: int) -> list[tuple[float, float, float]]:
+    """Get a list of n shades of helmholtz blue.
+
+    Args:
+        n: number of shades to generate
+
+    Returns:
+        List of colors as RGB tuples.
+    """
     blues = sns.blend_palette([darkblue, helmholtzblue, blue60, blue40], n)
     return cast(list[tuple[float, float, float]], blues)
 
 
 def get_greens(n: int) -> list[tuple[float, float, float]]:
+    """Get a list of n shades of helmholtz green.
+
+    Args:
+        n: number of shades to generate
+
+    Returns:
+        List of colors as RGB tuples.
+    """
     greens = sns.blend_palette([darkgreen, helmholtzgreen, green60, "#dbeeaa"], n)
     return cast(list[tuple[float, float, float]], greens)
 

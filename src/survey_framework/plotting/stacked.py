@@ -1,3 +1,5 @@
+"""Stacked bar plots. This is very quick-and-dirty and needs a proper cleanup."""
+
 from typing import Literal, cast
 
 import numpy as np
@@ -40,8 +42,7 @@ def plot_stacked_bar_comparison(
     ax: Axes | None = None,
     n_y_pos: float = 0.95,
 ) -> tuple[Figure, Axes]:
-    """
-    Create a vertical stacked bar plot of mental health classes for two groups.
+    """Create a vertical stacked bar plot of mental health classes for two groups.
 
     Args:
         df1: DataFrame for group 1 (left bar).
@@ -197,8 +198,7 @@ def plot_stacked_bar_single(
     ax: Axes | None = None,
     n_y_pos: float = 0.95,
 ) -> tuple[Figure, Axes]:
-    """
-    Create a vertical stacked bar plot of mental health classes for one group.
+    """Create a vertical stacked bar plot of mental health classes for one group.
 
     NOTE: This is a quick-fix. It might make sense to merge it with
     histplot.py/simple_histplot() where stacking should be implemented anyway
@@ -345,8 +345,10 @@ def plot_stacked_bar_categorical(
     legend_title: str = "",
     category_order: list[str] | None = None,
 ) -> tuple[Figure, Axes]:
-    """This might be what we want instead of the above --
-    arbitrary number of bars supported. Code needs a cleanup though.
+    """Plot a stacked barplot with an arbitrary number of bars.
+
+    This might be what we want instead of the above --
+    Code needs a cleanup and proper documentation though.
 
     Args:
         df: _description_
@@ -362,7 +364,7 @@ def plot_stacked_bar_categorical(
         category_order: _description_
 
     Returns:
-        tuple[Figure, Axes]: _description_
+        New matplotlib figure and axes.
     """
     hc.set_plotstyle()
 

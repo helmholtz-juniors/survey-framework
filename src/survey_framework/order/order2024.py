@@ -1,10 +1,11 @@
-# order2024.py
-# LimeSurvey assigns answer labels in non-ascending order to some questions,
-# which we manually sort as intended here.
-#
-# Note: A previous version of this file also included lists of all questions
-# by their question type; for this, use LimeSurveyData.get_questions_by_type().
+"""Manual re-ordering of answer options for the 2024 survey.
 
+LimeSurvey assigns answer labels in non-ascending order to some questions,
+which we manually sort as intended here.
+
+Note: A previous version of this file also included lists of all questions
+by their question type; for this, use `LimeSurveyData.get_questions_by_type()`.
+"""
 
 ORDER = {
     ### SECTION A: General

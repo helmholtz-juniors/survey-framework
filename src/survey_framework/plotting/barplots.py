@@ -1,3 +1,5 @@
+"""Functions for basic bar plots."""
+
 from collections.abc import Sequence
 
 import matplotlib.pyplot as plt
@@ -6,14 +8,14 @@ from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 
 from ..data_import.data_import import LimeSurveyData
-from ..plotting.helper_barplots import (
+from ._barplot_enums import BarLabels, Orientation, PlotStat, PlotType
+from ._barplots_helpers import (
     adapt_legend,
     add_bar_labels,
     add_tick_labels,
     barplot_internal,
     label_axes,
 )
-from ..plotting.helper_plotenums import BarLabels, Orientation, PlotStat, PlotType
 
 
 def plot_bar(
@@ -31,8 +33,7 @@ def plot_bar(
     tick_label_size: int | None = None,
     tick_label_wrap: int = 25,
 ) -> tuple[Figure, Axes]:
-    """
-    plot bar plots (single and multiple)
+    """Plot bar plots (single and multiple).
 
     Args:
         survey: The LimeSurvey object
@@ -45,11 +46,13 @@ def plot_bar(
         width: Width of figure.
         height: Height of figure.
         bar_labels: How to format bar labels.
+        bar_label_size: Font size for bar labels, if enabled.
+        tick_label_size: Font size for tick labels.
+        tick_label_wrap: How many characters are allowed per line in tick labels.
 
     Returns:
         New matplotlib Figure and Axes for the bar plot.
     """
-
     # plot barplot
     fig, ax = barplot_internal(
         data_df=data_df,
@@ -113,8 +116,7 @@ def plot_bar_comparison(
     tick_label_size: int | None = None,
     tick_label_wrap: int = 25,
 ) -> tuple[Figure, Axes]:
-    """
-    plot comparison bar plots (single and multiple)
+    """Plot comparison bar plots (single and multiple).
 
     Args:
         survey: The LimeSurvey object
@@ -137,7 +139,6 @@ def plot_bar_comparison(
     Returns:
         New matplotlib Figure and Axes for the bar plot.
     """
-
     # plot barplot
     fig, ax = barplot_internal(
         data_df=data_df,

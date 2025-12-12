@@ -1,3 +1,8 @@
+"""A very simple, but versatile histogram plot.
+
+This basically produces bar plots, but can add extras like a density curve.
+"""
+
 from collections.abc import Sequence
 
 import pandas as pd
@@ -22,8 +27,9 @@ def simple_histplot(
     width: float = 10,
     height: float = 6,
 ) -> tuple[Figure, Axes]:
-    """Very simple histplot. Currently in experimental state, to be expanded
-        for stacked barplots and KDE plots.
+    """Plot a histogram of values in `data_df[question_code]`.
+
+    Currently in experimental state, to be expanded for stacked barplots?
 
     Args:
         data_df: DataFrame to be plotted
@@ -32,14 +38,14 @@ def simple_histplot(
         hue_series: Separator for data_df (needs same index).
         hue_order: How to sort hues in the legend and plot
         kde: Whether to plot a density curve.
+        log_scale: whether the y axis should be log-scaled.
         binwidth: Width of bins; automatically inferred if not given.
         width: Plot width.
         height: Plot height.
 
     Returns:
-        tuple: new Figure and Axes of the histogram
+        New figure and axes of the histogram
     """
-
     orderlist = order_dict.get(question_code)
     if orderlist:
         data_df[question_code] = pd.Categorical(

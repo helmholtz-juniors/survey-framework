@@ -2,8 +2,7 @@ from enum import Enum, StrEnum, auto
 
 
 class Orientation(StrEnum):
-    """
-    Whether to plot horizontal or vertical bars.
+    """Whether to plot horizontal or vertical bars.
 
     The string value can be used directly with seaborn functions.
     """
@@ -13,10 +12,10 @@ class Orientation(StrEnum):
 
 
 class PlotStat(StrEnum):
-    """
-    Which stat to use in a plot: absolute (COUNT) or relative (PERCENT) numbers.
-    PROPORTION indicates that values a normalized to [0..1].
+    """Which stat to use in a plot.
 
+    Absolute (COUNT) or relative (PERCENT) numbers.
+    PROPORTION indicates that relative values are normalized to [0..1].
     The string value can be used directly with seaborn functions.
     """
 
@@ -26,9 +25,7 @@ class PlotStat(StrEnum):
 
 
 class BarLabels(Enum):
-    """
-    How each bar in a plot should be labeled. Can be different from PlotStat.
-    """
+    """How each bar in a plot should be labeled. Can be different from PlotStat."""
 
     NONE = auto()
     COUNT = auto()
@@ -36,6 +33,11 @@ class BarLabels(Enum):
 
 
 class PlotType(Enum):
+    """Whether the plot is a single-choice, multiple-choice, or comparison barplot.
+
+    This is currently used internally to select a color scheme.
+    """
+
     SINGLE_Q = auto()  # use blue
     MULTI_Q = auto()  # use shades of blue
     SINGLE_Q_COMPARISON = auto()  # use blue and green

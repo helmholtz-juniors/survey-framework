@@ -5,7 +5,9 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "survey-framework"
 version = "0.1.0"
-authors = [{ name = "Helmholtz Juniors", email = "steering@helmholtz-juniors.de" }]
+authors = [
+    { name = "Helmholtz Juniors", email = "steering@helmholtz-juniors.de" },
+]
 description = "Framework code to analyze and visualize LimeSurvey data."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -32,13 +34,12 @@ dev = [
     "ty>=0.0.1a5",
     "pre-commit>=4.2.0",
 ]
-docs = [
-    "mkdocstrings-python>=2.0.1",
-    "zensical>=0.0.11",
-]
+docs = ["mkdocstrings-python>=2.0.1", "zensical>=0.0.11"]
 
 [tool.ruff.lint]
 select = [
+    # pydocstyle
+    "D",
     # pycodestyle
     "E",
     # Pyflakes
@@ -52,7 +53,16 @@ select = [
     # isort
     "I",
 ]
+ignore = [
+    # no need for docstrings in packages
+    "D104",
+]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
 
 [tool.ruff.lint.per-file-ignores]
 # supress "line too long" warnings for the lookup dictionary
 "shortening.py" = ["E501"]
+# no need for docstrings in tests
+"tests/*.py" = ["D100", "D103"]

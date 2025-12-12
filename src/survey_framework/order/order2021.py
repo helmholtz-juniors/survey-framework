@@ -1,4 +1,8 @@
-# question orders
+"""Incomplete manual re-ordering of answer options for the 2021 survey.
+
+LimeSurvey assigns answer labels in non-ascending order to some questions,
+which we manually sort as intended here.
+"""
 
 order_A1 = ["A1", "A2", "A3", "A4"]
 order_A2 = [

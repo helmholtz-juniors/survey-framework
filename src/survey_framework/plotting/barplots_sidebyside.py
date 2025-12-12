@@ -1,3 +1,5 @@
+"""Functions for side-by-side horizontal bar plots."""
+
 from textwrap import wrap
 from typing import cast
 
@@ -8,15 +10,15 @@ from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 
 from ..data_import.data_import import LimeSurveyData
-from .helmholtzcolors import helmholtzblue, helmholtzgreen, set_plotstyle
-from .helper_barplots import (
+from ._barplot_enums import BarLabels, Orientation, PlotStat
+from ._barplots_helpers import (
     adapt_legend,
     add_bar_labels,
     add_tick_labels,
     get_hue_left,
     get_hue_right,
 )
-from .helper_plotenums import BarLabels, Orientation, PlotStat
+from .helmholtzcolors import helmholtzblue, helmholtzgreen, set_plotstyle
 
 
 def plot_bar_side_by_side(
@@ -50,9 +52,8 @@ def plot_bar_side_by_side(
         height: Total plot height.
 
     Returns:
-        tuple[plt.figure, plt.axes]: New Figure and Axes
+        New Figure and Axes
     """
-
     # set seaborn theme
     set_plotstyle()
 

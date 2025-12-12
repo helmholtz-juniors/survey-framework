@@ -1,3 +1,5 @@
+"""Basic filtering and aggreation of survey data."""
+
 from collections.abc import Sequence
 from typing import cast
 from warnings import warn
@@ -12,9 +14,12 @@ CENTER = "A2"
 
 
 def get_data_for_q(survey: LimeSurveyData, question_number: str) -> pd.DataFrame:
-    """
-    Returns a DataFrame with the responses to a specific question
-    without any contingent answers.
+    """Returns a DataFrame with the responses for the given question ID.
+
+    Contingent questions (free text fields, shown as "other") are removed.
+
+    Deprecated:
+        Use `LimeSurveyData.get_responses(drop_other=True)` instead.
 
     Args:
         survey: The LimeSurvey object
@@ -42,8 +47,7 @@ def get_data_for_q(survey: LimeSurveyData, question_number: str) -> pd.DataFrame
 def filter_by_center(
     survey: LimeSurveyData, responses: pd.DataFrame, center_code: str
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
-    """
-    Filter responses by center.
+    """Filter responses by center.
 
     Args:
         survey: The survey object
@@ -76,8 +80,9 @@ def filter_by_center(
 def get_center_series(
     survey: LimeSurveyData, center_code: str
 ) -> tuple["pd.Series[str]", Sequence[str]]:
-    """Get a series that contains the center name for every participant, with
-    all centers other than the target `center_code` replaced by "Other Centers".
+    """Get a series that contains the center name for every participant.
+
+    All centers *other than* `center_code` are replaced by "Other Centers".
     The output of this function can be nicely used with the histogram plot.
 
     Args:
@@ -102,11 +107,13 @@ def get_as_numeric(
     survey: LimeSurveyData, q_code: str, blocklist: list[str]
 ) -> "pd.Series[float]":
     """Get numeric answers for the requested question code.
-    Raises if non-numeric answer codes are not in the given blocklist.
+
+    Raises:
+        ValueError: if non-numeric answer codes are not in the given blocklist.
 
     Args:
         survey: The survey object
-        center_code: ID of the center to filter by (like 'A01')
+        q_code: The question ID to be queried
         blocklist: Answer codes to be excluded from the result
 
     Returns:
@@ -124,17 +131,18 @@ def get_as_numeric(
 def get_phd_duration(
     survey: LimeSurveyData,
 ) -> tuple["pd.Series[int]", "pd.Series[int]"]:
-    """Calculate relevant numbers from questions A8 and A9, namely:
-        * How long has the participant been a doctoral researcher [years]?
-        * How long do they estimate their project to last _in total_ [months]?
+    """Calculate relevant durations from questions A8 and A9.
+
+    We calculate:
+    * How long has the participant been a doctoral researcher [years]?
+    * How long do they estimate their project to last *in total* [months]?
 
     Args:
-        survey (LimeSurveyData): The survey object
+        survey: The survey object
 
     Returns:
-        tuple[pd.Series[int], pd.Series[int]]: Tuple of current year and estimation.
+        Tuple of current phd year and total duration estimation.
     """
-
     Q_START = {"year": "A8", "month": "A8a"}
     Q_END = {"year": "A9", "month": "A9a"}
 

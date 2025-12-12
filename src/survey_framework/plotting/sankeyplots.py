@@ -1,3 +1,5 @@
+"""Sankey Plot -- visualizes the "flow" of participants between questions."""
+
 import ausankey as sky  # type: ignore[import-untyped]
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -16,12 +18,13 @@ def plot_sankey(
     fontsize: int | None = None,
     plot_fractions: bool = True,
 ) -> Figure:
-    """Plots a two staged sankey diagram
+    """Plots a two staged sankey diagram.
 
     Args:
         data_df: Data containing rows like
             (label_left, count, label_right, same_count)
         titles: Titles of both stages.
+        title: _deprecated, unused_
         width: Total plot width.
         height: Total plot height.
         fontsize: Font size for the plot

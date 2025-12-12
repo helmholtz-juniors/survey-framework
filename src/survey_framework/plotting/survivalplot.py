@@ -1,3 +1,5 @@
+"""Survival Plots. Typically used to visualize change over time."""
+
 from collections.abc import Callable, Iterable
 from textwrap import wrap
 
@@ -21,8 +23,7 @@ def plot_survival_plot(
     width: int = 6,
     height: int = 4,
 ) -> tuple[Figure, Axes]:
-    """
-    Plots the given DataFrame as a survival plot, approaching zero.
+    """Plots the given DataFrame as a survival plot, approaching zero.
 
     Args:
         df: DataFrame with a column of numerical data called "data".
@@ -36,7 +37,7 @@ def plot_survival_plot(
         height: Vertical figure size.
 
     Returns:
-        tuple[Figure, Axes]: The matplotlib figure and axes.
+        The matplotlib figure and axes.
     """
     if legend_replace is None:
         legend_replace = dict()

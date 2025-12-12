@@ -1,3 +1,5 @@
+"""A heatmap, used to visualize correlation strength."""
+
 from enum import StrEnum
 
 import matplotlib.pyplot as plt
@@ -17,7 +19,7 @@ from survey_framework.data_import.data_import import LimeSurveyData
 
 
 class CorrMethod(StrEnum):
-    """Correlation Method used by Pandas"""
+    """Correlation Method used by Pandas."""
 
     KENDALL = "kendall"  # Kendall's tau
     PEARSON = "pearson"  # Pearson's rho
@@ -43,7 +45,6 @@ def plot_heatmap(
     Returns:
         tuple of matplotlib figure and axes for the heatmap
     """
-
     """"""
     SOMATIC = "D4"
     BURNOUT = "D3d"

@@ -17,8 +17,8 @@ from survey_framework.data_analysis.scoring import (
 )
 from survey_framework.data_import.data_import import LimeSurveyData
 from survey_framework.plotting import helmholtzcolors
-from survey_framework.plotting.helper_barplots import add_bar_labels, barplot_internal
-from survey_framework.plotting.helper_plotenums import BarLabels, Orientation, PlotStat
+from survey_framework.plotting._barplot_enums import BarLabels, Orientation, PlotStat
+from survey_framework.plotting._barplots_helpers import add_bar_labels, barplot_internal
 from survey_framework.plotting.likertplot import plot_likertplot
 
 

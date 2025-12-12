@@ -91,6 +91,7 @@ def plot_comparison_2021(
     answer_map: Mapping[str, str] | Callable[[str], str | None],
 ) -> None:
     """Create a comparison plot between 2021 and 2024 data.
+
     This presumes that the question code is the same for both years.
 
     Args:

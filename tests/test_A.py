@@ -5,12 +5,12 @@ import pandas as pd
 from survey_framework.data_analysis.analysis import get_data_for_q
 from survey_framework.data_import.data_import import LimeSurveyData
 from survey_framework.order.order2024 import ORDER
-from survey_framework.plotting.barplots import plot_bar, plot_bar_comparison
-from survey_framework.plotting.helper_plotenums import (
+from survey_framework.plotting._barplot_enums import (
     BarLabels,
     Orientation,
     PlotStat,
 )
+from survey_framework.plotting.barplots import plot_bar, plot_bar_comparison
 
 sectionA = "A"
 a1 = "A1"  # participation in last N2 survey

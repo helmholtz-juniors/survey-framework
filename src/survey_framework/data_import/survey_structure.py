@@ -1,6 +1,4 @@
-"""
-Taken from the N2 Survey Framework
-Lime Survey related helper functions
+"""Taken from the N2 Survey Framework; Lime Survey related helper functions.
 
 The module contains helper functions for parsing
 lime survey data such as *.xml structure files
@@ -16,8 +14,8 @@ from warnings import warn
 from bs4 import BeautifulSoup, MarkupResemblesLocatorWarning
 from bs4.element import Tag
 
+from ._types import QuestionTypeAlias, ResponseData, ResponseTypeAlias
 from .fixup_2024 import count_responses, name_response, rename_question
-from .types import QuestionTypeAlias, ResponseData, ResponseTypeAlias
 
 
 class SectionInfo(TypedDict):
@@ -37,16 +35,14 @@ __all__ = [
 
 
 def _get_clean_string(tag: Tag) -> str:
-    """
-    Clear a text in XML from HTML tags and line breaks
+    """Clear a text in XML from HTML tags and line breaks.
 
     Args:
-        tag: TODO
+        tag: bs4 tag which contains text
 
-    Returns: cleaned string
-
+    Returns:
+        cleaned string
     """
-
     # Remove HTML tags and line breaks
     # warnings are caused by "/" in strings, ignore them
     with warnings.catch_warnings():
@@ -66,17 +62,16 @@ def _get_clean_string(tag: Tag) -> str:
 
 
 def _parse_question_title(question: Tag) -> str:
-    """
-    Get a question title from <question> element
+    """Get a question title from <question> element.
 
     Args:
-        question (Tag):
+        question: bs4 tag of <question> element
 
     Raises:
-        AssertionError:
+        AssertionError: If the given question contains no title.
 
     Returns:
-        str: Parsed question title cleaned from HTML tags and extra spaces
+        Parsed question title cleaned from HTML tags and extra spaces
     """
     text_sections = question.find_all("text", recursive=False)
     if len(text_sections) >= 1:
@@ -88,15 +83,14 @@ def _parse_question_title(question: Tag) -> str:
 
 
 def _parse_question_description(question: Tag) -> str:
-    """Get a question description from <question> element
+    """Get a question description from <question> element.
 
     Args:
-        question (Tag): bs4 tag of <question> element
+        question: bs4 tag of <question> element
 
     Returns:
-        str: Parsed question description cleaned from HTML
-          tags and extra spaces. Or empty string if there is
-          no <directive> child element.
+        Parsed question description cleaned from HTML tags and extra spaces,
+        or empty string if there is no <directive> child element.
     """
     description = ""
     directive_sections = question.find_all("directive", recursive=False)
@@ -115,16 +109,15 @@ def _parse_question_description(question: Tag) -> str:
 
 
 def _parse_question_sub_questions(question: Tag) -> list[tuple[str, str]]:
-    """Collect subquestions data
+    """Collect subquestions data.
 
     Collects names and labels of each <subQuestion> sections
 
     Args:
-        question (Tag): bs4 tag of <question> element
+        question: bs4 tag of <question> element
 
     Returns:
-        list[tuple[str, str]]: List of pairs (<subsection varName>,
-          <subsection cleaned label>)
+        List of pairs (<subsection varName>, <subsection cleaned label>)
     """
     # TODO: Add validation that varName is provided
     # TODO: Add validation that there is only one <text> tag
@@ -140,18 +133,17 @@ def _parse_question_sub_questions(question: Tag) -> list[tuple[str, str]]:
 def _parse_single_question_response(
     response: Tag,
 ) -> ResponseTypeAlias:
-    """
-    Parse single <response> element of a question
+    """Parse single <response> element of a question.
 
     Args:
-        response (Tag): bs4 tag of <response> element
+        response: bs4 tag of <response> element
 
     Raises:
         AssertionError: Unknown response type. First child must be
           either "free" or "fixed".
 
     Returns:
-        tuple[dict, Optional[dict]]: Pair:
+        Pair of:
           1. Main response data: name, format, length, label, choices
           2. Contingent question data. None if there is no contingent
           question. Contains, name, text, length, format, and:
@@ -225,17 +217,21 @@ def _parse_single_question_response(
 def _parse_question_responses(
     question: Tag,
 ) -> list[ResponseTypeAlias]:
-    """
-    Parse all question responses
+    """Parse all question responses.
 
     Simply runs `_parse_single_question_response` for each <response>
     section. See `_parse_single_question_response` for the details.
 
     Args:
-        question:
+        question: bs4 tag of <question> element
 
     Returns:
-
+        Pairs of:
+          1. Main response data: name, format, length, label, choices
+          2. Contingent question data. None if there is no contingent
+          question. Contains, name, text, length, format, and:
+            * contingent_of_name - name of the parent <response> element
+            * contingent_of_choice - <value> of the parent <choice> element
     """
     response_sections = question.find_all("response", recursive=False)
 
@@ -253,8 +249,7 @@ def _parse_question_responses(
 
 
 def _get_question_group_name(responses: list[ResponseTypeAlias]) -> str:
-    """
-    Get a question group name
+    """Get a question group name.
 
     Some questions consist of many columns (subQuestions, contingent
     question, etc.), for them we try to get question group name. If there
@@ -262,13 +257,13 @@ def _get_question_group_name(responses: list[ResponseTypeAlias]) -> str:
     looking for a longest common prefix.
 
     Args:
-        responses (list[dict, Optional[dict]]): List of parsed responses
+        responses: List of parsed responses
 
     Raises:
         ValueError: At least one response with a (var)name is required
 
     Returns:
-        str: the question group name
+        the question group name
     """
     names = cast(list[str], [response["name"] for response, _ in responses])
     if len(names) == 1:
@@ -286,14 +281,14 @@ def _get_question_type(
     subquestions: list[tuple[str, str]],
     responses: list[ResponseTypeAlias],
 ) -> str:
-    """Infer question type
+    """Infer question type.
 
     Args:
-        subquestions (list): Parsed subquestions in the question
-        responses (list): Parsed responses in the question
+        subquestions: Parsed subquestions in the question
+        responses: Parsed responses in the question
 
     Returns:
-        str: Inferred question type
+        Inferred question type
     """
     subquestion_count = len(subquestions)
     # fixup broken question type in 2024 survey
@@ -319,26 +314,16 @@ def _get_question_type(
 def _parse_question(
     question: Tag,
 ) -> list[QuestionTypeAlias]:
-    """
-    Parse single <question> section
+    """Parse single <question> section.
 
     Args:
         question: bs4 tag of <question> element
 
     Returns:
-        list[dict]: List of parsed response columns. The list consists of
-        of dictionaries. Each dictionary corresponds to only one data column
-        in responses CSV. I.e. single question with contingent will return
-        list of two dictionaries.
-
+        List of parsed response columns. The list consists of dictionaries.
+        Each dictionary corresponds to only one data column in responses CSV.
+        I.e. single question with contingent will return list of two dictionaries.
     """
-    """
-    
-
-    :param question: 
-    :return: 
-    """
-
     # Get question label
     question_label = _parse_question_title(question)
 
@@ -446,17 +431,14 @@ def _parse_question(
 
 
 def _parse_section(section: Tag) -> SectionInfo:
-    """
-    Parse questionnaire section
+    """Parse questionnaire section.
 
     Args:
         section: bs4 element of a section like `soup.find("section")`
 
     Returns:
-        dict: A dictionary with the section information consisting of "id", "title",
-          and "info"
+        A dictionary with the section information consisting of id, title and info.
     """
-
     # Get section ID
     section_id_str = section.attrs.get("id", None)
     if not isinstance(section_id_str, str):
@@ -501,20 +483,18 @@ def _parse_section(section: Tag) -> SectionInfo:
 
 
 def read_lime_questionnaire_structure(filepath: Path) -> SurveyStructure:
-    """
-    Read LimeSurvey XML structure file
+    """Read LimeSurvey XML structure file.
 
     Args:
         filepath: Path to the XML structure file
 
     Returns:
-        dict[str, list[dict]]: A dictionary
+        A dictionary
             {
                 "sections": [...] - list of sections (see _parse_section)
                 "questions": [...] - list of data columns (see _parse_question)
             }
     """
-
     # Read the structure file
     with open(filepath, encoding="utf8") as fp:
         soup = BeautifulSoup(fp, "xml")

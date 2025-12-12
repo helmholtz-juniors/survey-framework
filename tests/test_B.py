@@ -9,9 +9,7 @@ from survey_framework.data_import.data_import import LimeSurveyData
 
 
 def test_swarm(survey: LimeSurveyData, output_path: Path) -> None:
-    """
-    WARNING: This is WIP, the generated plot does _not_ adhere to our style.
-    """
+    """WARNING: This is WIP, the generated plot does _not_ adhere to our style."""
     section = "B"
     q = "B14"
 

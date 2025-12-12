@@ -1,7 +1,17 @@
+"""Small data-handling helpers to be used in different places."""
+
 import re
 
 
 def shorten_center_name(long: str) -> str | None:
+    """Given a full center name, return its abbreviation.
+
+    Args:
+        long: Full name
+
+    Returns:
+        Center abbreviation, or None for invalid inputs.
+    """
     # first, search for an acronym in brackets
     m = re.search(r"\(([A-Z]+)\)", long)
     if m:

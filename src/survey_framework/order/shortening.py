@@ -1,5 +1,7 @@
-# Long answers that may need shortening for plotting go here.
-# If the short version is empty, the shortening is ignored.
+"""Long answers that may need shortening for plotting go here.
+
+If the short version is empty, the shortening is ignored.
+"""
 
 SHORTENED = {
     "I will not be able to submit and / or defend my thesis": "",

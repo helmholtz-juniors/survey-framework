@@ -13,18 +13,18 @@ from matplotlib.ticker import PercentFormatter
 from survey_framework.order.shortening import SHORTENED
 
 from ..data_import.data_import import LimeSurveyData, QuestionType
+from ._barplot_enums import (
+    BarLabels,
+    Orientation,
+    PlotStat,
+    PlotType,
+)
 from .helmholtzcolors import (
     get_blues,
     get_greens,
     helmholtzblue,
     helmholtzgreen,
     set_plotstyle,
-)
-from .helper_plotenums import (
-    BarLabels,
-    Orientation,
-    PlotStat,
-    PlotType,
 )
 
 
@@ -36,15 +36,15 @@ def add_bar_labels(
     fontsize: int | None = None,
     rotation: int = 0,
 ) -> Axes:
-    """
-    add labels to each bar in a bar plot
+    """Add labels to each bar in a bar plot.
 
     Args:
-        ax (Axes): matplotlib.axes
-        show_axes_labels (ShowAxesLabel): whether axes labels should be shown
-        percentcount (PercentCount): whether the data plotted is absolute or relative
-        n_question (int): the total number of answers, needed for percent calculation
-        fontsize (int): font size for the bar labels
+        ax: matplotlib.axes
+        show_axes_labels: whether axes labels should be shown
+        percentcount: whether the data plotted is absolute or relative
+        n_question: the total number of answers, needed for percent calculation
+        fontsize: font size for the bar labels
+        rotation: Degree of rotation for bar labels
 
     Returns:
         Axes: modified axes
@@ -91,8 +91,7 @@ def barplot_internal(
     hue: str | None = None,
     hue_order: Sequence[str] | None = None,
 ) -> tuple[Figure, Axes]:
-    """
-    plot bar plot with processed data
+    """Plot bar plot with processed data.
 
     Args:
         data_df: dataframe with processed data
@@ -101,13 +100,13 @@ def barplot_internal(
         stat: whether the plot shows counts or percentages
         width: x-axis size of figure
         height: y-axis size of figure
+        comparison: Which type of plot -- single choice, multiple choice, comparison?
         hue: DF column to use for hue. If None (default), use answer choices for hue.
         hue_order: order within hue to enforce consistent coloring.
 
     Returns:
-        tuple[Figure, Axes]: modified figure and axes
+        Modified figure and axes
     """
-
     # set up input for hue and colors for plotting
     colors: list[str] | list[tuple[float, float, float]] = list()
     match comparison:
@@ -173,16 +172,15 @@ def add_tick_labels(
     text_wrap: int,
     fontsize: int | None = None,
 ) -> Axes:
-    """
-    add axis labels for question
-    horizontal --> add labels to y-axis
-    vertical --> add labels to x-axis
+    """Add tick labels to ax using question data.
+
+    This resolves answer codes to full answer strings, wrapping them if neccessary.
 
     Args:
         survey: survey data
         ax: plot to modify
         question: str of question
-        orientation: orientation of plot
+        orientation: horizontal: add labels to y-axis, vertical: add labels to x-axis.
         text_wrap: after how many letters text should be wrapped
         fontsize: fontsize
 
@@ -255,8 +253,7 @@ def adapt_legend(
     group_n: dict[str, int] | None = None,
     anchor: tuple[float, float] | None = None,
 ) -> Axes:
-    """
-    rename legend and move below N
+    """Rename legend and move below N.
 
     Args:
         survey: survey data
@@ -269,7 +266,6 @@ def adapt_legend(
     Returns:
         The same matplotlib Axes that was given.
     """
-
     handles, labels = ax.get_legend_handles_labels()
     for i, old_label in enumerate(labels):
         if group_n is not None:
@@ -287,8 +283,15 @@ def adapt_legend(
 def get_hue_left(
     data_df: pd.DataFrame, hue: str
 ) -> tuple[list[str], list[tuple[float, float, float]]]:
-    hue_input = list()
-    colors = list()
+    """Assign shades of blue for each _distinct_ value in `data_df[hue]`.
+
+    Args:
+        data_df: Plot data table.
+        hue: Name of the column in `data_df` that contains the hue.
+
+    Returns:
+        Contents of the hue column, and colors for each distinct value.
+    """
     hue_input = list(data_df[hue])
     colors = get_blues(len(data_df[hue].value_counts()))
 
@@ -298,8 +301,15 @@ def get_hue_left(
 def get_hue_right(
     data_df: pd.DataFrame, hue: str
 ) -> tuple[list[str], list[tuple[float, float, float]]]:
-    hue_input = list()
-    colors = list()
+    """Assign shades of green for each _distinct_ value in `data_df[hue]`.
+
+    Args:
+        data_df: Plot data table.
+        hue: Name of the column in `data_df` that contains the hue.
+
+    Returns:
+        Contents of the hue column, and colors for each distinct value.
+    """
     hue_input = list(data_df[hue])
     colors = get_greens(len(data_df[hue].value_counts()))
 
@@ -309,6 +319,14 @@ def get_hue_right(
 def label_axes(
     ax: Axes, orientation: Orientation, label_q_data: str, stat: PlotStat
 ) -> None:
+    """Depending on stat and orientation, select the right formatter for the plot axes.
+
+    Args:
+        ax: The plot.
+        orientation: Whether the plot is horizontal or vertical.
+        label_q_data: Label for the data axis (e.g. "Participants")
+        stat: Whether data is absolute, relative or relative+normalized.
+    """
     prop_fmt = PercentFormatter(1.0, symbol=None)
     perc_fmt = PercentFormatter(100, symbol=None)
     match orientation:

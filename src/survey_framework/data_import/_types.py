@@ -2,6 +2,8 @@ from typing import TypeAlias, TypedDict
 
 
 class ResponseData(TypedDict):
+    """Dictionary with metadata about response options."""
+
     name: str
     format: str | None
     length: str | None

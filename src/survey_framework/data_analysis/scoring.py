@@ -1,3 +1,5 @@
+"""Logic for converting answers on standardized scales into scores."""
+
 from enum import StrEnum
 from typing import Any
 
@@ -5,6 +7,8 @@ import pandas as pd
 
 
 class Condition(StrEnum):
+    """Enumeration of mental health conditions, to be used with rate_mental_health."""
+
     STATE_ANXIETY = "D1"
     TRAIT_ANXIETY = "D2"
     DEPRESSION = "D3"
@@ -15,16 +19,15 @@ def rate_mental_health(
     condition: Condition,
     keep_subscores: bool = False,
 ) -> pd.DataFrame:
-    """Calculate State/Trait Anxiety or Depression score based on responses to
-        question based on the following references:
-            K. Kroenke, R. L. Spitzer, J. B. W. William, and B. Löwe., The
-                Patient Health Questionnaire somatic, anxiety,and depressive
-                symptom scales: a systematic review. General Hospital
-                Psychiatry, 32(4):345-359, 2010.
-            T. M. Marteau and H. Bekker., The development of a six-item short-
-                form of the state scale of the spielberger state-trait anxiety
-                inventory (STAI). British Journal of Clinical Psychology,
-                31(3):301-306, 1992.
+    """Calculate State/Trait Anxiety or Depression score based on responses to question.
+
+    Scoring is based on:
+      * K. Kroenke, R. L. Spitzer, J. B. W. William, and B. Löwe., The Patient
+        Health Questionnaire somatic, anxiety,and depressive symptom scales:
+        a systematic review. General Hospital Psychiatry, 32(4):345-359, 2010.
+      * T. M. Marteau and H. Bekker., The development of a six-item short-form
+        of the state scale of the spielberger state-trait anxiety inventory
+        (STAI). British Journal of Clinical Psychology, 31(3):301-306, 1992.
 
     Args:
         responses: DataFrame containing responses data
@@ -34,9 +37,8 @@ def rate_mental_health(
             Default False.
 
     Returns:
-        pd.DataFrame: Mental health condition ratings and classifications
+        Mental health condition ratings ("score") and classifications ("class").
     """
-
     # Set up condition-specific parameters
     match condition:
         case Condition.STATE_ANXIETY:
@@ -148,21 +150,20 @@ def rate_somatic(
     responses: pd.DataFrame,
     keep_subscores: bool = False,
 ) -> pd.DataFrame:
-    """Calculate Patient Health Questionaire (PHQ15) based on responses to
-        question based on:
-            K. Kroenke, R. L. Spitzer, J. B. W. William, and B. Löwe., The
-                Patient Health Questionnaire somatic, anxiety,and depressive
-                symptom scales: a systematic review. General Hospital
-                Psychiatry, 32(4):345-359, 2010.
+    """Calculate Patient Health Questionaire (PHQ15) from participant responses.
+
+    Scoring is based on:
+      * K. Kroenke, R. L. Spitzer, J. B. W. William, and B. Löwe., The Patient
+        Health Questionnaire somatic, anxiety, and depressive symptom scales:
+        a systematic review. General Hospital Psychiatry, 32(4):345-359, 2010.
 
     Args:
         responses: DataFrame containing responses data
         keep_subscores: Whether to include scores from subquestions
             in the output DataFrame, or only total score and classification.
-            Default False.
 
     Returns:
-        pd.DataFrame: PHQ15 classifications
+        PHQ15 classifications in two columns ("D4_class" and "D4_score").
     """
     PHQ15 = "D4"
     label = "somatic"
@@ -220,7 +221,7 @@ def rate_somatic(
 
 
 class Scale(StrEnum):
-    """The three burnout scales defined by the MBI"""
+    """The three burnout scales defined by the MBI."""
 
     EX = "Exhaustion"
     CY = "Cynicism"
@@ -228,7 +229,7 @@ class Scale(StrEnum):
 
 
 class Profile(StrEnum):
-    """The five burnout profiles defined in the MBI manual"""
+    """The five burnout profiles defined in the MBI manual."""
 
     ENGAGED = "Engaged"
     INEFFECTIVE = "Ineffective"
@@ -238,8 +239,10 @@ class Profile(StrEnum):
 
 
 def rate_burnout(responses: pd.DataFrame) -> pd.DataFrame:
-    """Calculate burnout scores for the MBI-GS scale according to the
-            Maslach Burnout Inventory Manual, Fourth Edition.
+    """Calculate burnout scores from participants' answers.
+
+    This uses the MBI-GS scale according to the Maslach Burnout Inventory (MBI)
+    Manual, Fourth Edition.
 
     Args:
         responses: responses to question D3d (burnout)
@@ -247,7 +250,6 @@ def rate_burnout(responses: pd.DataFrame) -> pd.DataFrame:
     Returns:
         SUM scores for each `Scale` (3 ints) and a burnout `Profile` (1 string)
     """
-
     SCORE_MAP = {
         "A2": 0,  # "Never"
         "A3": 1,  # "A few times a year or less"
@@ -293,7 +295,7 @@ def rate_burnout(responses: pd.DataFrame) -> pd.DataFrame:
     df["PE_critical"] = df[Scale.PE].div(6).map(lambda x: x > 4.30, na_action="ignore")
 
     def classify(row: "pd.Series[Any]") -> Profile:
-        """assign burnout profiles according to Table 1 in the manual
+        """Assign burnout profiles according to Table 1 in the manual.
 
         Args:
             row: a single participant
@@ -301,7 +303,6 @@ def rate_burnout(responses: pd.DataFrame) -> pd.DataFrame:
         Returns:
             burnout `Profile` of the participant
         """
-
         exhausted = row["EX_critical"]
         cynical = row["CY_critical"]
         effective = row["PE_critical"]
@@ -330,12 +331,14 @@ def rate_satisfaction(
     responses: pd.DataFrame,
     calc_average: bool = True,
 ) -> pd.DataFrame:
-    """Calculate satisfaction rating for each subquestion and average over all
-    subquestions. Numeric scale from 1 = very dissatisfied to 5 = very satisfied.
+    """Calculate satisfaction rating for each subquestion and calculate the average.
+
+    Uses a numeric scale from 1 = very dissatisfied to 5 = very satisfied.
 
     Args:
         responses: DataFrame containing responses data
         calc_average: Whether to calculate average satisfaction. Default True.
+
     Returns:
         Satisfaction ratings for each component (and overall average)
     """

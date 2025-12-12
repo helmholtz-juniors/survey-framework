@@ -1,3 +1,5 @@
+"""Likert Plots (typically used for data on a 5-point scale)."""
+
 import warnings
 from textwrap import wrap
 from typing import cast
@@ -10,8 +12,8 @@ from matplotlib.figure import Figure
 from plot_likert import plot_likert as _likert  # type: ignore [import-untyped]
 
 from ..data_import.data_import import LimeSurveyData
+from ._barplot_enums import BarLabels
 from .helmholtzcolors import palette, set_plotstyle
-from .helper_plotenums import BarLabels
 
 
 def plot_likertplot(
@@ -26,8 +28,7 @@ def plot_likertplot(
     text_wrap: int = 30,
     relabel_subquestions: bool = True,
 ) -> tuple[Figure, Axes]:
-    """
-    plot the given data as a Likert plot
+    """Plot the given data as a Likert plot.
 
     Args:
         survey: the LimeSurvey object
@@ -37,7 +38,9 @@ def plot_likertplot(
         bar_labels: which kind of bar labels to use.
         width: width of the figure.
         height: height of the figure.
+        percent_cutoff: If groups are smaller than x percent, they don't get a label.
         text_wrap: wrap question labels after x characters.
+        relabel_subquestions: Whether to rewrite y axis labels using the question data.
 
     Returns:
         The matplotlib figure and axis
@@ -66,8 +69,8 @@ def plot_likertplot(
     # ax.set_title(title[0])
 
     # set subquestion labels (y ticks)
-    new_labels = []
     if relabel_subquestions:
+        new_labels = []
         for old_label in ax.get_yticklabels():
             label = cast(str, survey.questions.loc[old_label.get_text()]["label"])
             clean_str = label.replace("/", " / ")
@@ -97,9 +100,7 @@ def plot_likertplot(
     )
 
     def cutoff_fmt(x: float) -> str:
-        """
-        formatter for bar labels, with a 5% cutoff (no label for small bars)
-        """
+        """Formatter for bar labels, with a 5% cutoff (no label for small bars)."""
         percentage = x * 100 / n_question
         if percentage < percent_cutoff:
             return ""

@@ -1,3 +1,5 @@
+"""Defines the central data type along with importing logic."""
+
 import re
 import warnings
 from collections.abc import Hashable, Iterable
@@ -12,6 +14,8 @@ from .survey_structure import read_lime_questionnaire_structure
 
 
 class QuestionType(StrEnum):
+    """Each type of question has a distinct data format."""
+
     FREE = auto()
     ARRAY = auto()
     SINGLE_CHOICE = "single-choice"
@@ -19,7 +23,7 @@ class QuestionType(StrEnum):
 
 
 class LimeSurveyData:
-    """Base LimeSurvey class"""
+    """Base LimeSurvey class."""
 
     # we probably want these kind of constants defined somewhere else in one place
     na_label: str = "No Answer"
@@ -33,19 +37,18 @@ class LimeSurveyData:
         structure_file: Path,
         responses_file: Path,
     ) -> None:
-        """
-        Initialize an instance of the Survey
+        """Initialize an instance of the Survey.
 
         Args:
             structure_file: path to the structure XML file
             responses_file: path to the responses CVS file
         """
-
         # Store path to structure file
         self._read_structure(structure_file)
         self._read_responses(responses_file)
 
     def __str__(self) -> str:
+        """Print all questions, responses and sections for debugging."""
         string = f"QUESTIONS\n{self.questions}\n"
         string += f"RESPONSES\n{self.responses}\n"
         string += f"SECTIONS\n{self.sections}\n"
@@ -53,16 +56,11 @@ class LimeSurveyData:
 
     # partially copied from N2Framework
     def _read_structure(self, structure_file: Path) -> None:
-        """
-        Read structure XML file
+        """Read structure XML file.
 
         Args:
             structure_file: path to the structure XML file
-
-        Returns:
-
         """
-
         # Parse XML structure file
         structure_dict = read_lime_questionnaire_structure(structure_file)
 
@@ -84,12 +82,11 @@ class LimeSurveyData:
         self,
         responses_file: Path,
     ) -> None:
-        """Read responses CSV file
+        """Read responses CSV file.
 
         Args:
-            responses_file (str): Path to the responses CSV file
+            responses_file: Path to the responses CSV file
         """
-
         # Read 1st line of the csv file
         response = pd.read_csv(responses_file, nrows=1, index_col=0)
 
@@ -208,17 +205,15 @@ class LimeSurveyData:
     def _get_dtype_info(
         self, columns: Iterable[str], renamed_columns: Iterable[str]
     ) -> tuple[dict[Hashable, Dtype], list[str]]:
-        """Get dtypes for columns in data csv
+        """Get dtypes for columns in data csv.
 
         Args:
             columns: Column names from data csv
             renamed_columns: Column names modified to match self.questions entries
 
         Returns:
-            dict: Dictionary of column names and dtypes
-            list: List of datetime columns
+            Dictionary of column names and dtypes and a list of datetime columns.
         """
-
         # Compile dict with dtype for each column
         dtype_dict: dict[Hashable, Dtype] = {}
         # Compile list of datetime columns
@@ -268,11 +263,10 @@ class LimeSurveyData:
         return dtype_dict, datetime_columns
 
     def export_Qs_to_CSV(self, output_path: Path) -> None:
-        """
-        export the question sheet from the survey to CSV
+        """Export the question sheet from the survey to CSV.
 
         Args:
-            output_path (Path): output path to where CSV is saved
+            output_path: output path to where CSV is saved
         """
         output_path.mkdir(parents=True, exist_ok=True)
 
@@ -280,18 +274,18 @@ class LimeSurveyData:
         self.questions.to_csv(output)
 
     def get_question(self, question: str, drop_other: bool = False) -> pd.DataFrame:
-        """Get question structure (i.e. subset from self.questions)
+        """Get question structure (i.e. subset from self.questions).
 
         Args:
             question: Name of question or subquestion
             drop_other: Whether to exclude contingent question (i.e. "other")
+
         Raises:
             ValueError: There is no such question or subquestion
 
         Returns:
             pd.DataFrame: Subset from `self.questions` with corresponding rows
         """
-
         questions_subdf = self.questions[
             (self.questions["question_group"] == question)
             | (self.questions.index == question)
@@ -306,7 +300,7 @@ class LimeSurveyData:
         return questions_subdf
 
     def get_choices(self, question: str) -> dict[str, str]:
-        """Get choices of a question
+        """Get choices of a question.
 
         * For multiple-choice group, format is `<subquestion code: subquestion title>`,
           for example, {"C3_SQ001": "I do not like scientific work.", "C3_SQ002": ...}
@@ -315,12 +309,11 @@ class LimeSurveyData:
         * For free and contingent, returns None
 
         Args:
-            question (str): Name of question or subquestion to retrieve
+            question: Name of question or subquestion to retrieve
 
         Returns:
-            dict: dict of choices mappings
+            dict of choices mappings
         """
-
         question_info = self.get_question(question)
         question_info = question_info[~question_info.is_contingent]
         question_type = self.get_question_type(question)
@@ -345,8 +338,7 @@ class LimeSurveyData:
         question: str,
         drop_other: bool = False,
     ) -> pd.DataFrame:
-        """Get responses for a given question with or without labels
-        (and with or without contingent questions).
+        """Get responses for given question with or without contingent questions.
 
         Args:
             question: Question to get the responses for.
@@ -357,7 +349,7 @@ class LimeSurveyData:
             ValueError: Unknown question types.
 
         Returns:
-            [pd.DataFrame]: The response for the selected question.
+            The response data for the selected question.
         """
         question_group = self.get_question(question, drop_other=drop_other)
         question_type = self.get_question_type(question)
@@ -378,10 +370,10 @@ class LimeSurveyData:
         return responses
 
     def get_question_type(self, question: str) -> QuestionType:
-        """Get question type and validate it
+        """Get question type and validate it.
 
         Args:
-            question (str): question or column code
+            question: question or column code
 
         Raises:
             AssertionError: Unconsistent question types within question
@@ -390,7 +382,6 @@ class LimeSurveyData:
         Returns:
             QuestionType: Question type like "single-choice", "array", etc.
         """
-
         question_group = self.get_question(question)
         question_types = question_group.type.unique()
 
@@ -404,6 +395,14 @@ class LimeSurveyData:
         return question_type
 
     def get_questions_by_type(self, type: QuestionType) -> list[str]:
+        """Get a list of all questions with the given QuestionType.
+
+        Args:
+            type: Desired QuestionType, e.g. SINGLE_CHOICE.
+
+        Returns:
+            Question IDs for all matching questions.
+        """
         return list(
             self.questions.loc[self.questions["type"] == type.value]["question_group"]
             .unique()
@@ -411,18 +410,13 @@ class LimeSurveyData:
         )
 
     def query(self, expr: str) -> pd.DataFrame:
-        """Filter responses DataFrame with a boolean expression
+        """Filter responses DataFrame with a boolean expression.
 
         Args:
-            expr (str): Condition str for pd.DataFrame.query().
+            expr: Condition str for pd.DataFrame.query().
                 E.g. "A6 == 'A3' & "B2 == 'A5'"
 
         Returns:
             pd.DataFrame: Filtered responses
         """
-
         return self.responses.query(expr)
-
-
-def main() -> None:
-    pass
