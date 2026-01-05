@@ -4,6 +4,8 @@ We have specific functions for single-choice and multiple-choice questions,
 as well as "grouped" variants for both (which can be used for comparison barplots).
 """
 
+from collections.abc import Hashable
+
 import pandas as pd
 
 
@@ -113,7 +115,7 @@ def prepare_df_comparison(
     q: str,
     q_comparison: str,
     ordering: dict[str, list[str]],
-) -> tuple[pd.DataFrame, dict[str, int]]:
+) -> tuple[pd.DataFrame, dict[Hashable, int]]:
     """Compare groups of participants (determined by comparison_series).
 
     This function is for single-choice questions.
@@ -169,7 +171,7 @@ def prepare_df_comparison_multiple(
     q: str,
     q_comparison: str,
     ordering: dict[str, list[str]],
-) -> tuple[pd.DataFrame, dict[str, int]]:
+) -> tuple[pd.DataFrame, dict[Hashable, int]]:
     """Compare groups of participants (determined by comparison_series).
 
     This function is for multiple-choice questions.
@@ -229,4 +231,4 @@ def prepare_df_comparison_multiple(
     responses_sort = responses_clean.sort_values(by=[q_comparison, q])
     # print(responses_sort)
 
-    return responses_sort, participants.to_dict()
+    return responses_sort, participants.astype(int).to_dict()

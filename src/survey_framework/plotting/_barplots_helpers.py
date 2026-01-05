@@ -1,4 +1,4 @@
-from collections.abc import Iterable, Sequence
+from collections.abc import Hashable, Iterable, Sequence
 from textwrap import wrap
 from typing import cast
 
@@ -250,7 +250,7 @@ def adapt_legend(
     ax: Axes,
     question: str,
     text_wrap: int,
-    group_n: dict[str, int] | None = None,
+    group_n: dict[Hashable, int] | None = None,
     anchor: tuple[float, float] | None = None,
 ) -> Axes:
     """Rename legend and move below N.

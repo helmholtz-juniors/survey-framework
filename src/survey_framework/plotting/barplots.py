@@ -1,6 +1,6 @@
 """Functions for basic bar plots."""
 
-from collections.abc import Sequence
+from collections.abc import Hashable, Sequence
 
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -105,7 +105,7 @@ def plot_bar_comparison(
     question: str,
     hue: str,
     hue_order: Sequence[str] | None = None,
-    n_participants: dict[str, int] | None = None,
+    n_participants: dict[Hashable, int] | None = None,
     label_q_data: str = "",
     orient: Orientation = Orientation.HORIZONTAL,
     stat: PlotStat = PlotStat.COUNT,
