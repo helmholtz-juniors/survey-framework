@@ -1324,7 +1324,7 @@ requires-dist = [
     { name = "beautifulsoup4", specifier = ">=4.13.3" },
     { name = "lxml", specifier = ">=5.3.0" },
     { name = "matplotlib", specifier = ">=3.9.2" },
-    { name = "pandas", specifier = ">=2.2.3" },
+    { name = "pandas", specifier = "~=2.2" },
     { name = "plot-likert", specifier = ">=0.5.0" },
     { name = "pytest", specifier = ">=8.3.3" },
     { name = "scipy", specifier = ">=1.15.3" },

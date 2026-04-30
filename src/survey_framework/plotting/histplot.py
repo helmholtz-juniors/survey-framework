@@ -4,15 +4,18 @@ This basically produces bar plots, but can add extras like a density curve.
 """
 
 from collections.abc import Sequence
+from typing import cast
 
 import pandas as pd
 import seaborn as sns
 from matplotlib import pyplot as plt
 from matplotlib.axes import Axes
+from matplotlib.container import BarContainer
 from matplotlib.figure import Figure
 from pandas import DataFrame, Series
 
 import survey_framework.plotting.helmholtzcolors as hc
+from survey_framework.plotting._barplot_enums import BarLabels
 
 
 def simple_histplot(
@@ -26,6 +29,7 @@ def simple_histplot(
     binwidth: int | None = None,
     width: float = 10,
     height: float = 6,
+    bar_labels: BarLabels = BarLabels.NONE,
 ) -> tuple[Figure, Axes]:
     """Plot a histogram of values in `data_df[question_code]`.
 
@@ -42,6 +46,7 @@ def simple_histplot(
         binwidth: Width of bins; automatically inferred if not given.
         width: Plot width.
         height: Plot height.
+        bar_labels: How to label each bar (NONE by default, or PERCENT)
 
     Returns:
         New figure and axes of the histogram
@@ -96,5 +101,13 @@ def simple_histplot(
             kde=kde,
             log_scale=log_scale,
         )
+
+    match bar_labels:
+        case BarLabels.NONE:
+            pass
+        case BarLabels.COUNT:
+            raise ValueError("count bar labels not supported on histogram plots")
+        case BarLabels.PERCENT:
+            ax.bar_label(cast(BarContainer, ax.containers[0]), fmt="{:.1f}%")
 
     return figure, ax
